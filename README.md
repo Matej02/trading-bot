@@ -57,6 +57,23 @@
 > Kdyby ses někdy vracel: každý nový nápad jde tímhle aparátem ověřit
 > během hodin, ne měsíců. To je hlavní hodnota, která zbyla.
 
+## F3 – průraz z F2 na 30 trzích, na kterých se nevybíral (2026-10-27) → neprošlo
+
+`research_f3.py` (plán předem v hlavičce), výstup `research_data/f3_verdikt.json`. Setup beze změny
+(průraz 20 dní + týdenní trend, SL 2 ATR, RRR 1:2), denní data z MT5, spread brokera + swapy.
+Vyřazeny podle nákladů (spread > 10 % SL): USDTRY, EURTRY, XAGUSD; hodnoceno 27 trhů jako skupina.
+
+| | n | úspěšnost | průměr | t | PF |
+|---|---|---|---|---|---|
+| celá historie se swapy | 3 408 | 34 % | −0,11 R | −3,55 | 0,84 |
+| bez swapů | 3 408 | 35 % | −0,03 R | −0,98 | 0,95 |
+| 2024+ | 416 | 33 % | −0,21 R | −2,79 | 0,70 |
+| kontrola „každý den + trend“ | 7 608 | 35 % | −0,10 R | −5,17 | 0,85 |
+
+**Závěr:** na forexu, evropských indexech a ropě průraz nefunguje → živě zůstává jen 9 trhů z F2.
+Zároveň to oslabuje důvěru v samotný F2: výhoda může být jen silný trend zlata, indexů USA a BTC
+v letech 2024–26, ne obecná vlastnost průrazu. Bere se jako forward test na demu, ne jako jistota.
+
 ## F2 – víc timeframů, cíl vysoká úspěšnost s kladným výsledkem (2026-10-27) → 1 setup prošel
 
 `research_f2.py` (plán předem v hlavičce), `research_f2_detail.py` (swapy, long/short, trhy),
