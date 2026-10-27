@@ -6,6 +6,7 @@ import { authMode, isAuthed } from "@/lib/server/auth";
 import { getKV } from "@/lib/server/kv";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 30; // AI zkousi i nahradni modely, kdyz je Gemini pretizeny
 
 export async function POST(req: NextRequest) {
   const kv = getKV();
