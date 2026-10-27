@@ -201,6 +201,21 @@ export function barStatus(system: string, c: Candle[], digits: number): { text: 
       tone: "near",
     };
   }
+  if (system === "proraz_d1") {
+    const trend = weeklyTrend(c);
+    // dalsi denni svicka musi zavrit za extremem poslednich 20 dni (vcetne te posledni)
+    const hi = Math.max(...high.slice(i - 19, i + 1));
+    const lo = Math.min(...low.slice(i - 19, i + 1));
+    if (trend === 1) {
+      const a = atr(high, low, close, 14)[i] ?? 0;
+      return { text: `týdenní trend nahoru – long při denním zavření nad ${f(hi)} (teď ${f(close[i])})`, tone: hi - close[i] < a ? "near" : "wait" };
+    }
+    if (trend === -1) {
+      const a = atr(high, low, close, 14)[i] ?? 0;
+      return { text: `týdenní trend dolů – short při denním zavření pod ${f(lo)} (teď ${f(close[i])})`, tone: close[i] - lo < a ? "near" : "wait" };
+    }
+    return { text: "týdenní trend nejasný (cena kolem týdenní EMA50) – neobchoduje", tone: "off" };
+  }
   if (system === "ukazka_ema_m1") {
     const e9 = ema(close, 9), e21 = ema(close, 21);
     const gap = e9[i]! - e21[i]!;

@@ -6,7 +6,8 @@ import { AI_AGENT, codeOpinions, judge, type AgentCtx } from "./agents";
 import { ema, rsiLast } from "./indicators";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKET_IDS, MARKETS, quote } from "./markets";
-import { apiAi, apiLoad, apiLogout, apiRelease, apiSave, deviceInfo } from "./remote";
+import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from "./remote";
+import { eventsFor, inMinutes, type CalEvent } from "./calendar";
 import {
   closePosition, DAILY_LOSS_DEFAULT, dayKey, equity, exitPrice, findHit, freshBroker, lotsFor, openPosition, swapBetween,
   updateAccount, type BrokerState,
@@ -114,13 +115,17 @@ export class Bot {
   syncNote = ""; // posledni problem s ukladanim
   journalTotal = 0;
   lease: Lease | null = null;
+  serverTick: { at: number; msg: string } | null = null; // posledni beh bota na serveru
   importInfo: { balance: number; journal: number; closed: number } | null = null;
   status = "";
   aiNote = ""; // posledni problem AI analytika (zobrazi se v Nastaveni)
   private aiLast = 0;
   /** co bot prave sleduje, po strategiich a trzich (jen v pameti) */
   readonly radar = new Map<string, RadarItem>();
-  readonly device = deviceInfo();
+  private events: CalEvent[] | null = null; // ekonomicky kalendar (obnovuje se po hodine)
+  private eventsAt = 0;
+
+  constructor(private backend: Backend, readonly device: { id: string; label: string }) {}
 
   private listeners = new Set<() => void>();
   private busy = false;
@@ -140,7 +145,7 @@ export class Bot {
     this.stopAll();
     this.phase = "loading";
     this.emit();
-    const r = await apiLoad(false);
+    const r = await this.backend.load(false);
     if (r.status === 401) return this.setPhase("login");
     if (r.status === 503) {
       // bez databaze (nebo bez hesla na serveru): bezi jako drive, jen v tomhle prohlizeci
@@ -209,6 +214,7 @@ export class Bot {
     }
     this.journalTotal = r.journalTotal;
     this.lease = r.lease;
+    this.serverTick = r.serverTick ?? null;
   }
 
   private startRunner() {
@@ -236,7 +242,7 @@ export class Bot {
   private async refreshView() {
     if (typeof document !== "undefined" && document.hidden) return; // skryta karta nic nestahuje
     const full = Date.now() - this.lastFullLoad > 5 * 60_000;
-    const r = await apiLoad(!full);
+    const r = await this.backend.load(!full);
     if (r.status === 401) return this.toLogin();
     if (r.status !== 200 || !r.data.core) return;
     this.apply(r.data as LoadResult, full);
@@ -249,9 +255,9 @@ export class Bot {
   /** Sledujici zarizeni prevezme rizeni (to druhe pri dalsim ulozeni zjisti, ze uz neridi). */
   async takeOver() {
     if (this.mode !== "server" || this.role === "runner") return;
-    const r = await apiLoad(false);
+    const r = await this.backend.load(false);
     if (r.status === 200 && r.data.core) this.apply(r.data as LoadResult, true);
-    const res = await apiSave({ device: this.device.id, label: this.device.label, takeover: true, core: coreOf(this.state) });
+    const res = await this.backend.save({ device: this.device.id, label: this.device.label, takeover: true, core: coreOf(this.state) });
     if (res.status === 200) {
       this.lease = res.data.lease ?? null;
       this.lastCoreSave = Date.now();
@@ -260,6 +266,27 @@ export class Bot {
       this.syncNote = res.data.error ?? `převzetí se nepovedlo (${res.status})`;
       this.emit();
     }
+  }
+
+  /**
+   * Jeden beh bota na serveru (budi ho cron kazdych 5 min). Ridi jen tehdy, kdyz zrovna neridi
+   * zadny prohlizec - otevrena stranka ma prednost, po jejim zavreni prebira server.
+   */
+  async runServerTick(): Promise<string> {
+    const r = await this.backend.load(false);
+    if (r.status !== 200) return `chyba načtení: ${r.data.error ?? r.status}`;
+    if (!r.data.core) return "na serveru zatím není účet – nejdřív se přihlas na stránce";
+    const l = r.data.lease;
+    if (l && l.device !== this.device.id && l.until > (r.data.now ?? Date.now())) return `řídí ${l.label}, server čeká`;
+    this.mode = "server";
+    this.db = r.data.db ?? "";
+    this.apply(r.data as LoadResult, true);
+    this.phase = "ready";
+    this.role = "runner";
+    this.dirty.core = true; // ulozeni na konci zabere rizeni
+    await this.tick();
+    const s = this.state;
+    return `bot ${s.settings.botOn ? "běží" : "je vypnutý"}, ${s.broker.positions.length} pozic, balance ${s.broker.account.balance.toFixed(2)} $`;
   }
 
   /** Prvni prihlaseni: nahrat ucet a denik z tohoto prohlizece na server. */
@@ -277,7 +304,7 @@ export class Bot {
       ...chunks([...local.log].reverse(), 200).map((l) => ({ ...base, log: l })),
     ];
     for (const b of batches) {
-      const r = await apiSave(b);
+      const r = await this.backend.save(b);
       if (r.status !== 200) {
         this.syncNote = `nahrání se nepovedlo: ${r.data.error ?? r.status}`;
         return this.setPhase("error");
@@ -404,7 +431,7 @@ export class Bot {
     if (!opts.force && !pending && Date.now() - this.lastCoreSave < CORE_EVERY_MS) return;
     const body = this.takeDirty();
     this.syncing = true;
-    const r = await apiSave(body, opts.keepalive);
+    const r = await this.backend.save(body, opts.keepalive);
     this.syncing = false;
     if (r.status === 200) {
       this.lastCoreSave = Date.now();
@@ -492,6 +519,10 @@ export class Bot {
     try {
       const now = nowSec();
       const s = this.state;
+      if (Date.now() - this.eventsAt > 3600_000) {
+        this.events = (await this.backend.calendar()) ?? this.events;
+        this.eventsAt = Date.now();
+      }
       await this.updatePositions(now);
       // i po zasahu limitu se signaly dal vyhodnocuji (Risk zive obchody vetuje) - sbiraji se data
       if (s.settings.botOn) {
@@ -614,7 +645,7 @@ export class Bot {
       market: m, signal: sig, system, now: nowSec(), mid: store.lastPrice.get(sig.market)?.mid ?? sig.price, candles,
       broker: s.broker, equity: this.equityNow(), settings: s.settings, seen: new Set(s.seen),
       delayedMin: store.delayed.get(sig.market) ?? 0, todayTrades: this.todayTrades(nowSec()),
-      systemTrades: s.broker.closed.filter((c) => c.system === sig.system),
+      systemTrades: s.broker.closed.filter((c) => c.system === sig.system), events: this.events,
     };
     s.seen.push(sig.id); // hned, aby stejny signal behem cekani na AI nesel podruhe
     if (s.seen.length > 2000) s.seen = s.seen.slice(-1500);
@@ -662,7 +693,7 @@ export class Bot {
     const spread = quote(m, mid, nowSec()).spread;
     const tail = candles.slice(-40);
     const done = s.shadows.filter((x) => x.system === sig.system && x.r != null);
-    const r = await apiAi({
+    const r = await this.backend.ai({
       market: m.id, marketName: m.name, systemName: system.name, tf: system.tf, dir: sig.dir, price: sig.price,
       sl: sig.sl, tp: sig.tp, rrr: sig.tp == null ? null : Math.abs(sig.tp - sig.price) / slDist, spread,
       spreadPctOfSl: (spread / slDist) * 100, atr: lastAtr(candles), ema20: lastOf(ema(close, 20)), ema50: lastOf(ema(close, 50)),
@@ -674,6 +705,8 @@ export class Bot {
       history: done.length ? { n: done.length, winrate: (done.filter((x) => x.r! > 0).length / done.length) * 100,
         avgR: done.reduce((a, x) => a + x.r!, 0) / done.length } : null,
       digits: m.digits,
+      events: this.events ? eventsFor(this.events, m, nowSec(), nowSec() + 86400, ["High", "Medium"])
+        .slice(0, 6).map((e) => `${e.currency} ${e.title} (${e.impact === "High" ? "vysoký" : "střední"} dopad) za ${inMinutes(e.time - nowSec())}`) : [],
     });
     if (r.status !== 200 || !r.data.vote) {
       this.aiNote = r.data.error ?? `chyba ${r.status}`;
@@ -864,7 +897,7 @@ export function getBot() {
   if (!instance) {
     // po aktualizaci kodu za behu (vyvojova verze) by jinak dal tikal i stary bot a prepisoval stav
     g.__simBot?.stop();
-    instance = new Bot();
+    instance = new Bot(browserBackend, deviceInfo());
     g.__simBot = instance;
   }
   return instance;

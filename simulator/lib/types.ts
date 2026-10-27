@@ -157,6 +157,7 @@ export interface LoadResult {
   log: LogEntry[]; // nejnovejsi prvni
   lease: Lease | null;
   now: number;
+  serverTick: { at: number; msg: string } | null; // posledni beh bota na serveru (24/7)
 }
 
 export interface SaveBody {

@@ -27,6 +27,7 @@ export interface AiContext {
   openPositions: number;
   history: { n: number; winrate: number; avgR: number } | null; // vysledky teto strategie v simulaci (stinove)
   digits: number;
+  events: string[]; // dulezite zpravy pro meny trhu v pristich 24 h
 }
 
 export interface AiAnswer {
@@ -43,7 +44,8 @@ odpověz "ne". Hodnoť hlavně:
 - směr trendu (EMA 20/50/200) vůči směru obchodu a zda vstup nehoní už ujetý pohyb,
 - RSI (překoupenost/přeprodanost proti směru), polohu ceny v nedávném rozsahu,
 - poměr zisk:riziko a realističnost TP vzhledem k ATR,
-- dosavadní výsledky této strategie v simulaci, pokud jsou k dispozici.
+- dosavadní výsledky této strategie v simulaci, pokud jsou k dispozici,
+- blížící se ekonomické zprávy (u krátkých obchodů velké riziko, u swingových menší).
 Odpověz POUZE JSON objektem: {"vote":"ano"|"ne","confidence":0-100,"reason":"max 2 krátké věty česky","risks":["max 3 krátká rizika česky"]}`;
 
 export function buildPrompt(c: AiContext) {
@@ -59,6 +61,7 @@ export function buildPrompt(c: AiContext) {
     `Rozsah posledních ${c.closes.length} svíček: ${f(c.rangeLow)} – ${f(c.rangeHigh)}. Zavírací ceny (nejstarší → nejnovější): ${c.closes.map((x) => x.toFixed(c.digits)).join(", ")}.`,
     `Účet: denní ztráta ${c.dailyLossPct.toFixed(2)} % z limitu ${c.dailyLimitPct} %, otevřených pozic ${c.openPositions}.`,
     h ? `Tato strategie v simulaci: ${h.n} uzavřených signálů, úspěšnost ${h.winrate.toFixed(0)} %, průměr ${h.avgR.toFixed(2)} R.` : "Tato strategie zatím nemá v simulaci výsledky.",
+    c.events?.length ? `Zprávy pro tento trh v příštích 24 h: ${c.events.join("; ")}.` : "Žádné důležité zprávy pro tento trh v příštích 24 h.",
     `Názory ostatních agentů: ${c.opinions.map((o) => `${o.agent}: ${o.vote.toUpperCase()} – ${o.reason}`).join(" | ")}`,
   ].join("\n");
   return { system: SYSTEM, user };

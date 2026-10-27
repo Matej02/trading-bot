@@ -3,52 +3,54 @@
 Webová aplikace (Next.js) se simulovaným brokerem, živými daty, botem a agenty, kteří
 rozhodují o každém obchodu. Žádné skutečné peníze.
 
+**Běží na:** https://trading-bot123-fawn.vercel.app (Vercel tým Weby_Korda, nasazuje se samo
+z GitHubu https://github.com/Matej02/trading-bot, kořen projektu `simulator`).
+
 ## Ovládání
+- **Přihlášení** heslem z `APP_PASSWORD` – na PC i mobilu stejný účet a celý deník.
 - **▶ AKTIVOVAT** (vpravo nahoře): bot začne sám obchodovat. V režimu *Bere co jde* vezme každý
-  signál, který projde tvrdými kontrolami (Validátor, Trh teď, Risk); Statistik a Ďáblův
-  advokát jen radí. Zelený pruh ukazuje dnešní počet signálů, vzatých a zamítnutých obchodů,
-  graf skáče na trh nového obchodu. **■ ZASTAVIT** bota vypne (otevřené pozice dál běží).
-- **Bot živě:** ruční BUY/SELL přes agenty (+ „Přesto vzít“, když jsou proti jen poradci)
-  a přehled, na co která strategie právě čeká.
-- *Opatrný* režim (Nastavení): nebere, když jsou proti aspoň dva poradci.
+  signál, který projde tvrdými kontrolami (Validátor, Trh teď, Kalendář, Risk); Statistik,
+  Ďáblův advokát a AI analytik jen radí. **■ ZASTAVIT** bota vypne (otevřené pozice dál běží).
+- **Obchodovat jen ověřené** (Nastavení): Statistik vetuje vše neověřené – živě jde jen průraz z F2.
+- **Bot živě:** ruční BUY/SELL přes agenty a přehled, na co která strategie právě čeká.
+- **Deník:** stažení celé historie – Deník (CSV), Obchody (CSV), Vše pro rozbor (JSON).
 
-## Co v ní je
-- **Graf** jako TradingView (knihovna `lightweight-charts`): svíčky 1m–1d, šipky vstupů,
-  šedé × u zamítnutých signálů, čtverečky výstupů s výsledkem, čáry vstupu/SL/TP.
-- **Data:** krypto živě z Binance (WebSocket přímo z prohlížeče), forex/indexy/kovy/ropa
-  z Yahoo Finance přes `/api/candles` (prohlížeč na Yahoo napřímo nesmí).
-- **Simulovaný broker** s podmínkami skutečného účtu z MT5 (`lib/broker.json`): spread po
-  hodinách včetně přirážky, swapy (3× v den brokera), hodnota pohybu v USD, min. lot a krok.
-  Limity prop firmy: denní ztráta 4 %, drawdown 8 %, cíl 8 % (z equity).
-- **Strategie** převedené 1:1 z Python bota (`lib/strategies.ts`) + rychlá ukázka na 1m kryptu.
-- **Místnost agentů:** Validátor, Trh teď, Statistik, Risk (stejní jako v `tv_agent/agents.py`)
-  a Ďáblův advokát; Rozhodčí z hlasů rozhodne BERU / NEBERU.
-- **Deník a stínové výsledky:** každý signál (i zamítnutý) se dopočítá, takže jde vidět,
-  jestli agenti filtrují lépe než náhoda.
+## Bot nonstop (24/7)
+Bota řídí vždy jen jedno místo: otevřená stránka má přednost, po jejím zavření ho do 5 minut
+převezme server. Server budí bezplatná služba cron-job.org:
+1. Vercel → projekt → Settings → Environment Variables: `TICK_SECRET` = dlouhý náhodný řetězec → Redeploy.
+2. cron-job.org (zdarma) → Create cronjob → URL `https://trading-bot123-fawn.vercel.app/api/tick?key=<TICK_SECRET>`
+   → každých 5 minut → uložit.
+V hlavičce stránky pak svítí „server 24/7 před X min“.
 
-Bot běží v prohlížeči, dokud je stránka otevřená. Stav je v `localStorage`; po návratu se
-otevřené pozice dopočítají ze svíček (SL/TP, swapy).
+## Agenti
+| Agent | Co hlídá | Váha |
+|---|---|---|
+| Validátor | čerstvost signálu, utečená cena, duplicita | veto |
+| Trh teď | víkend, pátek večer, rollover, spread | veto |
+| Kalendář | zprávy s vysokým dopadem (ForexFactory, zdarma) – 30 min před a 15 min po | veto |
+| Risk | denní limit (2 %), drawdown 8 %, velikost, expozice na měnu | veto |
+| Statistik | jen setupy ověřené v registru (`lib/registry.json`) | radí / veto (Nastavení) |
+| Ďáblův advokát | důvody proti (honění pohybu, proti trendu, série proher, swap) | radí |
+| AI analytik | Gemini posoudí signál s kontextem (trend, RSI, spread vůči SL, zprávy) | radí |
 
-## Spuštění a nasazení
-**Jen na tomhle PC:** dvojklik na `spustit-simulator.bat` → otevře se http://localhost:3000
-(okno nech otevřené, zavřením se simulátor vypne).
+## Co v ní dál je
+- **Graf** jako TradingView (`lightweight-charts`), svíčky 1m–1d, vstupy, výstupy, SL/TP, náš čas.
+- **Data:** krypto z Binance, forex/indexy/kovy/ropa z Yahoo (`lib/yahoo.ts`).
+- **Simulovaný broker** s podmínkami MT5 účtu (`lib/broker.json`): spread po hodinách, swapy, loty.
+- **Strategie** převedené 1:1 z Pythonu (`lib/strategies.ts`), ověřený `proraz_d1` z F2.
+- **Data na serveru:** Upstash Redis (lokálně soubor `.data/store.json`).
 
-Na Vercelu je veřejná jen adresa **https://trading-simulator-delta.vercel.app**. Adresy
-s `matej02s-projects` v názvu (i ta z tlačítka „Visit“ ve Vercelu) chtějí přihlášení do Vercelu.
-
+## Lokálně
 ```
 npm install
-npm run dev                  # vývoj, http://localhost:3000
-npx vercel deploy --prod     # nasazení na Vercel (zdarma, Hobby)
+npm run dev                  # http://localhost:3000 (bez hesla, data v .data/store.json)
 ```
-
-Lokální verze a verze na Vercelu mají každá svůj účet a deník (ukládá je prohlížeč pro danou adresu).
-
-Podmínky brokera se obnoví z MT5 (ve složce bota): `python export_broker_conditions.py`.
+Nebo dvojklik na `spustit-simulator.bat`. Podmínky brokera z MT5: `python export_broker_conditions.py`.
 
 ## Kontroly
 ```
 npx tsx scripts/test-sim.ts                      # broker: SL/TP, gap, swapy, velikost pozice
-npx tsx scripts/compare-signals.ts <json>        # signály TS vs Python na stejných datech
-npx tsx scripts/demo-frequency.ts                # jak často dává ukázka signál
+npx tsx scripts/compare-signals.ts <json>        # H1 signály TS vs Python
+npx tsx scripts/compare-f2.ts <json>             # průraz F2 TS vs Python
 ```

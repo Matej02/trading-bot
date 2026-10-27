@@ -116,6 +116,9 @@ export default function App() {
           {bot.mode === "server"
             ? <span className="up" title={bot.db === "soubor" ? "uloženo v souboru na tomhle počítači" : "uloženo v databázi"}>☁ účet na serveru</span>
             : <span className="warn" title={bot.setupNote}>⚠ jen v tomhle prohlížeči</span>}
+          {bot.mode === "server" && (bot.serverTick && Date.now() - bot.serverTick.at < 15 * 60_000
+            ? <span className="up" title={bot.serverTick.msg}> · server 24/7 před {Math.max(0, Math.round((Date.now() - bot.serverTick.at) / 60_000))} min</span>
+            : <span className="warn" title={bot.serverTick?.msg ?? "cron zatím nikdy nespustil bota"}> · server 24/7 neběží</span>)}
           {bot.syncNote && <span className="down"> · {bot.syncNote}</span>}
           {bot.auth === "password" && <button className="link-btn" onClick={() => bot.logout()}>odhlásit</button>}
         </div>

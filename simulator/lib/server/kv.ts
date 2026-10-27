@@ -42,8 +42,11 @@ const WRITES = new Set(["SET", "DEL", "RPUSH", "LTRIM", "HSET", "INCR", "EXPIRE"
 let data: Record<string, Entry> | null = null;
 let queue: Promise<unknown> = Promise.resolve();
 
-function idx(n: number, len: number) {
-  return n < 0 ? Math.max(len + n, 0) : Math.min(n, len);
+/** Rozsah jako v Redisu: zaporne indexy od konce, stop vcetne. */
+function range(v: string[], start: number, stop: number) {
+  const s = Math.max(start < 0 ? v.length + start : start, 0);
+  const e = Math.min(stop < 0 ? v.length + stop : stop, v.length - 1);
+  return e < s ? [] : v.slice(s, e + 1);
 }
 
 function exec(d: Record<string, Entry>, cmd: Cmd): unknown {
@@ -80,17 +83,11 @@ function exec(d: Record<string, Entry>, cmd: Cmd): unknown {
     }
     case "LLEN":
       return e?.t === "l" ? e.v.length : 0;
-    case "LRANGE": {
-      if (e?.t !== "l") return [];
-      const len = e.v.length;
-      return e.v.slice(idx(Number(a[0]), len), idx(Number(a[1]), len - 1) + 1);
-    }
-    case "LTRIM": {
-      if (e?.t !== "l") return "OK";
-      const len = e.v.length;
-      e.v = e.v.slice(idx(Number(a[0]), len), idx(Number(a[1]), len - 1) + 1);
+    case "LRANGE":
+      return e?.t === "l" ? range(e.v, Number(a[0]), Number(a[1])) : [];
+    case "LTRIM":
+      if (e?.t === "l") e.v = range(e.v, Number(a[0]), Number(a[1]));
       return "OK";
-    }
     case "HSET": {
       const h = e?.t === "h" ? e : (d[key] = { t: "h", v: {} });
       let added = 0;

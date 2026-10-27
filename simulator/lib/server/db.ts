@@ -5,7 +5,7 @@ import type { Cmd, KV } from "./kv";
 
 const K = {
   core: "sim:core", jHash: "sim:journal", jIds: "sim:journal:ids", shHash: "sim:shadows", shIds: "sim:shadows:ids",
-  closed: "sim:closed", log: "sim:log", lease: "sim:lease",
+  closed: "sim:closed", log: "sim:log", lease: "sim:lease", tick: "sim:tick:last",
 };
 export const LEASE_MS = 120_000;
 
@@ -24,10 +24,10 @@ async function hmget<T>(kv: KV, key: string, ids: string[]): Promise<T[]> {
 
 /** light = rychle obnoveni pro sledujici zarizeni (jen konec historie). */
 export async function loadState(kv: KV, journal: number, light: boolean): Promise<Omit<LoadResult, "db" | "auth">> {
-  const [core, jIds, jTotal, closed, log, lease, shIds] = await kv.pipeline([
+  const [core, jIds, jTotal, closed, log, lease, shIds, tick] = await kv.pipeline([
     ["GET", K.core], ["LRANGE", K.jIds, -journal, -1], ["LLEN", K.jIds],
     ["LRANGE", K.closed, light ? -30 : -500, -1], ["LRANGE", K.log, light ? -30 : -200, -1], ["GET", K.lease],
-    ["LRANGE", K.shIds, light ? -100 : 0, -1],
+    ["LRANGE", K.shIds, light ? -100 : 0, -1], ["GET", K.tick],
   ]);
   const ids = unique(jIds as string[]);
   const [entries, shadows] = await Promise.all([
@@ -43,6 +43,7 @@ export async function loadState(kv: KV, journal: number, light: boolean): Promis
     log: parseAll<LogEntry>(log).reverse(),
     lease: parse<Lease>(lease),
     now: Date.now(),
+    serverTick: parse<{ at: number; msg: string }>(tick),
   };
 }
 

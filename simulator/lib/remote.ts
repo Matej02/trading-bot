@@ -1,5 +1,6 @@
 // Volani serveru z prohlizece (stav, prihlaseni, uvolneni rizeni).
 import type { AiAnswer, AiContext } from "./aiPrompt";
+import type { CalEvent } from "./calendar";
 import type { Lease, LoadResult, SaveBody } from "./types";
 
 export interface Res<T> {
@@ -29,6 +30,21 @@ export const apiLogout = () => call<{ ok: boolean }>("/api/logout", { method: "P
 /** AI analytik - kdyz do 20 s neodpovi, signal se rozhodne bez nej. */
 export const apiAi = (ctx: AiContext) =>
   call<AiAnswer & { model: string }>("/api/ai-agent", { ...json(ctx), signal: AbortSignal.timeout(20_000) });
+
+export async function apiCalendar(): Promise<CalEvent[] | null> {
+  const r = await call<{ events: CalEvent[] }>("/api/calendar");
+  return r.status === 200 && r.data.events ? r.data.events : null;
+}
+
+/** Co bot potrebuje od okoli: v prohlizeci pres API, na serveru (bot 24/7) primo databaze a Gemini. */
+export interface Backend {
+  load(light: boolean): Promise<Res<LoadResult>>;
+  save(b: SaveBody, keepalive?: boolean): Promise<Res<{ ok: boolean; lease: Lease | null }>>;
+  ai(ctx: AiContext): Promise<Res<AiAnswer & { model: string }>>;
+  calendar(): Promise<CalEvent[] | null>;
+}
+
+export const browserBackend: Backend = { load: apiLoad, save: apiSave, ai: apiAi, calendar: apiCalendar };
 
 /** Pri zavreni stranky: posledni ulozeni + uvolneni rizeni (sendBeacon dobehne i po zavreni). */
 export function apiRelease(device: string, save?: SaveBody) {

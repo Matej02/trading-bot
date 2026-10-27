@@ -11,7 +11,7 @@ export interface ExportData {
   log: LogEntry[]; // chronologicky
 }
 
-const AGENTS = ["Validátor", "Trh teď", "Statistik", "Risk", "Ďáblův advokát", "AI analytik"];
+const AGENTS = ["Validátor", "Trh teď", "Kalendář", "Statistik", "Risk", "Ďáblův advokát", "AI analytik"];
 const BOM = "﻿";
 
 function cell(v: string | number | null | undefined): string {

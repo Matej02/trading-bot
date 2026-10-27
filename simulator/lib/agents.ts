@@ -4,6 +4,7 @@ import registry from "./registry.json";
 import { atr, ema, rollingMedian } from "./indicators";
 import { currencies, fmt, isCrypto, MARKETS, quote } from "./markets";
 import { lotsFor, pnlMoney, sign, type BrokerState } from "./sim";
+import { eventsFor, inMinutes, marketCurrencies, NEWS_AFTER_MIN, NEWS_BEFORE_MIN, type CalEvent } from "./calendar";
 import { momentumReturn, type SystemDef } from "./strategies";
 import type { Candle, ClosedTrade, Market, Opinion, Settings, Signal } from "./types";
 
@@ -21,6 +22,7 @@ export interface AgentCtx {
   delayedMin: number;
   todayTrades: number;
   systemTrades: ClosedTrade[]; // uzavrene obchody tohoto systemu, nejnovejsi prvni
+  events: CalEvent[] | null; // ekonomicky kalendar, null = nepodarilo se nacist
 }
 
 export interface Verdict {
@@ -69,6 +71,23 @@ function marketNow(x: AgentCtx): Opinion {
   }
   const delay = x.delayedMin ? ` Pozor: data zpožděná o ${x.delayedMin} min.` : "";
   return { ...base, vote: "ano", reason: `Spread ${fmt(x.market, q.spread)} je běžný pro ${h}:00 UTC.${delay}` };
+}
+
+function calendar(x: AgentCtx): Opinion {
+  const base = { agent: "Kalendář", role: "hlídá důležité ekonomické zprávy", hard: true };
+  const ccy = marketCurrencies(x.market).join("/");
+  if (!x.events) return { ...base, vote: "ano", reason: "Kalendář se teď nepodařilo načíst – zprávy nekontroluju." };
+  const near = eventsFor(x.events, x.market, x.now - NEWS_AFTER_MIN * 60, x.now + NEWS_BEFORE_MIN * 60);
+  if (near.length) {
+    const e = near[0];
+    const when = e.time >= x.now ? `za ${inMinutes(e.time - x.now)} vyjde` : `před ${inMinutes(x.now - e.time)} vyšla`;
+    return { ...base, vote: "ne", reason: `${when} zpráva s vysokým dopadem: ${e.currency} ${e.title} – vstup kolem zprávy je loterie (skoky, široký spread).` };
+  }
+  const next = eventsFor(x.events, x.market, x.now, x.now + 7 * 86400)[0];
+  return {
+    ...base, vote: "ano",
+    reason: `Žádná důležitá zpráva pro ${ccy} v nejbližších ${NEWS_BEFORE_MIN} min.${next ? ` Další: ${next.currency} ${next.title} za ${inMinutes(next.time - x.now)}.` : ""}`,
+  };
 }
 
 type RegRec = { status: string; note?: string; holdout_pf?: number; holdout_n?: number };
@@ -172,7 +191,7 @@ function devilsAdvocate(x: AgentCtx): Opinion {
 /** Kodovi agenti reknou svoje (AI analytik se pta az na ne - vidi jejich nazory). */
 export function codeOpinions(x: AgentCtx) {
   const r = risk(x);
-  return { opinions: [validator(x), marketNow(x), statistician(x), r.op, devilsAdvocate(x)], lots: r.lots };
+  return { opinions: [validator(x), marketNow(x), calendar(x), statistician(x), r.op, devilsAdvocate(x)], lots: r.lots };
 }
 
 /** Rozhodci: tvrde veto = neberu; jinak podle rezimu (bere co jde / opatrny = vetsina poradcu). */

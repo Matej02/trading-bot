@@ -221,7 +221,7 @@ export function JournalPanel({ state }: { state: BotState }) {
   const taken = rStats(state.shadows.filter((x) => x.taken));
   const rejected = rStats(state.shadows.filter((x) => !x.taken));
   // kdo mel pravdu: vysledek signalu, ktere agent pustil vs vetoval
-  const agents = ["Validátor", "Trh teď", "Statistik", "Risk", "Ďáblův advokát", "AI analytik"].map((name) => {
+  const agents = ["Validátor", "Trh teď", "Kalendář", "Statistik", "Risk", "Ďáblův advokát", "AI analytik"].map((name) => {
     const yes: Shadow[] = [], no: Shadow[] = [];
     for (const d of state.journal) {
       const sh = shadowBy.get(d.id);

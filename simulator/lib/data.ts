@@ -1,6 +1,7 @@
 // Trzni data: krypto zive z Binance (WebSocket), ostatni z Yahoo pres /api/candles.
 import type { Candle, Market, TF } from "./types";
 import { TF_SEC } from "./types";
+import { yahooCandles } from "./yahoo";
 
 const BINANCE_REST = "https://data-api.binance.vision/api/v3/klines";
 const BINANCE_WS = "wss://data-stream.binance.vision/ws";
@@ -17,9 +18,15 @@ export async function fetchCandles(m: Market, tf: TF, live = false): Promise<{ c
       delayed: 0,
     };
   }
-  const r = await fetch(`/api/candles?symbol=${encodeURIComponent(m.id)}&tf=${tf}${live ? "&live=1" : ""}`);
-  const j = (await r.json()) as { candles: Candle[]; delayed: number; error?: string };
-  if (!r.ok) throw new Error(j.error ?? `chyba ${r.status}`);
+  let j: { candles: Candle[]; delayed: number };
+  if (typeof window === "undefined") {
+    j = await yahooCandles(m, tf, live); // bot na serveru vola Yahoo primo
+  } else {
+    const r = await fetch(`/api/candles?symbol=${encodeURIComponent(m.id)}&tf=${tf}${live ? "&live=1" : ""}`);
+    const body = (await r.json()) as { candles: Candle[]; delayed: number; error?: string };
+    if (!r.ok) throw new Error(body.error ?? `chyba ${r.status}`);
+    j = body;
+  }
   const k = m.priceScale;
   if (k !== 1) {
     j.candles = j.candles.map((c) => ({ time: c.time, open: c.open * k, high: c.high * k, low: c.low * k, close: c.close * k }));
