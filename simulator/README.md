@@ -28,11 +28,11 @@ V hlavičce stránky pak svítí „server 24/7 před X min“.
 |---|---|---|
 | Validátor | čerstvost signálu, utečená cena, duplicita | veto |
 | Trh teď | víkend, pátek večer, rollover, spread | veto |
-| Kalendář | zprávy s vysokým dopadem (ForexFactory, zdarma) – 30 min před a 15 min po | veto |
+| Kalendář | zprávy s vysokým dopadem (ForexFactory, zdarma) – 30 min před a 15 min po; ukáže poslední vyhlášené číslo proti prognóze (FXStreet) | veto |
 | Risk | denní limit (2 %), drawdown 8 %, velikost, expozice na měnu | veto |
 | Statistik | jen setupy ověřené v registru (`lib/registry.json`) | radí / veto (Nastavení) |
 | Ďáblův advokát | důvody proti (honění pohybu, proti trendu, série proher, swap) | radí |
-| AI analytik | Gemini posoudí signál s kontextem (trend, RSI, spread vůči SL, zprávy) | radí; veto až si ho vyslouží (níže) |
+| AI analytik | Gemini posoudí signál s kontextem: trend, RSI, spread vůči SL, příští zprávy, vyhlášená čísla za 24 h (lepší/horší než prognóza) a titulky zpráv k trhu (Google News + Yahoo Finance, `lib/server/news.ts`) | radí; veto až si ho vyslouží (níže) |
 
 **Vysloužené veto AI** (`lib/aiScore.ts`): u každého signálu se zapisuje hlas AI a jak by signál dopadl.
 NE od AI se stane tvrdým vetem, až je aspoň 30 vyhodnocených ANO i 30 NE, signály s NE vychází v průměru

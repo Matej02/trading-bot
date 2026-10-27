@@ -8,7 +8,7 @@ import { ema, rsiLast } from "./indicators";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKET_IDS, MARKETS, quote } from "./markets";
 import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from "./remote";
-import { eventsFor, inMinutes, type CalEvent } from "./calendar";
+import { eventsFor, inMinutes, releasesFor, releaseText, type CalEvent, type Release } from "./calendar";
 import {
   closePosition, DAILY_LOSS_DEFAULT, dayKey, equity, exitPrice, findHit, freshBroker, lotsFor, openPosition, swapBetween,
   updateAccount, type BrokerState,
@@ -124,7 +124,8 @@ export class Bot {
   private aiLast = 0;
   /** co bot prave sleduje, po strategiich a trzich (jen v pameti) */
   readonly radar = new Map<string, RadarItem>();
-  private events: CalEvent[] | null = null; // ekonomicky kalendar (obnovuje se po hodine)
+  private events: CalEvent[] | null = null; // ekonomicky kalendar - pristi zpravy (obnovuje se po 10 min)
+  private releases: Release[] = []; // uz vyhlasene zpravy se skutecnou hodnotou
   private eventsAt = 0;
 
   constructor(private backend: Backend, readonly device: { id: string; label: string }) {}
@@ -521,8 +522,9 @@ export class Bot {
     try {
       const now = nowSec();
       const s = this.state;
-      if (Date.now() - this.eventsAt > 3600_000) {
-        this.events = (await this.backend.calendar()) ?? this.events;
+      if (Date.now() - this.eventsAt > 600_000) {
+        const cal = await this.backend.calendar();
+        if (cal) [this.events, this.releases] = [cal.events ?? this.events, cal.releases];
         this.eventsAt = Date.now();
       }
       await this.updatePositions(now);
@@ -647,7 +649,7 @@ export class Bot {
       market: m, signal: sig, system, now: nowSec(), mid: store.lastPrice.get(sig.market)?.mid ?? sig.price, candles,
       broker: s.broker, equity: this.equityNow(), settings: s.settings, seen: new Set(s.seen),
       delayedMin: store.delayed.get(sig.market) ?? 0, todayTrades: this.todayTrades(nowSec()),
-      systemTrades: s.broker.closed.filter((c) => c.system === sig.system), events: this.events,
+      systemTrades: s.broker.closed.filter((c) => c.system === sig.system), events: this.events, releases: this.releases,
     };
     s.seen.push(sig.id); // hned, aby stejny signal behem cekani na AI nesel podruhe
     if (s.seen.length > 2000) s.seen = s.seen.slice(-1500);
@@ -714,6 +716,8 @@ export class Bot {
       digits: m.digits,
       events: this.events ? eventsFor(this.events, m, nowSec(), nowSec() + 86400, ["High", "Medium"])
         .slice(0, 6).map((e) => `${e.currency} ${e.title} (${e.impact === "High" ? "vysoký" : "střední"} dopad) za ${inMinutes(e.time - nowSec())}`) : [],
+      released: releasesFor(this.releases, m, nowSec() - 86400, nowSec()).slice(0, 8)
+        .map((e) => `${releaseText(e)} (${e.impact === "High" ? "vysoký" : "střední"} dopad, před ${inMinutes(nowSec() - e.time)})`),
     });
     if (r.status !== 200 || !r.data.vote) {
       this.aiNote = r.data.error ?? `chyba ${r.status}`;
@@ -723,7 +727,7 @@ export class Bot {
     const a = r.data;
     const risks = a.risks?.length ? ` Rizika: ${a.risks.join("; ")}.` : "";
     return {
-      op: { agent: AI_AGENT, role: `Gemini · jistota ${a.confidence ?? 0} %`, vote: a.vote, hard: false, reason: `${a.reason}${risks}` } as Opinion,
+      op: { agent: AI_AGENT, role: `Gemini · jistota ${a.confidence ?? 0} %${a.news ? ` · ${a.news} titulků` : ""}`, vote: a.vote, hard: false, reason: `${a.reason}${risks}` } as Opinion,
       note: "",
     };
   }

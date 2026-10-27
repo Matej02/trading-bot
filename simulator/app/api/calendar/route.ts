@@ -7,8 +7,12 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    return NextResponse.json({ events: await getCalendar(getKV()) }, { headers: { "Cache-Control": "public, s-maxage=1800" } });
+    const cal = await getCalendar(getKV());
+    const ok = !!cal.events || cal.releases.length > 0;
+    // kdyz ForexFactory nejde, kratka cache - at se kalendar brzy zkusi znovu
+    const cache = cal.events ? "public, s-maxage=300" : "public, s-maxage=60";
+    return NextResponse.json(cal, { status: ok ? 200 : 502, headers: ok ? { "Cache-Control": cache } : {} });
   } catch (e) {
-    return NextResponse.json({ events: [], error: (e as Error).message }, { status: 502 });
+    return NextResponse.json({ events: [], releases: [], error: (e as Error).message }, { status: 502 });
   }
 }

@@ -28,6 +28,8 @@ export interface AiContext {
   history: { n: number; winrate: number; avgR: number } | null; // vysledky teto strategie v simulaci (stinove)
   digits: number;
   events: string[]; // dulezite zpravy pro meny trhu v pristich 24 h
+  released?: string[]; // uz vyhlasene zpravy za poslednich 24 h se skutecnou hodnotou proti prognoze
+  news?: string[]; // titulky zprav k trhu (doplni server, lib/server/news.ts)
 }
 
 export interface AiAnswer {
@@ -45,7 +47,10 @@ odpověz "ne". Hodnoť hlavně:
 - RSI (překoupenost/přeprodanost proti směru), polohu ceny v nedávném rozsahu,
 - poměr zisk:riziko a realističnost TP vzhledem k ATR,
 - dosavadní výsledky této strategie v simulaci, pokud jsou k dispozici,
-- blížící se ekonomické zprávy (u krátkých obchodů velké riziko, u swingových menší).
+- blížící se ekonomické zprávy (u krátkých obchodů velké riziko, u swingových menší),
+- čerstvě vyhlášená čísla (nad/pod prognózou) a titulky zpráv: jdou fundamenty a nálada PROTI směru obchodu?
+  Titulky ber kriticky - jeden článek nic neznamená, rozhoduje jasná převaha nebo zásadní událost.
+Cílem uživatele je co nejvyšší úspěšnost: sporný obchod raději vynech.
 Odpověz POUZE JSON objektem: {"vote":"ano"|"ne","confidence":0-100,"reason":"max 2 krátké věty česky","risks":["max 3 krátká rizika česky"]}`;
 
 export function buildPrompt(c: AiContext) {
@@ -62,6 +67,8 @@ export function buildPrompt(c: AiContext) {
     `Účet: denní ztráta ${c.dailyLossPct.toFixed(2)} % z limitu ${c.dailyLimitPct} %, otevřených pozic ${c.openPositions}.`,
     h ? `Tato strategie v simulaci: ${h.n} uzavřených signálů, úspěšnost ${h.winrate.toFixed(0)} %, průměr ${h.avgR.toFixed(2)} R.` : "Tato strategie zatím nemá v simulaci výsledky.",
     c.events?.length ? `Zprávy pro tento trh v příštích 24 h: ${c.events.join("; ")}.` : "Žádné důležité zprávy pro tento trh v příštích 24 h.",
+    c.released?.length ? `Vyhlášená čísla za posledních 24 h: ${c.released.join("; ")}.` : "Za posledních 24 h nevyšla žádná důležitá čísla pro tento trh (nebo je nemám).",
+    c.news?.length ? `Titulky zpráv k trhu (nejnovější první):\n${c.news.map((n) => `- ${n}`).join("\n")}` : "Titulky zpráv k trhu nejsou k dispozici.",
     `Názory ostatních agentů: ${c.opinions.map((o) => `${o.agent}: ${o.vote.toUpperCase()} – ${o.reason}`).join(" | ")}`,
   ].join("\n");
   return { system: SYSTEM, user };

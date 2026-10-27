@@ -4,7 +4,7 @@ import registry from "./registry.json";
 import { atr, ema, rollingMedian } from "./indicators";
 import { currencies, fmt, isCrypto, MARKETS, quote } from "./markets";
 import { lotsFor, pnlMoney, sign, type BrokerState } from "./sim";
-import { eventsFor, inMinutes, marketCurrencies, NEWS_AFTER_MIN, NEWS_BEFORE_MIN, type CalEvent } from "./calendar";
+import { eventsFor, inMinutes, marketCurrencies, NEWS_AFTER_MIN, NEWS_BEFORE_MIN, releasesFor, releaseText, type CalEvent, type Release } from "./calendar";
 import { momentumReturn, type SystemDef } from "./strategies";
 import type { Candle, ClosedTrade, Market, Opinion, Settings, Signal } from "./types";
 
@@ -23,6 +23,7 @@ export interface AgentCtx {
   todayTrades: number;
   systemTrades: ClosedTrade[]; // uzavrene obchody tohoto systemu, nejnovejsi prvni
   events: CalEvent[] | null; // ekonomicky kalendar, null = nepodarilo se nacist
+  releases: Release[]; // uz vyhlasene zpravy se skutecnou hodnotou
 }
 
 export interface Verdict {
@@ -84,9 +85,13 @@ function calendar(x: AgentCtx): Opinion {
     return { ...base, vote: "ne", reason: `${when} zpráva s vysokým dopadem: ${e.currency} ${e.title} – vstup kolem zprávy je loterie (skoky, široký spread).` };
   }
   const next = eventsFor(x.events, x.market, x.now, x.now + 7 * 86400)[0];
+  // posledni vyhlasena zprava (do 4 h) se skutecnou hodnotou - jen informace, veto zustava jen kolem zpravy
+  const recent = releasesFor(x.releases, x.market, x.now - 4 * 3600, x.now);
+  const last = recent.find((e) => e.impact === "High" && e.forecast) ?? recent.find((e) => e.forecast) ?? recent[0];
   return {
     ...base, vote: "ano",
-    reason: `Žádná důležitá zpráva pro ${ccy} v nejbližších ${NEWS_BEFORE_MIN} min.${next ? ` Další: ${next.currency} ${next.title} za ${inMinutes(next.time - x.now)}.` : ""}`,
+    reason: `Žádná důležitá zpráva pro ${ccy} v nejbližších ${NEWS_BEFORE_MIN} min.${next ? ` Další: ${next.currency} ${next.title} za ${inMinutes(next.time - x.now)}.` : ""}` +
+      (last ? ` Naposledy vyšlo: ${releaseText(last)} (před ${inMinutes(x.now - last.time)}).` : ""),
   };
 }
 

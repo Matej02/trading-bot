@@ -11,6 +11,21 @@ export interface CalEvent {
   previous?: string;
 }
 
+/** Uz vyhlasena zprava se skutecnou hodnotou (FXStreet, lib/server/calendar.ts). */
+export interface Release {
+  time: number;
+  currency: string;
+  impact: "High" | "Medium";
+  title: string;
+  actual: string;
+  forecast?: string;
+  previous?: string;
+  better: boolean | null; // vyslo pro menu lepe nez prognoza
+}
+
+/** events = null: ForexFactory se nepodarilo nacist (vyhlasene zpravy z FXStreet mohou prijit i tak) */
+export interface Calendar { events: CalEvent[] | null; releases: Release[]; error?: string }
+
 export const NEWS_BEFORE_MIN = 30; // tolik minut pred zpravou se nevstupuje
 export const NEWS_AFTER_MIN = 15; // a tolik po ni (nejvetsi skoky a spready)
 
@@ -47,3 +62,31 @@ export function inMinutes(sec: number) {
   const h = sec / 3600;
   return Math.abs(h) < 36 ? `${h.toFixed(1)} h` : `${(h / 24).toFixed(1)} dne`;
 }
+
+/** Cislo z hodnoty kalendare: "3.1%", "1.40M" -> 3.1, 1.4 (prognoza i skutecnost jsou ze stejneho zdroje) */
+function num(v?: string) {
+  const m = v?.replace(/,/g, "").match(/^\s*(-?\d+(?:\.\d+)?)/);
+  return m ? parseFloat(m[1]) : null;
+}
+
+/** Jak zprava dopadla proti prognoze: "nad prognózou" / "pod prognózou" / "podle prognózy" / "". */
+export function surprise(e: Release) {
+  const a = num(e.actual), f = num(e.forecast);
+  if (a == null || f == null) return "";
+  if (Math.abs(a - f) <= Math.abs(f) * 1e-9) return "podle prognózy";
+  return a > f ? "nad prognózou" : "pod prognózou";
+}
+
+/** Vyhlasena zprava jednou vetou: "USD CPI y/y: vyšlo 3.1% (prognóza 2.9%, předtím 3.0%) – nad prognózou" */
+export function releaseText(e: Release) {
+  const s = surprise(e);
+  const b = e.better == null || s === "podle prognózy" ? "" : e.better ? `, pro ${e.currency} lepší, než se čekalo` : `, pro ${e.currency} horší, než se čekalo`;
+  return `${e.currency} ${e.title}: vyšlo ${e.actual} (prognóza ${e.forecast || "?"}, předtím ${e.previous || "?"})${s ? ` – ${s}${b}` : ""}`;
+}
+
+/** Uz vyhlasene zpravy pro trh od - do, nejnovejsi prvni. */
+export function releasesFor(releases: Release[], m: Market, from: number, to: number) {
+  const ccy = new Set(marketCurrencies(m));
+  return releases.filter((e) => ccy.has(e.currency) && e.time >= from && e.time <= to).sort((a, b) => b.time - a.time);
+}
+
