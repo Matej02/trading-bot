@@ -266,6 +266,44 @@ export function ExportButtons({ bot }: { bot: Bot }) {
   );
 }
 
+/** Co funguje: vysledky vsech signalu (i nevzatych) po strategiich a trzich, nejlepsi nahore. */
+function ComboTable({ shadows }: { shadows: Shadow[] }) {
+  const groups = new Map<string, Shadow[]>();
+  for (const x of shadows) {
+    const k = `${x.system}|${x.market}`;
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k)!.push(x);
+  }
+  const rows = [...groups.entries()].map(([k, xs]) => {
+    const st = rStats(xs);
+    return { k, system: xs[0].system, market: xs[0].market, ...st, sum: st.mean * st.n, taken: xs.filter((x) => x.taken).length };
+  }).filter((r) => r.n > 0).sort((a, b) => b.mean - a.mean || b.n - a.n);
+  if (!rows.length) return null;
+  return (
+    <>
+      <div className="muted small">Co funguje – strategie × trh (všechny signály stínově, i nevzaté; nejlepší nahoře). Spolehlivé to začne
+        být až kolem 30 uzavřených signálů na řádek.</div>
+      <table className="tbl">
+        <thead><tr><th>Strategie</th><th>Trh</th><th>Uzavř.</th><th>Win</th><th>⌀ R</th><th>Součet R</th><th>Vzato živě</th><th>Běží</th></tr></thead>
+        <tbody>
+          {rows.slice(0, 40).map((r) => (
+            <tr key={r.k}>
+              <td className="small">{SYSTEM[r.system]?.name ?? r.system}</td>
+              <td>{r.market}</td>
+              <td>{r.n}{r.n < 30 && <span className="muted small"> (málo)</span>}</td>
+              <td>{r.win.toFixed(0)} %</td>
+              <td className={r.mean >= 0 ? "up" : "down"}>{r.mean.toFixed(2)}</td>
+              <td className={r.sum >= 0 ? "up" : "down"}>{r.sum.toFixed(1)}</td>
+              <td>{r.taken}</td>
+              <td>{r.open}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
+}
+
 /** Skore AI analytika na zivych signalech - podle nej dostane (nebo ztrati) pravo veta. */
 function AiScoreCard({ shadows }: { shadows: Shadow[] }) {
   const a = aiScore(shadows);
@@ -344,6 +382,7 @@ export function JournalPanel({ state }: { state: BotState }) {
         </tbody>
       </table>
       <AiScoreCard shadows={state.shadows} />
+      <ComboTable shadows={state.shadows} />
       <table className="tbl">
         <thead><tr><th>Agent</th><th>Když řekl ANO</th><th>Když řekl NE</th></tr></thead>
         <tbody>
@@ -385,8 +424,20 @@ export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
   return (
     <div className="settings">
       {bot.role === "viewer" && <div className="alert">Bota řídí jiné zařízení – nastavení změníš po převzetí řízení.</div>}
+      <div className="muted small">Teď: <b>{s.statistikBlocks ? "jen ověřené" : "učící režim – bere všechno"}</b></div>
       <div className="row gap">
-        <button className="btn" onClick={() => bot.update((st) => {
+        <button className={`btn ${!s.statistikBlocks ? "on" : ""}`} onClick={() => bot.update((st) => {
+          st.settings.statistikBlocks = false;
+          st.settings.mode = "vse";
+          for (const sys of SYSTEMS) st.settings.systems[sys.id] = true;
+        })}>
+          Učící režim – brát všechno
+        </button>
+        <span className="muted small">Všechny strategie obchodují na simulovaném účtu (i neověřené a ztrátové), aby bylo co
+          nejvíc obchodů a šlo poznat, co funguje. Tvrdé kontroly platí dál – po denní ztrátě 2 % se do konce dne jen sbírají data.</span>
+      </div>
+      <div className="row gap">
+        <button className={`btn ${s.statistikBlocks ? "on" : ""}`} onClick={() => bot.update((st) => {
           st.settings.statistikBlocks = true;
           for (const sys of SYSTEMS) if (sys.id.startsWith("ukazka")) st.settings.systems[sys.id] = false;
         })}>
