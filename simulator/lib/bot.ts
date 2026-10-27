@@ -2,10 +2,11 @@
 // obchoduje. Stav se uklada na server (po prihlaseni stejny na PC i mobilu, cely denik);
 // bez databaze jen do localStorage tohoto prohlizece. Bota ridi vzdy jen jedno zarizeni,
 // ostatni sleduji. Po pauze se pozice dopocitaji ze svicek (SL/TP, swapy).
-import { deliberate } from "./agents";
+import { AI_AGENT, codeOpinions, judge, type AgentCtx } from "./agents";
+import { ema, rsiLast } from "./indicators";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKET_IDS, MARKETS, quote } from "./markets";
-import { apiLoad, apiLogout, apiRelease, apiSave, deviceInfo } from "./remote";
+import { apiAi, apiLoad, apiLogout, apiRelease, apiSave, deviceInfo } from "./remote";
 import {
   closePosition, DAILY_LOSS_DEFAULT, dayKey, equity, exitPrice, findHit, freshBroker, lotsFor, openPosition, swapBetween,
   updateAccount, type BrokerState,
@@ -15,8 +16,8 @@ import {
   momentumTarget, relVol, SYSTEM, SYSTEMS, type SystemDef, type Tone,
 } from "./strategies";
 import type {
-  Candle, ClosedTrade, CoreState, Deliberation, Lease, LoadResult, LogEntry, MomentumBook, Position, SaveBody, Settings,
-  Shadow, Signal, TF,
+  Candle, ClosedTrade, CoreState, Deliberation, Lease, LoadResult, LogEntry, MomentumBook, Opinion, Position, SaveBody,
+  Settings, Shadow, Signal, TF,
 } from "./types";
 import { TF_SEC } from "./types";
 
@@ -44,7 +45,7 @@ export function freshState(): BotState {
     version: 1,
     settings: {
       botOn: false, mode: "vse", follow: true, statistikBlocks: false, riskPct: 0.25, maxTradesPerDay: 100, maxOpen: 50,
-      dailyLossPct: DAILY_LOSS_DEFAULT, rrr: 2, systems: Object.fromEntries(SYSTEMS.map((s) => [s.id, true])),
+      dailyLossPct: DAILY_LOSS_DEFAULT, rrr: 2, ai: true, systems: Object.fromEntries(SYSTEMS.map((s) => [s.id, true])),
     },
     broker: freshBroker(START_BALANCE, nowSec()),
     journal: [], shadows: [], lastBar: {}, momentum: { book: {}, lastRun: {} }, seen: [], log: [],
@@ -62,6 +63,7 @@ function migrate<T extends { settings: Settings }>(s: T): T {
   }
   s.settings.dailyLossPct ??= DAILY_LOSS_DEFAULT;
   s.settings.rrr ??= 2;
+  s.settings.ai ??= true;
   return s;
 }
 
@@ -114,6 +116,8 @@ export class Bot {
   lease: Lease | null = null;
   importInfo: { balance: number; journal: number; closed: number } | null = null;
   status = "";
+  aiNote = ""; // posledni problem AI analytika (zobrazi se v Nastaveni)
+  private aiLast = 0;
   /** co bot prave sleduje, po strategiich a trzich (jen v pameti) */
   readonly radar = new Map<string, RadarItem>();
   readonly device = deviceInfo();
@@ -600,19 +604,22 @@ export class Bot {
     return this.state.journal.filter((d) => d.decision === "beru" && dayKey(d.time) === day).length;
   }
 
-  private handleSignal(sig: Signal, candles: Candle[], system: SystemDef = SYSTEM[sig.system]): Deliberation {
+  private async handleSignal(sig: Signal, candles: Candle[], system: SystemDef = SYSTEM[sig.system]): Promise<Deliberation> {
     const s = this.state;
     const m = MARKETS[sig.market];
-    const now = nowSec();
-    const mid = store.lastPrice.get(sig.market)?.mid ?? sig.price;
-    const v = deliberate({
-      market: m, signal: sig, system, now, mid, candles, broker: s.broker,
-      equity: this.equityNow(), settings: s.settings, seen: new Set(s.seen),
-      delayedMin: store.delayed.get(sig.market) ?? 0, todayTrades: this.todayTrades(now),
+    const ctx: AgentCtx = {
+      market: m, signal: sig, system, now: nowSec(), mid: store.lastPrice.get(sig.market)?.mid ?? sig.price, candles,
+      broker: s.broker, equity: this.equityNow(), settings: s.settings, seen: new Set(s.seen),
+      delayedMin: store.delayed.get(sig.market) ?? 0, todayTrades: this.todayTrades(nowSec()),
       systemTrades: s.broker.closed.filter((c) => c.system === sig.system),
-    });
-    s.seen.push(sig.id);
+    };
+    s.seen.push(sig.id); // hned, aby stejny signal behem cekani na AI nesel podruhe
     if (s.seen.length > 2000) s.seen = s.seen.slice(-1500);
+    const base = codeOpinions(ctx);
+    const ai = await this.askAi(sig, system, candles, base.opinions, ctx.mid);
+    const v = judge(ctx, ai.op ? [...base.opinions, ai.op] : base.opinions, base.lots, ai.note);
+    const now = nowSec();
+    const mid = store.lastPrice.get(sig.market)?.mid ?? ctx.mid;
     let positionId: string | null = null;
     if (v.decision === "beru" && v.lots) positionId = openPosition(s.broker, sig, v.lots, mid, now).id;
     const d: Deliberation = { id: sig.id, signal: sig, opinions: v.opinions, decision: v.decision, summary: v.summary,
@@ -627,6 +634,50 @@ export class Bot {
     this.recordShadow(shadow, true);
     this.log(`${SYSTEM[sig.system].name} ${sig.market} ${sig.dir}: ${v.summary}`);
     return d;
+  }
+
+  /**
+   * AI analytik (Gemini pres server): dostane signal, trend, volatilitu, spread vuci SL a nazory
+   * ostatnich agentu. Jen radi. Kdyz je nedostupny, signal se rozhodne bez nej (poznamka v souhrnu).
+   */
+  private async askAi(sig: Signal, system: SystemDef, candles: Candle[], opinions: Opinion[], mid: number) {
+    const s = this.state;
+    const none = (note: string) => ({ op: null as Opinion | null, note: note ? ` (AI analytik: ${note}.)` : "" });
+    if (!s.settings.ai) return none("");
+    if (this.mode !== "server") return none("běží jen s účtem na serveru");
+    if (Date.now() - this.aiLast < 5000) return none("přeskočen – víc signálů najednou");
+    this.aiLast = Date.now();
+    const m = MARKETS[sig.market];
+    const close = candles.map((c) => c.close);
+    const lastOf = (a: (number | null)[]) => (a.length ? a[a.length - 1] : null);
+    const slDist = Math.abs(sig.price - sig.sl) || 1e-12;
+    const spread = quote(m, mid, nowSec()).spread;
+    const tail = candles.slice(-40);
+    const done = s.shadows.filter((x) => x.system === sig.system && x.r != null);
+    const r = await apiAi({
+      market: m.id, marketName: m.name, systemName: system.name, tf: system.tf, dir: sig.dir, price: sig.price,
+      sl: sig.sl, tp: sig.tp, rrr: sig.tp == null ? null : Math.abs(sig.tp - sig.price) / slDist, spread,
+      spreadPctOfSl: (spread / slDist) * 100, atr: lastAtr(candles), ema20: lastOf(ema(close, 20)), ema50: lastOf(ema(close, 50)),
+      ema200: close.length >= 200 ? lastOf(ema(close, 200)) : null, rsi14: rsiLast(close, 14),
+      closes: tail.map((c) => c.close), rangeHigh: Math.max(...tail.map((c) => c.high)), rangeLow: Math.min(...tail.map((c) => c.low)),
+      reason: sig.reason, opinions: opinions.map((o) => ({ agent: o.agent, vote: o.vote, reason: o.reason })),
+      dailyLossPct: Math.max(0, ((s.broker.account.dayStart - this.equityNow()) / s.broker.account.start) * 100),
+      dailyLimitPct: s.settings.dailyLossPct, openPositions: s.broker.positions.length,
+      history: done.length ? { n: done.length, winrate: (done.filter((x) => x.r! > 0).length / done.length) * 100,
+        avgR: done.reduce((a, x) => a + x.r!, 0) / done.length } : null,
+      digits: m.digits,
+    });
+    if (r.status !== 200 || !r.data.vote) {
+      this.aiNote = r.data.error ?? `chyba ${r.status}`;
+      return none(`nedostupný – ${this.aiNote}`);
+    }
+    this.aiNote = "";
+    const a = r.data;
+    const risks = a.risks?.length ? ` Rizika: ${a.risks.join("; ")}.` : "";
+    return {
+      op: { agent: AI_AGENT, role: `Gemini · jistota ${a.confidence ?? 0} %`, vote: a.vote, hard: false, reason: `${a.reason}${risks}` } as Opinion,
+      note: "",
+    };
   }
 
   private async runBarSystem(systemId: string, id: string, now: number) {
@@ -648,7 +699,7 @@ export class Bot {
     // validator stary signal zamitne, misto aby se vstupovalo na zastaralou cenu
     // SL podle strategie, TP podle nastaveneho pomeru zisk : riziko
     const rrr = this.state.settings.rrr;
-    this.handleSignal({
+    await this.handleSignal({
       id: `${systemId}-${id}-${last.time}`, system: systemId, market: id, dir: bs.dir, price: last.close,
       time: last.time + TF_SEC[sys.tf], barTime: last.time, sl: bs.sl,
       tp: last.close + (bs.dir === "long" ? 1 : -1) * rrr * Math.abs(last.close - bs.sl),
@@ -666,7 +717,7 @@ export class Bot {
     const mid = store.lastPrice.get(marketId)?.mid;
     if (!a || mid == null) return "Na tomhle timeframu zatím není dost dat pro ATR.";
     const { sl, tp } = manualLevels(mid, a, dir, this.state.settings.rrr);
-    const d = this.handleSignal({
+    const d = await this.handleSignal({
       id: `rucne-${marketId}-${now}`, system: MANUAL.id, market: marketId, dir, price: mid, time: now, barTime: now,
       sl, tp, riskPct: this.state.settings.riskPct,
       reason: `Ruční ${dir === "long" ? "nákup" : "prodej"} z grafu ${tf}, SL 1,5 ATR, RRR 1:${this.state.settings.rrr} (ATR ${a.toFixed(m.digits)}).`,
@@ -784,7 +835,7 @@ export class Bot {
       const price = store.lastPrice.get(id)?.mid ?? closes[closes.length - 1];
       const dist = MOM_SL_SIGMA * relVol(closes) * price;
       const dailyCandles = candles.filter((c) => c.time < Math.floor(now / 86400) * 86400);
-      const dlb = this.handleSignal({
+      const dlb = await this.handleSignal({
         id: `${MOMENTUM}-${id}-${day}`, system: MOMENTUM, market: id, dir, price, time: now, barTime: now,
         sl: dir === "long" ? price - dist : price + dist, tp: null, riskPct: MOM_RISK_PCT,
         reason: `Výnos za 250 obchodních dní ${(momentumReturn(closes) * 100).toFixed(1)} % → ${dir}. Bez TP, drží do otočení trendu.`,

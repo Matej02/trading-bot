@@ -181,6 +181,7 @@ export interface Settings {
   riskPct: number; // riziko na obchod u bar strategii
   dailyLossPct: number; // denni limit ztraty - po zasahu jen sber dat do konce dne
   rrr: number; // pomer zisk : riziko, TP = rrr x vzdalenost SL
+  ai: boolean; // AI analytik (Gemini) se k signalum vyjadruje
   maxTradesPerDay: number;
   maxOpen: number;
   systems: Record<string, boolean>;

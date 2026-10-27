@@ -1,4 +1,5 @@
 // Volani serveru z prohlizece (stav, prihlaseni, uvolneni rizeni).
+import type { AiAnswer, AiContext } from "./aiPrompt";
 import type { Lease, LoadResult, SaveBody } from "./types";
 
 export interface Res<T> {
@@ -24,6 +25,10 @@ export const apiSave = (b: SaveBody, keepalive = false) =>
   call<{ ok: boolean; lease: Lease | null }>("/api/state", json(b, keepalive && JSON.stringify(b).length < 60_000));
 export const apiLogin = (password: string) => call<{ ok: boolean }>("/api/login", json({ password }));
 export const apiLogout = () => call<{ ok: boolean }>("/api/logout", { method: "POST" });
+
+/** AI analytik - kdyz do 20 s neodpovi, signal se rozhodne bez nej. */
+export const apiAi = (ctx: AiContext) =>
+  call<AiAnswer & { model: string }>("/api/ai-agent", { ...json(ctx), signal: AbortSignal.timeout(20_000) });
 
 /** Pri zavreni stranky: posledni ulozeni + uvolneni rizeni (sendBeacon dobehne i po zavreni). */
 export function apiRelease(device: string, save?: SaveBody) {

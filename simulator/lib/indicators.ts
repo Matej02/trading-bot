@@ -72,3 +72,22 @@ export function atr(high: number[], low: number[], close: number[], n = 14): Ser
   // pandas: prvni TR ma shift NaN -> max ignoruje NaN, tedy h-l; stejne jako tady
   return sma(tr, n);
 }
+
+/** RSI (Wilderovo vyhlazeni) posledni svicky, null = malo dat. */
+export function rsiLast(close: number[], n = 14): number | null {
+  if (close.length <= n) return null;
+  let up = 0, down = 0;
+  for (let i = 1; i <= n; i++) {
+    const d = close[i] - close[i - 1];
+    if (d > 0) up += d;
+    else down -= d;
+  }
+  up /= n;
+  down /= n;
+  for (let i = n + 1; i < close.length; i++) {
+    const d = close[i] - close[i - 1];
+    up = (up * (n - 1) + Math.max(d, 0)) / n;
+    down = (down * (n - 1) + Math.max(-d, 0)) / n;
+  }
+  return down === 0 ? 100 : 100 - 100 / (1 + up / down);
+}

@@ -221,7 +221,7 @@ export function JournalPanel({ state }: { state: BotState }) {
   const taken = rStats(state.shadows.filter((x) => x.taken));
   const rejected = rStats(state.shadows.filter((x) => !x.taken));
   // kdo mel pravdu: vysledek signalu, ktere agent pustil vs vetoval
-  const agents = ["Validátor", "Trh teď", "Statistik", "Risk", "Ďáblův advokát"].map((name) => {
+  const agents = ["Validátor", "Trh teď", "Statistik", "Risk", "Ďáblův advokát", "AI analytik"].map((name) => {
     const yes: Shadow[] = [], no: Shadow[] = [];
     for (const d of state.journal) {
       const sh = shadowBy.get(d.id);
@@ -333,6 +333,11 @@ export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
         <input type="checkbox" checked={s.statistikBlocks}
           onChange={(e) => bot.update((st) => { st.settings.statistikBlocks = e.target.checked; })} />
         <span><b>Statistik může vetovat</b> – jako v ostrém botovi. Vypnuto = v simulaci jen radí, aby šly obchody vidět.</span>
+      </label>
+      <label className="row">
+        <input type="checkbox" checked={s.ai} onChange={(e) => bot.update((st) => { st.settings.ai = e.target.checked; })} />
+        <span><b>AI analytik (Gemini)</b> – ke každému signálu napíše ANO/NE s důvodem. Zatím jen radí.
+          {bot.aiNote && <span className="down small"> Poslední problém: {bot.aiNote}</span>}</span>
       </label>
       <label className="row">
         <span>Riziko na obchod (H1 a ukázka)</span>

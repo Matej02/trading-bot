@@ -5,7 +5,7 @@ import { MARKETS, fmt } from "@/lib/markets";
 import { SYSTEM } from "@/lib/strategies";
 import type { Deliberation } from "@/lib/types";
 
-const INITIAL: Record<string, string> = { "Validátor": "V", "Trh teď": "T", "Statistik": "S", "Risk": "R", "Ďáblův advokát": "Ď" };
+const INITIAL: Record<string, string> = { "Validátor": "V", "Trh teď": "T", "Statistik": "S", "Risk": "R", "Ďáblův advokát": "Ď", "AI analytik": "AI" };
 const time = (t: number) => new Date(t * 1000).toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 const date = (t: number) => new Date(t * 1000).toLocaleDateString("cs-CZ", { day: "numeric", month: "numeric" });
 

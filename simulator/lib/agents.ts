@@ -168,10 +168,14 @@ function devilsAdvocate(x: AgentCtx): Opinion {
   return { ...base, vote: "ano", reason: "Nenašel jsem rozumný důvod proti." };
 }
 
-/** Vsichni agenti reknou svoje, rozhodci rozhodne. */
-export function deliberate(x: AgentCtx): Verdict {
+/** Kodovi agenti reknou svoje (AI analytik se pta az na ne - vidi jejich nazory). */
+export function codeOpinions(x: AgentCtx) {
   const r = risk(x);
-  const opinions = [validator(x), marketNow(x), statistician(x), r.op, devilsAdvocate(x)];
+  return { opinions: [validator(x), marketNow(x), statistician(x), r.op, devilsAdvocate(x)], lots: r.lots };
+}
+
+/** Rozhodci: tvrde veto = neberu; jinak podle rezimu (bere co jde / opatrny = vetsina poradcu). */
+export function judge(x: AgentCtx, opinions: Opinion[], lots: number | null, note = ""): Verdict {
   const hardNo = opinions.filter((o) => o.hard && o.vote === "ne");
   const softNo = opinions.filter((o) => !o.hard && o.vote === "ne");
   const yes = opinions.filter((o) => o.vote === "ano").length;
@@ -190,5 +194,7 @@ export function deliberate(x: AgentCtx): Verdict {
   } else {
     summary = `Beru – tvrdé kontroly prošly, ${yes}× pro, ${softNo.length}× proti (jen rada).`;
   }
-  return { opinions, decision, summary, lots: decision === "beru" ? r.lots : null };
+  return { opinions, decision, summary: summary + note, lots: decision === "beru" ? lots : null };
 }
+
+export const AI_AGENT = "AI analytik";
