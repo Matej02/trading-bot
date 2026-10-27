@@ -4,7 +4,7 @@ import { useEffect, useReducer, useRef, useState } from "react";
 import Chart from "./Chart";
 import AgentRoom from "./AgentRoom";
 import Gate from "./Gate";
-import { AccountPanel, ExportButtons, JournalPanel, Log, ManualTrade, Positions, Radar, Settings } from "./Panels";
+import { AccountPanel, ExportButtons, JournalPanel, Log, ManualTrade, NewsPanel, Positions, Radar, Settings } from "./Panels";
 import { getBot, type Bot } from "@/lib/bot";
 import { store } from "@/lib/data";
 import { BROKER_ACCOUNT, CHART_ORDER, fmt, MARKETS, quote } from "@/lib/markets";
@@ -175,6 +175,8 @@ export default function App() {
                 <ManualTrade bot={bot} marketId={marketId} tf={tf} />
                 <div className="room-title flat">Co bot právě sleduje</div>
                 <Radar bot={bot} />
+                <div className="room-title flat">Zprávy, které bot vidí – {marketId}</div>
+                <NewsPanel marketId={marketId} />
               </>
             )}
             {tab === "pozice" && <Positions broker={s.broker} onClose={viewer ? undefined : (id) => bot.update(() => bot.closeAtMarket(id))} onPick={pick} />}

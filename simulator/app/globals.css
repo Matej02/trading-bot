@@ -42,7 +42,12 @@ button, select, input { font: inherit; color: inherit; }
 .gate-card input { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 16px; }
 .gate-card .activate { margin-left: 0; }
 .export { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
-a.btn { text-decoration: none; display: inline-block; }
+a.btn { text-decoration: none; display: inline-block; color: var(--text); }
+.export .btn { border-color: var(--accent); color: #fff; background: rgba(41, 98, 255, .18); }
+.export .btn:hover { background: rgba(41, 98, 255, .35); }
+.news { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.news-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 4px 24px; }
+.news-h { color: var(--muted); font-size: 12px; font-weight: 600; margin-top: 8px; text-transform: uppercase; letter-spacing: .04em; }
 .activate { margin-left: 0; border: none; border-radius: 8px; padding: 9px 22px; font-weight: 800; font-size: 15px;
   letter-spacing: .5px; cursor: pointer; color: #fff; }
 .activate.go { background: #089981; box-shadow: 0 0 0 0 rgba(8, 153, 129, .6); animation: glow 2s infinite; }

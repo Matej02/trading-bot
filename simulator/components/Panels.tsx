@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { closedCandles, store } from "@/lib/data";
 import { aiScore } from "@/lib/aiScore";
+import { eventsFor, inMinutes, marketCurrencies, releasesFor, releaseText, type Calendar } from "@/lib/calendar";
 import { exportFile } from "@/lib/exporting";
 import { fmt, MARKETS, quote, spreadAt } from "@/lib/markets";
 import { exitPrice, lotsFor, MAX_DD_LIMIT, pnlMoney, PROFIT_TARGET, type BrokerState } from "@/lib/sim";
@@ -145,6 +146,54 @@ export function Radar({ bot }: { bot: Bot }) {
         ))}
       </tbody>
     </table>
+  );
+}
+
+/** Co bot vi o zpravach k trhu v grafu: pristi zpravy, vyhlasena cisla a titulky (to same dostava AI analytik). */
+export function NewsPanel({ marketId }: { marketId: string }) {
+  const [cal, setCal] = useState<Calendar | null>(null);
+  const [news, setNews] = useState<{ market: string; items: { time: number; title: string }[] } | null>(null);
+  useEffect(() => {
+    let on = true;
+    const load = () => {
+      fetch("/api/calendar").then((r) => r.json()).then((j: Calendar) => on && setCal(j)).catch(() => {});
+      fetch(`/api/news?market=${encodeURIComponent(marketId)}`).then((r) => r.json()).then((j) => on && setNews(j)).catch(() => {});
+    };
+    load();
+    const t = setInterval(load, 10 * 60_000);
+    return () => { on = false; clearInterval(t); };
+  }, [marketId]);
+  const m = MARKETS[marketId];
+  if (!m) return null;
+  const now = Date.now() / 1000;
+  const next = cal?.events ? eventsFor(cal.events, m, now, now + 48 * 3600, ["High", "Medium"]).slice(0, 5) : [];
+  const done = cal ? releasesFor(cal.releases, m, now - 86400, now).slice(0, 6) : [];
+  const heads = news?.market === marketId ? news.items : [];
+  return (
+    <div className="news">
+      <div className="muted small">Měny, které trhem hýbou: {marketCurrencies(m).join(", ")} · totéž dostává AI analytik u každého signálu</div>
+      <div className="news-cols">
+        <div>
+          <div className="news-h">Příští zprávy (48 h)</div>
+          {!cal ? <div className="muted small">načítám…</div> : !cal.events ? <div className="down small">kalendář se teď nepodařilo načíst</div>
+            : next.length ? next.map((e) => (
+              <div key={`${e.time}${e.title}`} className="small"><span className={e.impact === "High" ? "down" : "warn"}>●</span> {e.currency} {e.title}
+                <span className="muted"> za {inMinutes(e.time - now)}{e.forecast ? ` · prognóza ${e.forecast}` : ""}</span></div>))
+              : <div className="muted small">nic důležitého</div>}
+        </div>
+        <div>
+          <div className="news-h">Vyhlášeno za 24 h</div>
+          {done.length ? done.map((e) => (
+            <div key={`${e.time}${e.title}`} className={`small ${e.better == null ? "" : e.better ? "up" : "down"}`}>
+              {releaseText(e)} <span className="muted">před {inMinutes(now - e.time)}</span></div>))
+            : <div className="muted small">{cal ? "nic důležitého" : "načítám…"}</div>}
+        </div>
+      </div>
+      <div className="news-h">Titulky zpráv</div>
+      {heads.length ? heads.map((h) => (
+        <div key={h.title} className="small">{h.title} <span className="muted">před {inMinutes(now - h.time)}</span></div>))
+        : <div className="muted small">{news ? "žádné čerstvé titulky" : "načítám…"}</div>}
+    </div>
   );
 }
 
