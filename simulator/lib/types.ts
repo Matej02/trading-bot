@@ -103,6 +103,7 @@ export interface Shadow {
   openTime: number;
   checkedTo: number;
   r: number | null; // vysledek v nasobcich rizika, null = jeste bezi
+  ai?: Vote | null; // hlas AI analytika (u starsich zaznamu chybi)
 }
 
 export interface Account {
@@ -184,6 +185,7 @@ export interface Settings {
   dailyLossPct: number; // denni limit ztraty - po zasahu jen sber dat do konce dne
   rrr: number; // pomer zisk : riziko, TP = rrr x vzdalenost SL
   ai: boolean; // AI analytik (Gemini) se k signalum vyjadruje
+  aiVeto: "auto" | "nikdy"; // auto = NE od AI je veto, jakmile si to vyslouzi na zivych signalech (lib/aiScore.ts)
   maxTradesPerDay: number;
   maxOpen: number;
   systems: Record<string, boolean>;

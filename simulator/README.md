@@ -32,7 +32,12 @@ V hlavičce stránky pak svítí „server 24/7 před X min“.
 | Risk | denní limit (2 %), drawdown 8 %, velikost, expozice na měnu | veto |
 | Statistik | jen setupy ověřené v registru (`lib/registry.json`) | radí / veto (Nastavení) |
 | Ďáblův advokát | důvody proti (honění pohybu, proti trendu, série proher, swap) | radí |
-| AI analytik | Gemini posoudí signál s kontextem (trend, RSI, spread vůči SL, zprávy) | radí |
+| AI analytik | Gemini posoudí signál s kontextem (trend, RSI, spread vůči SL, zprávy) | radí; veto až si ho vyslouží (níže) |
+
+**Vysloužené veto AI** (`lib/aiScore.ts`): u každého signálu se zapisuje hlas AI a jak by signál dopadl.
+NE od AI se stane tvrdým vetem, až je aspoň 30 vyhodnocených ANO i 30 NE, signály s NE vychází v průměru
+ztrátově a ANO jsou lepší než NE s t ≥ 2. Když to přestane platit, veto zase zmizí. Skóre je v Deníku,
+vypínač v Nastavení.
 
 ## Co v ní dál je
 - **Graf** jako TradingView (`lightweight-charts`), svíčky 1m–1d, vstupy, výstupy, SL/TP, náš čas.

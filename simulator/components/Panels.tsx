@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { closedCandles, store } from "@/lib/data";
+import { aiScore } from "@/lib/aiScore";
 import { exportFile } from "@/lib/exporting";
 import { fmt, MARKETS, quote, spreadAt } from "@/lib/markets";
 import { exitPrice, lotsFor, MAX_DD_LIMIT, pnlMoney, PROFIT_TARGET, type BrokerState } from "@/lib/sim";
@@ -216,6 +217,21 @@ export function ExportButtons({ bot }: { bot: Bot }) {
   );
 }
 
+/** Skore AI analytika na zivych signalech - podle nej dostane (nebo ztrati) pravo veta. */
+function AiScoreCard({ shadows }: { shadows: Shadow[] }) {
+  const a = aiScore(shadows);
+  const cell = (g: typeof a.ano) => g.n
+    ? <>{g.n} · win {g.win.toFixed(0)} % · <span className={g.mean >= 0 ? "up" : "down"}>⌀ {g.mean.toFixed(2)} R</span></>
+    : "zatím nic";
+  return (
+    <div className="stat">
+      <div className="muted small">AI analytik – skóre na živých signálech {a.earned ? "· má právo veta" : "· jen radí"}</div>
+      <div>Řekl ANO: {cell(a.ano)} &nbsp;|&nbsp; Řekl NE: {cell(a.ne)}</div>
+      <div className="muted small">{a.text}</div>
+    </div>
+  );
+}
+
 export function JournalPanel({ state }: { state: BotState }) {
   const shadowBy = new Map(state.shadows.map((x) => [x.signalId, x]));
   const taken = rStats(state.shadows.filter((x) => x.taken));
@@ -278,6 +294,7 @@ export function JournalPanel({ state }: { state: BotState }) {
           ))}
         </tbody>
       </table>
+      <AiScoreCard shadows={state.shadows} />
       <table className="tbl">
         <thead><tr><th>Agent</th><th>Když řekl ANO</th><th>Když řekl NE</th></tr></thead>
         <tbody>
@@ -346,8 +363,13 @@ export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
       </label>
       <label className="row">
         <input type="checkbox" checked={s.ai} onChange={(e) => bot.update((st) => { st.settings.ai = e.target.checked; })} />
-        <span><b>AI analytik (Gemini)</b> – ke každému signálu napíše ANO/NE s důvodem. Zatím jen radí.
+        <span><b>AI analytik (Gemini)</b> – ke každému signálu napíše ANO/NE s důvodem.
           {bot.aiNote && <span className="down small"> Poslední problém: {bot.aiNote}</span>}</span>
+      </label>
+      <label className="row">
+        <input type="checkbox" checked={s.aiVeto === "auto"} disabled={!s.ai}
+          onChange={(e) => bot.update((st) => { st.settings.aiVeto = e.target.checked ? "auto" : "nikdy"; })} />
+        <span><b>AI smí vetovat, až si to vyslouží</b> – {aiScore(state.shadows).text}</span>
       </label>
       <label className="row">
         <span>Riziko na obchod (H1 a ukázka)</span>

@@ -45,7 +45,8 @@
    "status": "validated",
    "holdout_pf": 1.64,
    "holdout_n": 185,
-   "note": "F2 (2026-10-27): průraz 20 dní + týdenní trend, SL 2 ATR, RRR 1:2; holdout 2024–26 se swapy +0,34 R, t 3,03, PF 1,64; vstup na průrazu porazil kontrolu (každý den ve směru trendu) v obou obdobích"
+   "note": "F2 (2026-10-27): průraz 20 dní + týdenní trend, SL 2 ATR, RRR 1:2; holdout 2024–26 se swapy +0,34 R, t 3,03, PF 1,64; vstup na průrazu porazil kontrolu (každý den ve směru trendu) v obou obdobích; F3 (2026-10-27): na 27 jiných trzích (forex, evropské indexy, ropa) neplatí – se swapy −0,11 R, t −3,55 → jen na 9 trzích z F2 a s menší důvěrou (výhoda může být jen silný trend zlata, indexů USA a BTC)",
+   "f3_new_markets": "neprošlo"
   }
  }
 }

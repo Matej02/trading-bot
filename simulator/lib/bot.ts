@@ -3,6 +3,7 @@
 // bez databaze jen do localStorage tohoto prohlizece. Bota ridi vzdy jen jedno zarizeni,
 // ostatni sleduji. Po pauze se pozice dopocitaji ze svicek (SL/TP, swapy).
 import { AI_AGENT, codeOpinions, judge, type AgentCtx } from "./agents";
+import { aiScore } from "./aiScore";
 import { ema, rsiLast } from "./indicators";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKET_IDS, MARKETS, quote } from "./markets";
@@ -46,7 +47,7 @@ export function freshState(): BotState {
     version: 1,
     settings: {
       botOn: false, mode: "vse", follow: true, statistikBlocks: false, riskPct: 0.25, maxTradesPerDay: 100, maxOpen: 50,
-      dailyLossPct: DAILY_LOSS_DEFAULT, rrr: 2, ai: true, systems: Object.fromEntries(SYSTEMS.map((s) => [s.id, true])),
+      dailyLossPct: DAILY_LOSS_DEFAULT, rrr: 2, ai: true, aiVeto: "auto", systems: Object.fromEntries(SYSTEMS.map((s) => [s.id, true])),
     },
     broker: freshBroker(START_BALANCE, nowSec()),
     journal: [], shadows: [], lastBar: {}, momentum: { book: {}, lastRun: {} }, seen: [], log: [],
@@ -65,6 +66,7 @@ function migrate<T extends { settings: Settings }>(s: T): T {
   s.settings.dailyLossPct ??= DAILY_LOSS_DEFAULT;
   s.settings.rrr ??= 2;
   s.settings.ai ??= true;
+  s.settings.aiVeto ??= "auto";
   return s;
 }
 
@@ -651,6 +653,10 @@ export class Bot {
     if (s.seen.length > 2000) s.seen = s.seen.slice(-1500);
     const base = codeOpinions(ctx);
     const ai = await this.askAi(sig, system, candles, base.opinions, ctx.mid);
+    // NE od AI je tvrde veto, jen kdyz si to AI vyslouzilo na zivych signalech (lib/aiScore.ts)
+    if (ai.op?.vote === "ne" && s.settings.aiVeto === "auto" && aiScore(s.shadows).earned) {
+      ai.op = { ...ai.op, hard: true, role: `${ai.op.role} · veto (vysloužené)` };
+    }
     const v = judge(ctx, ai.op ? [...base.opinions, ai.op] : base.opinions, base.lots, ai.note);
     const now = nowSec();
     const mid = store.lastPrice.get(sig.market)?.mid ?? ctx.mid;
@@ -668,7 +674,8 @@ export class Bot {
     this.recordJournal(d, true);
     const q = quote(m, mid, now);
     const shadow: Shadow = { signalId: sig.id, system: sig.system, market: sig.market, dir: sig.dir, taken: v.decision === "beru",
-      entry: sig.dir === "long" ? q.ask : q.bid, sl: sig.sl, tp: sig.tp, openTime: now, checkedTo: now, r: null };
+      entry: sig.dir === "long" ? q.ask : q.bid, sl: sig.sl, tp: sig.tp, openTime: now, checkedTo: now, r: null,
+      ai: ai.op?.vote ?? null };
     s.shadows.push(shadow);
     this.recordShadow(shadow, true);
     this.log(`${SYSTEM[sig.system].name} ${sig.market} ${sig.dir}: ${v.summary}`);
