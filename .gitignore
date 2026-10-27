@@ -1,0 +1,20 @@
+# knihovny a buildy (dají se znovu nainstalovat / sestavit)
+node_modules/
+.next/
+*.tsbuildinfo
+__pycache__/
+
+# tajné údaje a napojení na účty – nikdy do repozitáře
+.env*
+.vercel/
+
+# data (velká nebo osobní – zůstávají jen na disku)
+research_data/
+simulator/.data/
+tv_journal.jsonl
+tv_state.json
+tv_spreads.json
+tv_momentum_book.json
+challenge_state.json
+live_trades_log.csv
+files.zip

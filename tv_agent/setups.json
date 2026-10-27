@@ -1,0 +1,13 @@
+{
+  "_info": "Registr overeni setupu pro Statistika. Plnit VYHRADNE vysledky testu se spready a holdoutem. status: validated / unvalidated / rejected.",
+  "bbsqueeze_h1": {
+    "EURUSD": {"status": "rejected", "note": "walk-forward 4/5 bez spreadu, se skutecnymi spready neproslo (2026-08-21)"},
+    "AUDJPY": {"status": "rejected", "note": "se spready neproslo, zlato test potvrdil chybejici edge (2026-08-26)"}
+  },
+  "pullback_h1": {
+    "EURUSD": {"status": "rejected", "note": "se spready 0 z 32 kombinaci (2026-08-21)"}
+  },
+  "momentum_d1_L250": {
+    "*": {"status": "unvalidated", "note": "F1 holdout 2023+ po nakladech PF 0.98, t +0.01 (neproslo); hrube t 3.3, sebere to swap. Jen papirovy test dopredu (2026-10-26)"}
+  }
+}

@@ -1,0 +1,388 @@
+"use client";
+
+import { useState } from "react";
+import { closedCandles, store } from "@/lib/data";
+import { exportFile } from "@/lib/exporting";
+import { fmt, MARKETS, quote, spreadAt } from "@/lib/markets";
+import { exitPrice, lotsFor, MAX_DD_LIMIT, pnlMoney, PROFIT_TARGET, type BrokerState } from "@/lib/sim";
+import { lastAtr, manualLevels, SYSTEM, SYSTEMS } from "@/lib/strategies";
+import type { Bot, BotState } from "@/lib/bot";
+import type { Deliberation, Shadow, TF } from "@/lib/types";
+
+const money = (v: number) => `${v >= 0 ? "" : "−"}${Math.abs(v).toLocaleString("cs-CZ", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} $`;
+const dt = (t: number) => new Date(t * 1000).toLocaleString("cs-CZ", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
+
+function Bar({ label, value, limit, good }: { label: string; value: number; limit: number; good?: boolean }) {
+  const pct = Math.max(0, Math.min(100, (value / limit) * 100));
+  const color = good ? "#26a69a" : pct > 75 ? "#ef5350" : pct > 40 ? "#f0b90b" : "#2962ff";
+  return (
+    <div className="bar">
+      <div className="bar-top">
+        <span>{label}</span>
+        <span>{value.toFixed(2)} % / {limit} %</span>
+      </div>
+      <div className="bar-track"><div className="bar-fill" style={{ width: `${pct}%`, background: color }} /></div>
+    </div>
+  );
+}
+
+export function AccountPanel({ broker, eq, dailyLimit }: { broker: BrokerState; eq: number; dailyLimit: number }) {
+  const a = broker.account;
+  const daily = Math.max(0, ((a.dayStart - eq) / a.start) * 100);
+  const dd = Math.max(0, ((a.peak - eq) / a.start) * 100);
+  const profit = ((a.balance - a.start) / a.start) * 100;
+  // kazda pozice zacina v minusu o spread (nakup za ask, prodej za bid) - at je videt, kolik minusu to je
+  const spreadCost = broker.positions.reduce((s, p) => {
+    const m = MARKETS[p.market];
+    return s + spreadAt(m, p.openTime) * p.lots * m.moneyPerPrice;
+  }, 0);
+  const swaps = broker.positions.reduce((s, p) => s + p.swap, 0);
+  const today = new Date().toISOString().slice(0, 10);
+  const closedToday = broker.closed.filter((c) => new Date(c.closeTime * 1000).toISOString().slice(0, 10) === today);
+  const realizedToday = closedToday.reduce((s, c) => s + c.pnl + c.swap, 0);
+  return (
+    <div className="panel">
+      <div className="acc-grid">
+        <div><div className="muted small">Balance</div><div className="big">{money(a.balance)}</div></div>
+        <div><div className="muted small">Equity</div><div className={`big ${eq >= a.balance ? "up" : "down"}`}>{money(eq)}</div></div>
+        <div><div className="muted small">Otevřený P&amp;L</div><div className={eq - a.balance >= 0 ? "up" : "down"}>{money(eq - a.balance)}</div></div>
+        <div><div className="muted small">Pozic</div><div>{broker.positions.length}</div></div>
+      </div>
+      <div className="small muted costs">
+        Z otevřeného P&amp;L je spread při vstupu {money(-spreadCost)}{swaps ? `, swapy ${money(swaps)}` : ""}.
+        Dnes uzavřeno {closedToday.length} {closedToday.length === 1 ? "obchod" : closedToday.length >= 2 && closedToday.length <= 4 ? "obchody" : "obchodů"}:{" "}
+        <span className={realizedToday >= 0 ? "up" : "down"}>{money(realizedToday)}</span>.
+      </div>
+      <Bar label="Denní ztráta" value={daily} limit={dailyLimit} />
+      <Bar label="Drawdown" value={dd} limit={MAX_DD_LIMIT} />
+      <Bar label="Zisk k cíli" value={Math.max(0, profit)} limit={PROFIT_TARGET} good />
+      {a.halted && <div className="alert down">Challenge NEPROŠLA: {a.halted}. Signály se dál sbírají do statistiky, reset v Nastavení.</div>}
+      {!a.halted && a.pausedDay === a.dayKey && (
+        <div className="alert down">Dnes padl denní limit {dailyLimit} % – živé obchody stop do zítřka, signály se dál sbírají do statistiky.</div>
+      )}
+      {a.passed && !a.halted && <div className="alert up">Cíl {PROFIT_TARGET} % splněn – v simulaci.</div>}
+    </div>
+  );
+}
+
+/** Rucni BUY/SELL na zobrazenem trhu - o vstupu rozhodnou agenti. */
+export function ManualTrade({ bot, marketId, tf }: { bot: Bot; marketId: string; tf: TF }) {
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
+  const [last, setLast] = useState<Deliberation | null>(null);
+  const m = MARKETS[marketId];
+  const now = Math.floor(Date.now() / 1000);
+  const px = store.lastPrice.get(marketId);
+  const a = lastAtr(closedCandles(store.peek(m, tf), tf, now));
+  const q = px ? quote(m, px.mid, now) : null;
+  const send = async (dir: "long" | "short") => {
+    setBusy(true);
+    setResult(null);
+    const d = await bot.manualSignal(marketId, tf, dir);
+    setLast(typeof d === "string" ? null : d);
+    setResult(typeof d === "string" ? d : `${d.decision === "beru" ? "BERU" : "NEBERU"} – ${d.summary}`);
+    setBusy(false);
+  };
+  // zamitnuto jen radou poradcu (zadne tvrde veto) -> posledni slovo mas ty
+  const canOverride = last && last.decision === "neberu" && !last.positionId &&
+    !last.opinions.some((o) => o.hard && o.vote === "ne") && now - last.time < 120;
+  const override = () => {
+    if (!last) return;
+    const err = bot.forceManual(last.id);
+    setResult(err ?? `Otevřeno i přes radu agentů – ${last.lots} lotu. Ve stínových výsledcích se ukáže, kdo měl pravdu.`);
+    setLast(null);
+  };
+  const preview = (dir: "long" | "short") => {
+    if (!a || !q || !px) return null;
+    const { sl, tp } = manualLevels(px.mid, a, dir, bot.state.settings.rrr);
+    const { lots } = lotsFor(m, dir === "long" ? q.ask : q.bid, sl, bot.state.settings.riskPct, bot.state.broker.account.balance);
+    return `SL ${fmt(m, sl)} · TP ${fmt(m, tp)} · ${lots ?? "pod min."} lotu`;
+  };
+  return (
+    <div className="manual">
+      <div className="manual-head">
+        <b>Ruční obchod – {marketId}</b>
+        <span className="muted small"> SL 1,5 ATR z grafu {tf}, RRR 1:{bot.state.settings.rrr}, riziko {bot.state.settings.riskPct} % · o vstupu rozhodnou agenti</span>
+      </div>
+      <div className="manual-btns">
+        <button className="btn buy" disabled={busy || !q || bot.role === "viewer"} onClick={() => send("long")}>
+          <b>BUY {q ? fmt(m, q.ask) : ""}</b><span className="small">{preview("long") ?? "čekám na data"}</span>
+        </button>
+        <button className="btn sell" disabled={busy || !q || bot.role === "viewer"} onClick={() => send("short")}>
+          <b>SELL {q ? fmt(m, q.bid) : ""}</b><span className="small">{preview("short") ?? "čekám na data"}</span>
+        </button>
+      </div>
+      {result && <div className={`manual-res ${result.startsWith("BERU") || result.startsWith("Otevřeno") ? "up" : "muted"}`}>{result} Podrobnosti v Místnosti agentů →</div>}
+      {canOverride && (
+        <button className="btn small override" onClick={override}>
+          Přesto vzít – tvrdé kontroly prošly, proti jsou jen poradci
+        </button>
+      )}
+    </div>
+  );
+}
+
+const TONE: Record<string, string> = { near: "blízko signálu", wait: "čeká", off: "stojí", err: "chyba" };
+
+/** Co bot prave sleduje a proc zatim nebere. */
+export function Radar({ bot }: { bot: Bot }) {
+  const items = [...bot.radar.values()].sort((x, y) =>
+    SYSTEMS.findIndex((s) => s.id === x.system) - SYSTEMS.findIndex((s) => s.id === y.system) || x.market.localeCompare(y.market));
+  if (!bot.state.settings.botOn) return <div className="empty">Bot je vypnutý – klikni AKTIVOVAT vpravo nahoře.</div>;
+  if (!items.length) return <div className="empty">Bot se rozbíhá, za pár vteřin tu bude, co sleduje…</div>;
+  return (
+    <table className="tbl radar">
+      <thead><tr><th>Strategie</th><th>Trh</th><th>Stav</th><th>Na co čeká / proč zatím nebere</th></tr></thead>
+      <tbody>
+        {items.map((r) => (
+          <tr key={`${r.system}|${r.market}`}>
+            <td className="small">{SYSTEM[r.system]?.name ?? r.system}</td>
+            <td>{r.market}</td>
+            <td><span className={`tone ${r.tone}`}>{TONE[r.tone]}</span></td>
+            <td className="wrap">{r.text}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+export function Positions({ broker, onClose, onPick }: { broker: BrokerState; onClose?: (id: string) => void; onPick: (m: string) => void }) {
+  if (!broker.positions.length) return <div className="empty">Žádné otevřené pozice.</div>;
+  const now = Math.floor(Date.now() / 1000);
+  return (
+    <table className="tbl">
+      <thead>
+        <tr><th>Trh</th><th>Směr</th><th>Loty</th><th>Vstup</th><th>Teď</th><th>SL</th><th>TP</th><th>P&amp;L</th><th>Swap</th><th>Systém</th><th>Otevřeno</th><th /></tr>
+      </thead>
+      <tbody>
+        {broker.positions.map((p) => {
+          const m = MARKETS[p.market];
+          const px = store.lastPrice.get(p.market);
+          const exit = px ? exitPrice(p, px.mid, now) : null;
+          const pnl = exit != null ? pnlMoney(p, exit) : 0;
+          return (
+            <tr key={p.id}>
+              <td className="link" onClick={() => onPick(p.market)}>{p.market}</td>
+              <td className={`dir ${p.dir}`}>{p.dir === "long" ? "BUY" : "SELL"}</td>
+              <td>{p.lots}</td>
+              <td>{fmt(m, p.entry)}</td>
+              <td>{fmt(m, exit)}</td>
+              <td>{fmt(m, p.sl)}</td>
+              <td>{p.tp != null ? fmt(m, p.tp) : "–"}</td>
+              <td className={pnl >= 0 ? "up" : "down"}>{money(pnl)}</td>
+              <td className={p.swap >= 0 ? "up" : "down"}>{money(p.swap)}</td>
+              <td className="small">{SYSTEM[p.system]?.name ?? p.system}</td>
+              <td className="small muted">{dt(p.openTime)}</td>
+              <td>{onClose && <button className="btn small" onClick={() => onClose(p.id)}>Zavřít</button>}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
+function rStats(xs: Shadow[]) {
+  const done = xs.filter((x) => x.r != null);
+  const mean = done.length ? done.reduce((a, x) => a + x.r!, 0) / done.length : 0;
+  const win = done.length ? (done.filter((x) => x.r! > 0).length / done.length) * 100 : 0;
+  return { n: done.length, open: xs.length - done.length, mean, win };
+}
+
+/** Stazeni dat: ze serveru cela historie, v lokalnim rezimu to, co je v tomhle prohlizeci. */
+export function ExportButtons({ bot }: { bot: Bot }) {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const local = (format: string) => {
+    const s = bot.state;
+    const f = exportFile({
+      core: null, journal: [...s.journal].reverse(), closed: [...s.broker.closed].reverse(), shadows: s.shadows,
+      log: [...s.log].reverse(),
+    }, format, tz);
+    const url = URL.createObjectURL(new Blob([f.body], { type: f.type }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: f.name });
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const items: [string, string][] = [["journal", "Deník (CSV)"], ["trades", "Obchody (CSV)"], ["json", "Vše pro rozbor (JSON)"]];
+  return (
+    <div className="export">
+      <span className="small muted">Stáhnout {bot.mode === "server" ? `celou historii (${bot.journalTotal} záznamů v deníku)` : "data z tohoto prohlížeče"}:</span>
+      {items.map(([f, label]) =>
+        bot.mode === "server"
+          ? <a key={f} className="btn small" href={`/api/export?format=${f}&tz=${encodeURIComponent(tz)}`}>{label}</a>
+          : <button key={f} className="btn small" onClick={() => local(f)}>{label}</button>)}
+    </div>
+  );
+}
+
+export function JournalPanel({ state }: { state: BotState }) {
+  const shadowBy = new Map(state.shadows.map((x) => [x.signalId, x]));
+  const taken = rStats(state.shadows.filter((x) => x.taken));
+  const rejected = rStats(state.shadows.filter((x) => !x.taken));
+  // kdo mel pravdu: vysledek signalu, ktere agent pustil vs vetoval
+  const agents = ["Validátor", "Trh teď", "Statistik", "Risk", "Ďáblův advokát"].map((name) => {
+    const yes: Shadow[] = [], no: Shadow[] = [];
+    for (const d of state.journal) {
+      const sh = shadowBy.get(d.id);
+      const op = d.opinions.find((o) => o.agent === name);
+      if (sh && op) (op.vote === "ano" ? yes : no).push(sh);
+    }
+    return { name, yes: rStats(yes), no: rStats(no) };
+  });
+  const closed = state.broker.closed;
+  // po strategiich: kolik signalu denne, uspesnost, prumer R a jak dlouho se drzi (scalp / daytrade / swing)
+  const bySystem = [...new Set(state.shadows.map((x) => x.system))].map((id) => {
+    const sh = state.shadows.filter((x) => x.system === id);
+    const st = rStats(sh.filter((x) => x.taken));
+    const all = rStats(sh);
+    const days = new Set(sh.map((x) => new Date(x.openTime * 1000).toISOString().slice(0, 10))).size || 1;
+    const held = closed.filter((c) => c.system === id).map((c) => c.closeTime - c.openTime);
+    const avgHold = held.length ? held.reduce((a, b) => a + b, 0) / held.length : null;
+    const style = avgHold == null ? "–" : avgHold < 3600 ? "scalp" : avgHold < 86400 ? "daytrade" : "swing";
+    return { id, perDay: sh.length / days, st, all, avgHold, style };
+  });
+  const hold = (s: number | null) => s == null ? "–" : s < 3600 ? `${Math.round(s / 60)} min` : s < 86400 ? `${(s / 3600).toFixed(1)} h` : `${(s / 86400).toFixed(1)} dne`;
+  return (
+    <div className="journal">
+      <div className="stats">
+        <div className="stat">
+          <div className="muted small">Přijaté signály (stínově)</div>
+          <div>{taken.n} uzavř. · ⌀ {taken.mean.toFixed(2)} R · win {taken.win.toFixed(0)} %</div>
+        </div>
+        <div className="stat">
+          <div className="muted small">Zamítnuté signály (stínově)</div>
+          <div>{rejected.n} uzavř. · ⌀ {rejected.mean.toFixed(2)} R · win {rejected.win.toFixed(0)} %</div>
+        </div>
+        <div className="stat">
+          <div className="muted small">Skutečné obchody (účet)</div>
+          <div>{closed.length} · {money(closed.reduce((a, c) => a + c.pnl + c.swap, 0))}</div>
+        </div>
+      </div>
+      <div className="muted small">
+        Stínově = jak by signál dopadl, i když ho agenti zamítli (R = násobek rizika). Agenti mají smysl, jen když
+        přijaté vycházejí lépe než zamítnuté – a to až po desítkách obchodů.
+      </div>
+      <table className="tbl">
+        <thead><tr><th>Strategie</th><th>Signálů/den</th><th>Přijaté: uzavř. · win · ⌀ R</th><th>Všechny signály: win · ⌀ R</th><th>Drží ⌀</th><th>Styl</th></tr></thead>
+        <tbody>
+          {bySystem.map((r) => (
+            <tr key={r.id}>
+              <td>{SYSTEM[r.id]?.name ?? r.id}</td>
+              <td>{r.perDay.toFixed(1)}</td>
+              <td>{r.st.n} · {r.st.win.toFixed(0)} % · <span className={r.st.mean >= 0 ? "up" : "down"}>{r.st.mean.toFixed(2)} R</span></td>
+              <td>{r.all.win.toFixed(0)} % · <span className={r.all.mean >= 0 ? "up" : "down"}>{r.all.mean.toFixed(2)} R</span></td>
+              <td>{hold(r.avgHold)}</td>
+              <td>{r.style}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <table className="tbl">
+        <thead><tr><th>Agent</th><th>Když řekl ANO</th><th>Když řekl NE</th></tr></thead>
+        <tbody>
+          {agents.map((a) => (
+            <tr key={a.name}>
+              <td>{a.name}</td>
+              <td>{a.yes.n} · ⌀ {a.yes.mean.toFixed(2)} R</td>
+              <td>{a.no.n} · ⌀ {a.no.mean.toFixed(2)} R</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <table className="tbl">
+        <thead><tr><th>Čas</th><th>Systém</th><th>Trh</th><th>Směr</th><th>Rozhodnutí</th><th>Stínový výsledek</th></tr></thead>
+        <tbody>
+          {state.journal.slice(0, 100).map((d: Deliberation) => {
+            const sh = shadowBy.get(d.id);
+            return (
+              <tr key={d.id}>
+                <td className="small muted">{dt(d.time)}</td>
+                <td className="small">{SYSTEM[d.signal.system]?.name ?? d.signal.system}</td>
+                <td>{d.signal.market}</td>
+                <td className={`dir ${d.signal.dir}`}>{d.signal.dir === "long" ? "BUY" : "SELL"}</td>
+                <td><span className={`badge ${d.decision}`}>{d.decision === "beru" ? "BERU" : "NEBERU"}</span></td>
+                <td className={sh?.r == null ? "muted" : sh.r >= 0 ? "up" : "down"}>
+                  {sh?.r == null ? "běží" : `${sh.r >= 0 ? "+" : ""}${sh.r.toFixed(2)} R`}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
+  const s = state.settings;
+  return (
+    <div className="settings">
+      {bot.role === "viewer" && <div className="alert">Bota řídí jiné zařízení – nastavení změníš po převzetí řízení.</div>}
+      <h4>Režim po aktivaci</h4>
+      <label className="row">
+        <input type="radio" name="mode" checked={s.mode === "vse"} onChange={() => bot.update((st) => { st.settings.mode = "vse"; })} />
+        <span><b>Bere co jde</b> – vezme každý obchod, který projde tvrdými kontrolami (Validátor, Trh teď, Risk).
+          Statistik a Ďáblův advokát jen radí.</span>
+      </label>
+      <label className="row">
+        <input type="radio" name="mode" checked={s.mode === "opatrny"} onChange={() => bot.update((st) => { st.settings.mode = "opatrny"; })} />
+        <span><b>Opatrný</b> – když jsou proti aspoň dva poradci, nebere.</span>
+      </label>
+      <label className="row">
+        <input type="checkbox" checked={s.statistikBlocks}
+          onChange={(e) => bot.update((st) => { st.settings.statistikBlocks = e.target.checked; })} />
+        <span><b>Statistik může vetovat</b> – jako v ostrém botovi. Vypnuto = v simulaci jen radí, aby šly obchody vidět.</span>
+      </label>
+      <label className="row">
+        <span>Riziko na obchod (H1 a ukázka)</span>
+        <select value={s.riskPct} onChange={(e) => bot.update((st) => { st.settings.riskPct = +e.target.value; })}>
+          {[0.1, 0.25, 0.5, 1].map((v) => <option key={v} value={v}>{v} %</option>)}
+        </select>
+      </label>
+      <label className="row">
+        <span>Denní limit ztráty (pak do konce dne jen sběr dat)</span>
+        <select value={s.dailyLossPct} onChange={(e) => bot.update((st) => { st.settings.dailyLossPct = +e.target.value; })}>
+          {[1, 1.5, 2, 3, 4].map((v) => <option key={v} value={v}>{v} %</option>)}
+        </select>
+      </label>
+      <label className="row">
+        <span>Poměr zisk : riziko (TP = násobek vzdálenosti SL)</span>
+        <select value={s.rrr} onChange={(e) => bot.update((st) => { st.settings.rrr = +e.target.value; })}>
+          {[1, 1.5, 2, 2.5, 3].map((v) => <option key={v} value={v}>1 : {v}</option>)}
+        </select>
+      </label>
+      <label className="row">
+        <span>Max. obchodů za den</span>
+        <input type="number" min={1} max={200} value={s.maxTradesPerDay}
+          onChange={(e) => bot.update((st) => { st.settings.maxTradesPerDay = Math.max(1, +e.target.value || 1); })} />
+      </label>
+      <h4>Strategie</h4>
+      {SYSTEMS.map((sys) => (
+        <label key={sys.id} className="row">
+          <input type="checkbox" checked={!!s.systems[sys.id]}
+            onChange={(e) => bot.update((st) => { st.settings.systems[sys.id] = e.target.checked; })} />
+          <span><b>{sys.name}</b> <span className="muted small">({sys.markets.length > 3 ? `${sys.markets.length} trhů` : sys.markets.join(", ")}, {sys.tf})</span><br />
+            <span className="muted small">{sys.desc}</span></span>
+        </label>
+      ))}
+      <div className="row gap">
+        <button className="btn" onClick={() => bot.requestMomentum()}>Rozhodnout momentum teď (všech 40 trhů)</button>
+        <button className="btn danger" onClick={() => { if (confirm("Smazat účet, pozice i deník a začít znovu se 100 000 $?")) bot.reset(); }}>
+          Reset účtu
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export function Log({ state }: { state: BotState }) {
+  if (!state.log.length) return <div className="empty">Zatím prázdné.</div>;
+  return (
+    <div className="log">
+      {state.log.slice(0, 100).map((l, i) => (
+        <div key={i}><span className="muted">{dt(l.t)}</span> {l.text}</div>
+      ))}
+    </div>
+  );
+}
