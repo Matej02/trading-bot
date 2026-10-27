@@ -14,6 +14,28 @@ const QUERY: Record<string, string> = {
   FRA_40mini: "CAC 40", EUR_50mini: "Euro Stoxx 50", ESP_35mini: "IBEX 35", GBR_100mini: "FTSE 100",
 };
 
+// Titulek musi trh zminit (Yahoo k tickeru prida i zpravy o tezarich, ETF apod.) a nesmi to byt reklama/clanek "co koupit".
+const KEYS: Record<string, string> = {
+  XAUUSD: "gold|bullion|xau", GAUUSD: "gold|bullion|xau", XAGUSD: "silver|xag", XPTUSD: "platinum|xpt",
+  CRUDE_OIL: "oil|crude|brent|wti|opec", BRENT_OIL: "oil|crude|brent|wti|opec", BTCUSD: "bitcoin|btc|crypto",
+  ETHUSD: "ethereum|ether|eth|crypto", SPX500mini: "s&p|wall street|stock market|stocks|dow|nasdaq",
+  US30mini: "dow|wall street|stock market|stocks", NAS100mini: "nasdaq|tech stocks|wall street|stock market",
+  GER_30mini: "dax|german|european (?:shares|stocks)", FRA_40mini: "cac|french|european (?:shares|stocks)",
+  EUR_50mini: "stoxx|european (?:shares|stocks)", ESP_35mini: "ibex|spanish|spain", GBR_100mini: "ftse|london stocks|uk stocks|british stocks",
+};
+const CCY_NAME: Record<string, string> = {
+  EUR: "euro", USD: "dollar|greenback|fed", JPY: "yen|boj", GBP: "pound|sterling|boe", AUD: "aussie|australian dollar|rba",
+  CAD: "loonie|canadian dollar", CHF: "franc|snb", NZD: "kiwi|new zealand dollar", NOK: "krone|norwegian", SEK: "krona|swedish",
+  ZAR: "rand", TRY: "lira",
+};
+const JUNK = /\b(?:drill(?:ing)?|intercepts?|exploration|market size|dividends?|stocks? to buy|buy now|price predictions?)\b/i;
+
+function relevant(id: string) {
+  const fx = id.length === 6 && !KEYS[id] ? [`${id.slice(0, 3)}/${id.slice(3)}`, id, CCY_NAME[id.slice(0, 3)], CCY_NAME[id.slice(3)]] : [];
+  const re = new RegExp(`(?:^|[^a-z])(?:${(KEYS[id] ? [KEYS[id]] : fx).filter(Boolean).join("|")})(?:[^a-z]|$)`, "i");
+  return (title: string) => re.test(title) && !JUNK.test(title);
+}
+
 export interface Headline { time: number; title: string }
 
 const mem = new Map<string, { at: number; items: Headline[] }>();
@@ -58,8 +80,9 @@ export async function marketNews(kv: KV | null, id: string): Promise<Headline[]>
     yahoo ? rss(`https://feeds.finance.yahoo.com/rss/2.0/headline?s=${encodeURIComponent(yahoo)}&region=US&lang=en-US`) : Promise.resolve([]),
   ]);
   const seen = new Set<string>();
+  const ok = relevant(id);
   const items = got.flatMap((g) => (g.status === "fulfilled" ? g.value : []))
-    .filter((h) => now / 1000 - h.time < MAX_AGE_H * 3600)
+    .filter((h) => now / 1000 - h.time < MAX_AGE_H * 3600 && ok(h.title))
     .sort((a, b) => b.time - a.time)
     .filter((h) => {
       const k = h.title.toLowerCase().replace(/ - [^-]+$/, "").replace(/\W+/g, " ").trim();
