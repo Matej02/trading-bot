@@ -319,6 +319,16 @@ export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
   return (
     <div className="settings">
       {bot.role === "viewer" && <div className="alert">Bota řídí jiné zařízení – nastavení změníš po převzetí řízení.</div>}
+      <div className="row gap">
+        <button className="btn" onClick={() => bot.update((st) => {
+          st.settings.statistikBlocks = true;
+          for (const sys of SYSTEMS) if (sys.id.startsWith("ukazka")) st.settings.systems[sys.id] = false;
+        })}>
+          Obchodovat jen ověřené
+        </button>
+        <span className="muted small">Statistik začne vetovat vše neověřené (živě se pak obchoduje jen průraz z F2) a ukázky
+          na 1m se vypnou. Ostatní strategie dál sbírají signály do statistiky.</span>
+      </div>
       <h4>Režim po aktivaci</h4>
       <label className="row">
         <input type="radio" name="mode" checked={s.mode === "vse"} onChange={() => bot.update((st) => { st.settings.mode = "vse"; })} />

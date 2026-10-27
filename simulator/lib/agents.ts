@@ -30,7 +30,8 @@ export interface Verdict {
   lots: number | null;
 }
 
-const MAX_AGE: Record<string, number> = { "1m": 90, "5m": 300, "15m": 600, "1h": 900, "1d": 3600 };
+// denni swing setup drzi ~2 tydny - vstup az 12 h po zavreni svicky je v poradku (drift hlida limit ceny)
+const MAX_AGE: Record<string, number> = { "1m": 90, "5m": 300, "15m": 600, "1h": 900, "1d": 12 * 3600 };
 
 function validator(x: AgentCtx): Opinion {
   const base = { agent: "Validátor", role: "kontroluje, jestli je signál čerstvý a cena neutekla", hard: true };

@@ -80,6 +80,7 @@ export interface Position {
   openTime: number;
   swap: number;
   checkedTo: number; // do kdy uz jsou zkontrolovane SL/TP (unix s)
+  expires?: number; // po tomhle case se zavre za trzni cenu (nejdelsi drzeni setupu)
 }
 
 export interface ClosedTrade extends Position {

@@ -11,9 +11,20 @@ export interface SystemDef {
   kind: "bar" | "momentum";
   holdsWeekends: boolean;
   desc: string;
+  maxHoldBars?: number; // nejdele tolik svicek, pak se zavre za trzni cenu (jako v testu)
 }
 
+/** Trhy, na kterych byl setup F2 testovany a overeny. */
+export const F2_MARKETS = ["BTCUSD", "ETHUSD", "XAUUSD", "EURUSD", "GBPUSD", "USDJPY", "SPX500mini", "NAS100mini", "GER_30mini"];
+
 export const SYSTEMS: SystemDef[] = [
+  {
+    id: "proraz_d1", name: "Průraz 20 dní + týdenní trend (ověřeno F2)", tf: "1d", markets: F2_MARKETS, kind: "bar",
+    holdsWeekends: true, maxHoldBars: 48,
+    desc: "Jediný setup, který prošel ověřením: zavření nad 20denním max / pod min jen ve směru týdenního trendu, " +
+      "SL 2 ATR, TP 1:2 (ověřeno 1:1,5 a 1:2). Holdout 2024–26 se swapy +0,34 R/obchod, PF 1,64, úspěšnost ~48 %, " +
+      "drží ~2 týdny, ~1 obchod za 5 dní na 9 trzích.",
+  },
   {
     id: "ukazka_ema_m1", name: "Ukázka – EMA 9/21 na 1m", tf: "1m", markets: ["BTCUSD", "ETHUSD"], kind: "bar",
     holdsWeekends: true,
@@ -69,6 +80,23 @@ function arrays(c: Candle[]) {
   };
 }
 
+/**
+ * Tydenni trend k posledni denni svicce (jako htf_trend v research_f2.py): tydny od nedele, jen UZAVRENE
+ * tydny; +1 = tydenni close nad EMA50 a EMA50 vys nez pred 3 tydny, -1 opacne, 0 jinak.
+ */
+export function weeklyTrend(c: Candle[]): number {
+  const decision = c[c.length - 1].time + 86400; // rozhoduje se na konci posledni denni svicky
+  const weeks = new Map<number, number>();
+  for (const k of c) weeks.set(Math.floor((k.time / 86400 + 4) / 7), k.close); // 1. 1. 1970 je ctvrtek
+  const closes = [...weeks.entries()].filter(([w]) => (w * 7 - 4 + 7) * 86400 <= decision).map(([, v]) => v);
+  if (closes.length < 54) return 0;
+  const e = ema(closes, 50);
+  const n = closes.length - 1;
+  if (closes[n] > e[n]! && e[n]! > e[n - 3]!) return 1;
+  if (closes[n] < e[n]! && e[n]! < e[n - 3]!) return -1;
+  return 0;
+}
+
 /** Signal na posledni UZAVRENE svicce (c uz neobsahuje tvorici se svicku). */
 export function barSignal(system: string, c: Candle[]): BarSignal | null {
   if (c.length < 150) return null;
@@ -77,6 +105,22 @@ export function barSignal(system: string, c: Candle[]): BarSignal | null {
   const a = atr(high, low, close, 14);
   const aMed = rollingMedian(a, 100);
   if (a[i] == null || aMed[i] == null) return null;
+
+  if (system === "proraz_d1") {
+    const trend = weeklyTrend(c);
+    const hi = Math.max(...high.slice(i - 20, i));
+    const lo = Math.min(...low.slice(i - 20, i));
+    const d = 2 * a[i]!;
+    if (close[i] > hi && trend === 1) {
+      return { dir: "long", sl: close[i] - d, tp: close[i] + 2 * d,
+        reason: `Denní svíčka zavřela nad 20denním maximem (${hi}) a týdenní trend je nahoru (cena nad rostoucí EMA50).` };
+    }
+    if (close[i] < lo && trend === -1) {
+      return { dir: "short", sl: close[i] + d, tp: close[i] - 2 * d,
+        reason: `Denní svíčka zavřela pod 20denním minimem (${lo}) a týdenní trend je dolů (cena pod klesající EMA50).` };
+    }
+    return null;
+  }
 
   if (system === "bbsqueeze_h1" || system === "ukazka_m1") {
     const mid = sma(close, 20);

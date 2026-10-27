@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 // [plna historie, kratke doplneni pri zivem obnovovani]
 const RANGE: Record<string, [string, string]> = {
-  "1m": ["5d", "1d"], "5m": ["1mo", "5d"], "15m": ["1mo", "5d"], "1h": ["1y", "5d"], "1d": ["2y", "1mo"],
+  "1m": ["5d", "1d"], "5m": ["1mo", "5d"], "15m": ["1mo", "5d"], "1h": ["1y", "5d"], "1d": ["5y", "1mo"],
 };
 const INTERVAL: Record<string, string> = { "1m": "1m", "5m": "5m", "15m": "15m", "1h": "60m", "1d": "1d" };
 

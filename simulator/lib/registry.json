@@ -1,22 +1,51 @@
 {
  "_info": "Registr ověření setupů pro Statistika (kopie tv_agent/setups.json s českými texty). status: validated / unvalidated / rejected.",
  "bbsqueeze_h1": {
-  "EURUSD": {"status": "rejected", "note": "walk-forward 4/5 bez spreadu, se skutečnými spready neprošlo (2026-08-21)"},
-  "AUDJPY": {"status": "rejected", "note": "se spready neprošlo, test na zlatě potvrdil chybějící výhodu (2026-08-26)"}
+  "EURUSD": {
+   "status": "rejected",
+   "note": "walk-forward 4/5 bez spreadu, se skutečnými spready neprošlo (2026-08-21)"
+  },
+  "AUDJPY": {
+   "status": "rejected",
+   "note": "se spready neprošlo, test na zlatě potvrdil chybějící výhodu (2026-08-26)"
+  }
  },
  "pullback_h1": {
-  "EURUSD": {"status": "rejected", "note": "se spready prošlo 0 z 32 kombinací (2026-08-21)"}
+  "EURUSD": {
+   "status": "rejected",
+   "note": "se spready prošlo 0 z 32 kombinací (2026-08-21)"
+  }
  },
  "momentum_d1_L250": {
-  "*": {"status": "unvalidated", "note": "holdout 2023+ po nákladech PF 0,98, t +0,01 (neprošlo); hrubě t 3,3, sebere to swap brokera"}
+  "*": {
+   "status": "unvalidated",
+   "note": "holdout 2023+ po nákladech PF 0,98, t +0,01 (neprošlo); hrubě t 3,3, sebere to swap brokera"
+  }
  },
  "ukazka_m1": {
-  "*": {"status": "unvalidated", "note": "jen ukázka bez výhody – na předvedení, jak celý tok funguje"}
+  "*": {
+   "status": "unvalidated",
+   "note": "jen ukázka bez výhody – na předvedení, jak celý tok funguje"
+  }
  },
  "ukazka_ema_m1": {
-  "*": {"status": "unvalidated", "note": "jen ukázka bez výhody (křížení EMA 9/21) – aby bylo vidět, co agenti berou"}
+  "*": {
+   "status": "unvalidated",
+   "note": "jen ukázka bez výhody (křížení EMA 9/21) – aby bylo vidět, co agenti berou"
+  }
  },
  "rucne": {
-  "*": {"status": "unvalidated", "note": "ruční obchod – žádná ověřená výhoda"}
+  "*": {
+   "status": "unvalidated",
+   "note": "ruční obchod – žádná ověřená výhoda"
+  }
+ },
+ "proraz_d1": {
+  "*": {
+   "status": "validated",
+   "holdout_pf": 1.64,
+   "holdout_n": 185,
+   "note": "F2 (2026-10-27): průraz 20 dní + týdenní trend, SL 2 ATR, RRR 1:2; holdout 2024–26 se swapy +0,34 R, t 3,03, PF 1,64; vstup na průrazu porazil kontrolu (každý den ve směru trendu) v obou obdobích"
+  }
  }
 }

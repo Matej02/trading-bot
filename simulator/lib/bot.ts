@@ -570,6 +570,9 @@ export class Bot {
         if (hit) {
           const c = this.close(p, hit.exit, Math.max(hit.time, p.openTime), hit.reason);
           this.log(`${hit.reason} ${c.market} ${c.dir} ${c.lots} lotu: ${(c.pnl + c.swap).toFixed(2)} $`);
+        } else if (p.expires && now >= p.expires && mid != null) {
+          const c = this.close(p, exitPrice(p, mid, now), now, "čas");
+          this.log(`Konec doby držení ${c.market} ${c.dir}: ${(c.pnl + c.swap).toFixed(2)} $`);
         }
       }
       for (const x of open.filter((y) => y.market === id)) {
@@ -621,7 +624,12 @@ export class Bot {
     const now = nowSec();
     const mid = store.lastPrice.get(sig.market)?.mid ?? ctx.mid;
     let positionId: string | null = null;
-    if (v.decision === "beru" && v.lots) positionId = openPosition(s.broker, sig, v.lots, mid, now).id;
+    if (v.decision === "beru" && v.lots) {
+      const p = openPosition(s.broker, sig, v.lots, mid, now);
+      // nejdelsi drzeni jako v testu (svicky -> dny; mimo krypto 5 obchodnich dni = 7 kalendarnich)
+      if (system.maxHoldBars) p.expires = now + system.maxHoldBars * TF_SEC[system.tf] * (isCrypto(m) ? 1 : 7 / 5);
+      positionId = p.id;
+    }
     const d: Deliberation = { id: sig.id, signal: sig, opinions: v.opinions, decision: v.decision, summary: v.summary,
       time: now, lots: v.lots, positionId };
     s.journal.unshift(d);
@@ -685,7 +693,9 @@ export class Bot {
     const m = MARKETS[id];
     const closed = closedCandles(await store.get(m, sys.tf, POLL[sys.tf]), sys.tf, now);
     const key = `${systemId}|${id}`;
-    const st = barStatus(systemId, closed.slice(-400), m.digits);
+    // denni systemy potrebuji celou historii (tydenni EMA50), ostatnim staci 400 svicek
+    const win = sys.tf === "1d" ? closed : closed.slice(-400);
+    const st = barStatus(systemId, win, m.digits);
     this.radar.set(key, { system: systemId, market: id, text: st.text, tone: st.tone, t: now });
     if (closed.length < 150) return;
     const last = closed[closed.length - 1];
@@ -693,7 +703,7 @@ export class Bot {
     this.state.lastBar[key] = last.time;
     // prvni beh si jen zapamatuje svicku - na starou svicku se neobchoduje
     if (prev == null || last.time <= prev) return;
-    const bs = barSignal(systemId, closed.slice(-400));
+    const bs = barSignal(systemId, win);
     if (!bs) return;
     // cas signalu = uzavreni svicky (jako v Python botovi) - po otevreni stranky s pauzou
     // validator stary signal zamitne, misto aby se vstupovalo na zastaralou cenu

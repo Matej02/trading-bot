@@ -57,6 +57,28 @@
 > Kdyby ses někdy vracel: každý nový nápad jde tímhle aparátem ověřit
 > během hodin, ne měsíců. To je hlavní hodnota, která zbyla.
 
+## F2 – víc timeframů, cíl vysoká úspěšnost s kladným výsledkem (2026-10-27) → 1 setup prošel
+
+`research_f2.py` (plán předem v hlavičce), `research_f2_detail.py` (swapy, long/short, trhy),
+`research_f2_kontrola.py` (kontrolní skupina). 288 setupů (4 rodiny vstupů × 15m/1h/4h/1d × filtr
+vyššího timeframu × SL 1/1,5/2 ATR × RRR 1/1,5/2) napříč 9 trhy (BTC, ETH, zlato, EURUSD, GBPUSD,
+USDJPY, S&P 500, Nasdaq, DAX), živé spready brokera. Výběr do 2023, holdout 2024+.
+
+**Prošel: průraz 20denního max/min na denním grafu jen ve směru týdenního trendu, SL 2 ATR.**
+
+| | výběr do 2023 (se swapy) | holdout 2024–26 (se swapy) |
+|---|---|---|
+| RRR 1:2 | +0,09 R, t 1,87 (longy +0,25 R) | **+0,34 R, t 3,03, PF 1,64, win 48 %, n 185** |
+| RRR 1:1,5 | +0,06 R, t 1,61 | +0,23 R, t 2,68, PF 1,47, win 51 % |
+| kontrola: každý den ve směru trendu, 1:2 | −0,06 R | +0,04 R |
+
+- Vstup na průrazu porazil kontrolu v obou obdobích → není to jen „být long v rostoucím trhu“.
+- Ale: holdout je z 86 % longy v silně rostoucích trzích (zlato, indexy, BTC), shorty ve výběru
+  prodělávaly (−0,11 R), GBPUSD na holdoutu −0,5 R. Swapy berou ~0,08 R/obchod.
+- Frekvence ~0,2 obchodu/den napříč 9 trhy (≈ 1 za 5 dní), drží ~12–15 dní → swing, ne 1–2 obchody denně.
+- Krátké timeframy (15m, 1h) nic nedaly; 1m je u tohoto brokera neobchodovatelný (spread ~70 % SL).
+- V simulátoru jako `proraz_d1` (signály TS = Python 339/339), v registru `validated`.
+
 ## F1 – nové třídy signálů se skutečnými náklady (2026-10-26)
 
 `research_f1.py` (plán stanovený předem v hlavičce), `research_f1_rozklad.py` (rozklad nákladů).
