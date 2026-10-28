@@ -15,7 +15,7 @@ for (const system of ["bbsqueeze_h1", "pullback_h1"]) {
     if (ts && p) {
       if (ts.dir === p.dir) same++;
       else onlyPy++;
-      if (Math.abs(ts.sl - p.sl) > 1e-9 || Math.abs(ts.tp - p.tp) > 1e-9) levelDiff++;
+      if (Math.abs(ts.sl - p.sl) > 1e-9 || Math.abs((ts.tp ?? NaN) - p.tp) > 1e-9) levelDiff++;
     } else if (p) {
       onlyPy++;
       console.log("jen Python:", system, i, p.dir);

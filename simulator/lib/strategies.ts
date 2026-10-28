@@ -1,5 +1,5 @@
 // Strategie prevedene 1:1 z Python bota (strategy.py, strategy_bbsqueeze.py, strategy_momentum.py).
-import { atr, ema, rollingMedian, rollingRankPct, sma, stdev } from "./indicators";
+import { atr, ema, rollingMedian, rollingRankPct, rsiLast, sma, stdev } from "./indicators";
 import { MARKET_IDS } from "./markets";
 import type { Candle, Dir, TF } from "./types";
 
@@ -12,7 +12,12 @@ export interface SystemDef {
   holdsWeekends: boolean;
   desc: string;
   maxHoldBars?: number; // nejdele tolik svicek, pak se zavre za trzni cenu (jako v testu)
+  noTp?: boolean; // bez TP - ven az podle pravidla vystupu (exitRule), stopu nebo casu
+  exitRule?: "sma5"; // ven, kdyz denni svicka zavre nad SMA5 (long) / pod (short)
 }
+
+/** US indexy pro mean reversion (F6: vyhoda byla silnejsi uz ve vyberu do 2018). */
+export const US_INDEXES = ["SPX500mini", "NAS100mini", "US30mini"];
 
 /** Trhy, na kterych byl setup F2 testovany a overeny. */
 export const F2_MARKETS = ["BTCUSD", "ETHUSD", "XAUUSD", "EURUSD", "GBPUSD", "USDJPY", "SPX500mini", "NAS100mini", "GER_30mini"];
@@ -24,6 +29,12 @@ export const SYSTEMS: SystemDef[] = [
     desc: "Jediný setup, který prošel ověřením: zavření nad 20denním max / pod min jen ve směru týdenního trendu, " +
       "SL 2 ATR, TP 1:2 (ověřeno 1:1,5 a 1:2). Holdout 2024–26 se swapy +0,34 R/obchod, PF 1,64, úspěšnost ~48 %, " +
       "drží ~2 týdny, ~1 obchod za 5 dní na 9 trzích.",
+  },
+  {
+    id: "mr_rsi2_d1", name: "RSI(2) pullback – US indexy (kandidát F6)", tf: "1d", markets: US_INDEXES, kind: "bar",
+    holdsWeekends: true, maxHoldBars: 10, noTp: true, exitRule: "sma5",
+    desc: "Mean reversion: zavření nad SMA200 a RSI(2) pod 10 → long, ven při zavření nad SMA5, stop 3 ATR(20), " +
+      "nejdéle 10 dní. F6: úspěšnost ~70 % ve všech obdobích, US indexy 2019+ PF 1,9; formálně zatím neověřeno.",
   },
   {
     id: "ukazka_ema_m1", name: "Ukázka – EMA 9/21 na 1m", tf: "1m", markets: ["BTCUSD", "ETHUSD"], kind: "bar",
@@ -61,7 +72,7 @@ export const SYSTEM = Object.fromEntries([...SYSTEMS, MANUAL].map((s) => [s.id, 
 export interface BarSignal {
   dir: Dir;
   sl: number;
-  tp: number;
+  tp: number | null; // null = bez TP (system s pravidlem vystupu)
   reason: string;
 }
 
@@ -118,6 +129,18 @@ export function barSignal(system: string, c: Candle[]): BarSignal | null {
     if (close[i] < lo && trend === -1) {
       return { dir: "short", sl: close[i] + d, tp: close[i] - 2 * d,
         reason: `Denní svíčka zavřela pod 20denním minimem (${lo}) a týdenní trend je dolů (cena pod klesající EMA50).` };
+    }
+    return null;
+  }
+
+  if (system === "mr_rsi2_d1") {
+    const s200 = sma(close, 200);
+    const r2 = rsiLast(close, 2);
+    const a20 = atr(high, low, close, 20);
+    if (s200[i] == null || r2 == null || a20[i] == null) return null;
+    if (close[i] > s200[i]! && r2 < 10) {
+      return { dir: "long", sl: close[i] - 3 * a20[i]!, tp: null,
+        reason: `Pullback v uptrendu: zavření nad SMA200 a RSI(2) ${r2.toFixed(1)} < 10. Ven při zavření nad SMA5, stop 3 ATR, nejdéle 10 dní.` };
     }
     return null;
   }
@@ -187,6 +210,14 @@ export function barStatus(system: string, c: Candle[], digits: number): { text: 
   const sessionRule = system === "bbsqueeze_h1" || system === "pullback_h1";
   if (sessionRule && !inSession(c[i].time)) {
     return { text: `mimo obchodní okno 13–17 UTC (poslední svíčka ${hour}:00 UTC)`, tone: "off" };
+  }
+  if (system === "mr_rsi2_d1") {
+    const s200 = sma(close, 200);
+    const r2 = rsiLast(close, 2);
+    if (s200[i] == null || r2 == null) return { text: "málo dat (SMA200)", tone: "off" };
+    if (close[i] <= s200[i]!) return { text: `pod SMA200 (${f(s200[i]!)}) – neobchoduje`, tone: "off" };
+    return { text: `nad SMA200 · RSI(2) ${r2.toFixed(1)} – long, až RSI(2) při zavření klesne pod 10 (teď ${f(close[i])})`,
+      tone: r2 < 25 ? "near" : "wait" };
   }
   if (system === "bbsqueeze_h1" || system === "ukazka_m1") {
     const mid = sma(close, 20);

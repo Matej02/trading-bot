@@ -18,3 +18,4 @@ tv_momentum_book.json
 challenge_state.json
 live_trades_log.csv
 files.zip
+scratch/*.json
