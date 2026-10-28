@@ -134,7 +134,10 @@ export function dailyLimitOf(st: { statistikBlocks: boolean; dailyLossPct: numbe
   return st.statistikBlocks ? st.dailyLossPct : null;
 }
 
-export function updateAccount(s: BrokerState, eq: number, t: number, dailyLimitPct: number | null) {
+/** Limity prop firmy (drawdown 8 % = konec, cil +8 % = dal neriskovat) plati jen mimo ucici rezim. */
+export const propLimitsOn = (st: { statistikBlocks: boolean }) => st.statistikBlocks;
+
+export function updateAccount(s: BrokerState, eq: number, t: number, dailyLimitPct: number | null, propLimits = true) {
   const a = s.account;
   const day = dayKey(t);
   if (day !== a.dayKey) {
@@ -145,7 +148,7 @@ export function updateAccount(s: BrokerState, eq: number, t: number, dailyLimitP
   const daily = ((a.dayStart - eq) / a.start) * 100;
   const dd = ((a.peak - eq) / a.start) * 100;
   let hit: string | null = null;
-  if (!a.halted && dd >= MAX_DD_LIMIT) {
+  if (propLimits && !a.halted && dd >= MAX_DD_LIMIT) {
     a.halted = `drawdown ${dd.toFixed(2)} % (limit ${MAX_DD_LIMIT} %)`;
     hit = `DRAWDOWN ${dd.toFixed(2)} % – challenge neprošla`;
   }
@@ -153,6 +156,6 @@ export function updateAccount(s: BrokerState, eq: number, t: number, dailyLimitP
     a.pausedDay = day;
     hit ??= `DENNÍ LIMIT ${daily.toFixed(2)} % (limit ${dailyLimitPct} %)`;
   }
-  if (((a.balance - a.start) / a.start) * 100 >= PROFIT_TARGET) a.passed = true;
+  if (propLimits && ((a.balance - a.start) / a.start) * 100 >= PROFIT_TARGET) a.passed = true;
   return { daily, dd, hit };
 }

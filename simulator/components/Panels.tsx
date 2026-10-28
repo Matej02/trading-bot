@@ -29,7 +29,7 @@ function Bar({ label, value, limit, good }: { label: string; value: number; limi
   );
 }
 
-export function AccountPanel({ broker, eq, dailyLimit }: { broker: BrokerState; eq: number; dailyLimit: number | null }) {
+export function AccountPanel({ broker, eq, dailyLimit, prop }: { broker: BrokerState; eq: number; dailyLimit: number | null; prop: boolean }) {
   const a = broker.account;
   const daily = Math.max(0, ((a.dayStart - eq) / a.start) * 100);
   const dd = Math.max(0, ((a.peak - eq) / a.start) * 100);
@@ -58,13 +58,15 @@ export function AccountPanel({ broker, eq, dailyLimit }: { broker: BrokerState; 
       </div>
       {dailyLimit != null ? <Bar label="Denní ztráta" value={daily} limit={dailyLimit} />
         : <div className="small muted">Denní ztráta {daily.toFixed(2)} % · limit vypnutý (učící režim)</div>}
-      <Bar label="Drawdown" value={dd} limit={MAX_DD_LIMIT} />
-      <Bar label="Zisk k cíli" value={Math.max(0, profit)} limit={PROFIT_TARGET} good />
-      {a.halted && <div className="alert down">Challenge NEPROŠLA: {a.halted}. Signály se dál sbírají do statistiky, reset v Nastavení.</div>}
+      {prop ? <>
+        <Bar label="Drawdown" value={dd} limit={MAX_DD_LIMIT} />
+        <Bar label="Zisk k cíli" value={Math.max(0, profit)} limit={PROFIT_TARGET} good />
+      </> : <div className="small muted">Drawdown {dd.toFixed(2)} % · výsledek {profit >= 0 ? "+" : ""}{profit.toFixed(2)} % · limity 8 % vypnuté (učící režim)</div>}
+      {prop && a.halted && <div className="alert down">Challenge NEPROŠLA: {a.halted}. Signály se dál sbírají do statistiky, reset v Nastavení.</div>}
       {!a.halted && dailyLimit != null && a.pausedDay === a.dayKey && (
         <div className="alert down">Dnes padl denní limit {dailyLimit} % – živé obchody stop do zítřka, signály se dál sbírají do statistiky.</div>
       )}
-      {a.passed && !a.halted && <div className="alert up">Cíl {PROFIT_TARGET} % splněn – v simulaci.</div>}
+      {prop && a.passed && !a.halted && <div className="alert up">Cíl {PROFIT_TARGET} % splněn – v simulaci.</div>}
     </div>
   );
 }
@@ -484,7 +486,7 @@ export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
           Učící režim – brát všechno
         </button>
         <span className="muted small">Všechny strategie obchodují na simulovaném účtu (i neověřené a ztrátové), aby bylo co
-          nejvíc obchodů a šlo poznat, co funguje. Denní limit ztráty se v něm neuplatňuje; ostatní tvrdé kontroly platí dál.</span>
+          nejvíc obchodů a šlo poznat, co funguje. Denní limit ztráty, drawdown 8 % ani cíl +8 % ho nezastaví; ostatní tvrdé kontroly platí dál.</span>
       </div>
       <div className="row gap">
         <button className={`btn ${s.statistikBlocks ? "on" : ""}`} onClick={() => bot.update((st) => {

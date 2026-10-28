@@ -13,7 +13,7 @@ import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from 
 import { eventsFor, inMinutes, releasesFor, releaseText, type CalEvent, type Release } from "./calendar";
 import {
   closePosition, DAILY_LOSS_DEFAULT, dayKey, equity, exitPrice, findHit, freshBroker, lotsFor, openPosition, swapBetween,
-  updateAccount, dailyLimitOf, type BrokerState,
+  updateAccount, dailyLimitOf, propLimitsOn, type BrokerState,
 } from "./sim";
 import {
   barSignal, barStatus, dailyCloses, lastAtr, MANUAL, manualLevels, MOM_RISK_PCT, MOM_SL_SIGMA, momentumReturn,
@@ -563,7 +563,7 @@ export class Bot {
       const eq = this.equityNow();
       const a = s.broker.account;
       const was = { passed: a.passed, day: a.dayKey };
-      const { hit } = updateAccount(s.broker, eq, now, dailyLimitOf(s.settings));
+      const { hit } = updateAccount(s.broker, eq, now, dailyLimitOf(s.settings), propLimitsOn(s.settings));
       if (hit || was.passed !== a.passed || was.day !== a.dayKey) this.dirty.core = true;
       if (hit) {
         this.log(`${hit} – zavírám pozice, živé obchody stop, signály dál sbírám do statistiky.`);

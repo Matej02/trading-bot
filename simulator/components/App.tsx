@@ -201,7 +201,7 @@ export default function App() {
           </div>
         </section>
         <aside className="right">
-          <AccountPanel broker={s.broker} eq={bot.equityNow()} dailyLimit={dailyLimitOf(s.settings)} />
+          <AccountPanel broker={s.broker} eq={bot.equityNow()} dailyLimit={dailyLimitOf(s.settings)} prop={s.settings.statistikBlocks} />
           <div className="room-title">Místnost agentů</div>
           <AgentRoom journal={s.journal} onPick={pick} />
         </aside>

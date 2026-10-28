@@ -3,7 +3,7 @@
 import registry from "./registry.json";
 import { atr, ema, rollingMedian } from "./indicators";
 import { currencies, fmt, isCrypto, MARKETS, quote } from "./markets";
-import { lotsFor, pnlMoney, sign, type BrokerState, dailyLimitOf } from "./sim";
+import { dailyLimitOf, lotsFor, pnlMoney, propLimitsOn, sign, type BrokerState } from "./sim";
 import { eventsFor, inMinutes, marketCurrencies, NEWS_AFTER_MIN, NEWS_BEFORE_MIN, releasesFor, releaseText, type CalEvent, type Release } from "./calendar";
 import { momentumReturn, type SystemDef } from "./strategies";
 import type { Candle, ClosedTrade, Market, Opinion, Settings, Signal } from "./types";
@@ -125,11 +125,12 @@ function risk(x: AgentCtx): { op: Opinion; lots: number | null } {
   const a = x.broker.account;
   const no = (reason: string) => ({ op: { ...base, vote: "ne" as const, reason }, lots: null });
   const limit = dailyLimitOf(x.settings); // null = ucici rezim, denni limit neplati
-  if (a.halted) return no(`Challenge neprošla (${a.halted}) – živé obchody neberu, signály jen sbírám do statistiky.`);
+  const prop = propLimitsOn(x.settings); // v ucicim rezimu drawdown ani cil obchodovani nezastavi
+  if (prop && a.halted) return no(`Challenge neprošla (${a.halted}) – živé obchody neberu, signály jen sbírám do statistiky.`);
   if (limit != null && a.pausedDay === a.dayKey) {
     return no(`Dnes padl denní limit ztráty ${limit} % – do konce dne neberu živé obchody, signály jen sbírám do statistiky.`);
   }
-  if (a.passed) return no("Cíl challenge je splněný – dál neriskovat.");
+  if (prop && a.passed) return no("Cíl challenge je splněný – dál neriskovat.");
   if (x.todayTrades >= x.settings.maxTradesPerDay) return no(`Dnes už ${x.todayTrades} obchodů (limit ${x.settings.maxTradesPerDay}).`);
   if (x.broker.positions.length >= x.settings.maxOpen) return no(`Otevřeno ${x.broker.positions.length} pozic (limit ${x.settings.maxOpen}).`);
   if (x.broker.positions.some((p) => p.system === x.signal.system && p.market === x.market.id)) {
