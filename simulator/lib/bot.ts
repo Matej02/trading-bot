@@ -4,6 +4,7 @@
 // ostatni sleduji. Po pauze se pozice dopocitaji ze svicek (SL/TP, swapy).
 import { AI_AGENT, codeOpinions, judge, type AgentCtx } from "./agents";
 import { aiScore } from "./aiScore";
+import { blockedBy, decisionVerdict } from "./verdict";
 import { ema, rsiLast } from "./indicators";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKET_IDS, MARKETS, quote } from "./markets";
@@ -613,9 +614,18 @@ export class Bot {
       for (const x of open.filter((y) => y.market === id)) {
         const { hit, checkedTo } = findHit(m, x.dir, x.sl, x.tp, candles, TF_SEC[tf], x.checkedTo, now);
         x.checkedTo = Math.max(x.checkedTo, checkedTo);
+        const sys = SYSTEM[x.system];
+        const expires = sys?.maxHoldBars ? x.openTime + sys.maxHoldBars * TF_SEC[sys.tf] * (isCrypto(m) ? 1 : 7 / 5) : null;
         if (hit) {
           x.r = ((hit.exit - x.entry) * (x.dir === "long" ? 1 : -1)) / Math.abs(x.entry - x.sl);
+        } else if (expires && now >= expires && mid != null) {
+          // stejne jako skutecny obchod: po nejdelsi dobe drzeni ven za trzni cenu
+          const q = quote(m, mid, now);
+          x.r = (((x.dir === "long" ? q.bid : q.ask) - x.entry) * (x.dir === "long" ? 1 : -1)) / Math.abs(x.entry - x.sl);
+        }
+        if (x.r != null) {
           this.recordShadow(x, false);
+          this.logVerdict(x);
         }
       }
     }
@@ -640,6 +650,16 @@ export class Bot {
   private todayTrades(now: number) {
     const day = dayKey(now);
     return this.state.journal.filter((d) => d.decision === "beru" && dayKey(d.time) === day).length;
+  }
+
+  /** Zpetne do logu: jak by dopadl signal a jestli bylo rozhodnuti dobre (i u nevzatych). */
+  private logVerdict(x: Shadow) {
+    const d = this.state.journal.find((j) => j.id === x.signalId);
+    if (!d || x.r == null) return;
+    const v = decisionVerdict(d, x.r);
+    const who = blockedBy(d);
+    this.log(`Zpětně: ${d.decision === "beru" ? "BERU" : "NEBERU"} ${SYSTEM[x.system]?.name ?? x.system} ${x.market} ${x.dir} ` +
+      `→ ${x.r >= 0 ? "+" : ""}${x.r.toFixed(2)} R – ${v.text}${who.length ? ` (zastavil: ${who.join(", ")})` : ""}.`);
   }
 
   private async handleSignal(sig: Signal, candles: Candle[], system: SystemDef = SYSTEM[sig.system]): Promise<Deliberation> {

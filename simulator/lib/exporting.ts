@@ -1,6 +1,7 @@
 // Stazeni dat: denik a obchody do CSV (cesky Excel: strednik, desetinna carka, BOM)
 // a vsechno do jednoho JSON souboru (ten je nejlepsi poslat k rozboru).
 import { SYSTEM } from "./strategies";
+import { blockedBy, decisionVerdict } from "./verdict";
 import type { ClosedTrade, CoreState, Deliberation, LogEntry, Shadow } from "./types";
 
 export interface ExportData {
@@ -34,12 +35,14 @@ export function journalCsv(d: ExportData, tz: string): string {
   const t = timeFmt(tz);
   const shadow = new Map(d.shadows.map((x) => [x.signalId, x]));
   const head = ["Čas", "Systém", "Trh", "Směr", "Cena signálu", "SL", "TP", "Rozhodnutí", "Loty", "Stínový výsledek (R)",
+    "Bylo to dobré rozhodnutí?", "Kdo zastavil",
     "Rozhodčí", "Důvod signálu", ...AGENTS.flatMap((a) => [a, `${a} – proč`])];
   const rows = d.journal.map((j) => {
     const r = shadow.get(j.id)?.r;
     return [
       t(j.time), sysName(j.signal.system), j.signal.market, j.signal.dir === "long" ? "BUY" : "SELL", j.signal.price,
-      j.signal.sl, j.signal.tp, j.decision === "beru" ? "BERU" : "NEBERU", j.lots, r == null ? "běží" : r, j.summary,
+      j.signal.sl, j.signal.tp, j.decision === "beru" ? "BERU" : "NEBERU", j.lots, r == null ? "běží" : r,
+      decisionVerdict(j, r).text, blockedBy(j).join(", "), j.summary,
       j.signal.reason,
       ...AGENTS.flatMap((a) => {
         const o = j.opinions.find((x) => x.agent === a);

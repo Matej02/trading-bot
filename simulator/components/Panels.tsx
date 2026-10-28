@@ -5,6 +5,7 @@ import { closedCandles, store } from "@/lib/data";
 import { aiScore } from "@/lib/aiScore";
 import { eventsFor, inMinutes, marketCurrencies, releasesFor, releaseText, type Calendar } from "@/lib/calendar";
 import { exportFile } from "@/lib/exporting";
+import { blockedBy, decisionStats, decisionVerdict } from "@/lib/verdict";
 import { fmt, MARKETS, quote, spreadAt } from "@/lib/markets";
 import { exitPrice, lotsFor, MAX_DD_LIMIT, pnlMoney, PROFIT_TARGET, type BrokerState } from "@/lib/sim";
 import { lastAtr, manualLevels, SYSTEM, SYSTEMS } from "@/lib/strategies";
@@ -266,6 +267,48 @@ export function ExportButtons({ bot }: { bot: Bot }) {
   );
 }
 
+/** Zpetne hodnoceni rozhodnuti: vcetne nevzatych obchodu - pomohlo zamitnuti, nebo ulo zisk? */
+function DecisionCard({ state }: { state: BotState }) {
+  const s = decisionStats(state.journal, state.shadows);
+  if (!s.n) return <div className="muted small">Rozhodnutí zpětně: zatím žádný signál nedoběhl (každý, i nevzatý, se sleduje až do SL / TP).</div>;
+  const pct = (a: number, b: number) => (b ? `${((a / b) * 100).toFixed(0)} %` : "–");
+  const net = s.saved - s.missed;
+  return (
+    <>
+      <div className="stats">
+        <div className="stat">
+          <div className="muted small">Rozhodnutí zpětně – správně</div>
+          <div>{s.correct} z {s.n} ({pct(s.correct, s.n)})</div>
+        </div>
+        <div className="stat">
+          <div className="muted small">Vzaté obchody</div>
+          <div>{s.takenOk} z {s.takenN} vydělalo ({pct(s.takenOk, s.takenN)})</div>
+        </div>
+        <div className="stat">
+          <div className="muted small">Nevzaté obchody</div>
+          <div>{s.rejOk} z {s.rejN} by prodělalo ({pct(s.rejOk, s.rejN)}) · ušetřeno {s.saved.toFixed(1)} R, ušlo {s.missed.toFixed(1)} R ·{" "}
+            <span className={net >= 0 ? "up" : "down"}>zamítání {net >= 0 ? "pomohlo" : "škodilo"} {net >= 0 ? "+" : ""}{net.toFixed(1)} R</span></div>
+        </div>
+      </div>
+      {s.byBlocker.length > 0 && (
+        <table className="tbl">
+          <thead><tr><th>Kdo obchod zastavil</th><th>Zastavil</th><th>Z toho správně</th><th>Přínos (ušetřeno − ušlo)</th></tr></thead>
+          <tbody>
+            {s.byBlocker.map((b) => (
+              <tr key={b.agent}>
+                <td>{b.agent}</td>
+                <td>{b.n}</td>
+                <td>{b.ok} ({pct(b.ok, b.n)})</td>
+                <td className={b.net >= 0 ? "up" : "down"}>{b.net >= 0 ? "+" : ""}{b.net.toFixed(1)} R</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
+  );
+}
+
 /** Co funguje: vysledky vsech signalu (i nevzatych) po strategiich a trzich, nejlepsi nahore. */
 function ComboTable({ shadows }: { shadows: Shadow[] }) {
   const groups = new Map<string, Shadow[]>();
@@ -381,6 +424,7 @@ export function JournalPanel({ state }: { state: BotState }) {
           ))}
         </tbody>
       </table>
+      <DecisionCard state={state} />
       <AiScoreCard shadows={state.shadows} />
       <ComboTable shadows={state.shadows} />
       <table className="tbl">
@@ -396,7 +440,7 @@ export function JournalPanel({ state }: { state: BotState }) {
         </tbody>
       </table>
       <table className="tbl">
-        <thead><tr><th>Čas</th><th>Systém</th><th>Trh</th><th>Směr</th><th>Rozhodnutí</th><th>Stínový výsledek</th></tr></thead>
+        <thead><tr><th>Čas</th><th>Systém</th><th>Trh</th><th>Směr</th><th>Rozhodnutí</th><th>Kdo zastavil</th><th>Stínový výsledek</th><th>Bylo to dobře?</th></tr></thead>
         <tbody>
           {state.journal.slice(0, 100).map((d: Deliberation) => {
             const sh = shadowBy.get(d.id);
@@ -407,9 +451,14 @@ export function JournalPanel({ state }: { state: BotState }) {
                 <td>{d.signal.market}</td>
                 <td className={`dir ${d.signal.dir}`}>{d.signal.dir === "long" ? "BUY" : "SELL"}</td>
                 <td><span className={`badge ${d.decision}`}>{d.decision === "beru" ? "BERU" : "NEBERU"}</span></td>
+                <td className="small muted">{blockedBy(d).join(", ") || "–"}</td>
                 <td className={sh?.r == null ? "muted" : sh.r >= 0 ? "up" : "down"}>
                   {sh?.r == null ? "běží" : `${sh.r >= 0 ? "+" : ""}${sh.r.toFixed(2)} R`}
                 </td>
+                {(() => {
+                  const v = decisionVerdict(d, sh?.r);
+                  return <td className={`small ${v.ok == null ? "muted" : v.ok ? "up" : "down"}`}>{v.ok == null ? v.text : `${v.ok ? "✓" : "✗"} ${v.text}`}</td>;
+                })()}
               </tr>
             );
           })}
