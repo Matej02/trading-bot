@@ -4,6 +4,7 @@
 // ostatni sleduji. Po pauze se pozice dopocitaji ze svicek (SL/TP, swapy).
 import { AI_AGENT, codeOpinions, judge, type AgentCtx } from "./agents";
 import { aiScore } from "./aiScore";
+import type { AiContext } from "./aiPrompt";
 import { blockedBy, decisionVerdict } from "./verdict";
 import { ema, rsiLast } from "./indicators";
 import { closedCandles, nowSec, store } from "./data";
@@ -19,7 +20,7 @@ import {
   momentumTarget, relVol, SYSTEM, SYSTEMS, type SystemDef, type Tone,
 } from "./strategies";
 import type {
-  Candle, ClosedTrade, CoreState, Deliberation, Lease, LoadResult, LogEntry, MomentumBook, Opinion, Position, SaveBody,
+  AiJob, Candle, ClosedTrade, CoreState, Deliberation, Lease, LoadResult, LogEntry, MomentumBook, Opinion, Position, SaveBody,
   Settings, Shadow, Signal, TF,
 } from "./types";
 import { TF_SEC } from "./types";
@@ -41,7 +42,11 @@ export interface BotState {
   momentum: { book: Record<string, MomentumBook>; lastRun: Record<string, string> };
   seen: string[];
   log: LogEntry[];
+  aiQueue: AiJob[];
 }
+
+const AI_GAP_MS = 5000; // server pusti nejvys 12 dotazu za minutu
+const AI_LATE = " (AI analytik: posudek dopíše dodatečně.)";
 
 export function freshState(): BotState {
   return {
@@ -51,7 +56,7 @@ export function freshState(): BotState {
       dailyLossPct: DAILY_LOSS_DEFAULT, rrr: 2, ai: true, aiVeto: "auto", systems: Object.fromEntries(SYSTEMS.map((s) => [s.id, true])),
     },
     broker: freshBroker(START_BALANCE, nowSec()),
-    journal: [], shadows: [], lastBar: {}, momentum: { book: {}, lastRun: {} }, seen: [], log: [],
+    journal: [], shadows: [], lastBar: {}, momentum: { book: {}, lastRun: {} }, seen: [], log: [], aiQueue: [],
   };
 }
 
@@ -83,7 +88,7 @@ function loadLocal(): BotState | null {
 
 const coreOf = (s: BotState): CoreState => ({
   version: 1, settings: s.settings, broker: { account: s.broker.account, positions: s.broker.positions },
-  lastBar: s.lastBar, momentum: s.momentum, seen: s.seen.slice(-500),
+  lastBar: s.lastBar, momentum: s.momentum, seen: s.seen.slice(-500), aiQueue: s.aiQueue.slice(-60),
 });
 
 export interface RadarItem {
@@ -123,6 +128,8 @@ export class Bot {
   status = "";
   aiNote = ""; // posledni problem AI analytika (zobrazi se v Nastaveni)
   private aiLast = 0;
+  private aiDraining = false;
+  private serverRun = false; // bot 24/7: frontu AI odbavi runServerTick (na serveru nic nebezi na pozadi)
   /** co bot prave sleduje, po strategiich a trzich (jen v pameti) */
   readonly radar = new Map<string, RadarItem>();
   private events: CalEvent[] | null = null; // ekonomicky kalendar - pristi zpravy (obnovuje se po 10 min)
@@ -195,12 +202,13 @@ export class Bot {
       this.state = {
         version: 1, settings: core.settings, broker: { account: core.broker.account, positions: core.broker.positions, closed: r.closed },
         journal: r.journal, shadows: r.shadows, lastBar: core.lastBar, momentum: core.momentum, seen: core.seen, log: r.log,
+        aiQueue: core.aiQueue ?? [],
       };
       this.lastFullLoad = Date.now();
     } else {
       // sledujici zarizeni: stav vymenit, konec historie doplnit
       const s = this.state;
-      Object.assign(s, { settings: core.settings, lastBar: core.lastBar, momentum: core.momentum, seen: core.seen });
+      Object.assign(s, { settings: core.settings, lastBar: core.lastBar, momentum: core.momentum, seen: core.seen, aiQueue: core.aiQueue ?? [] });
       s.broker.account = core.broker.account;
       s.broker.positions = core.broker.positions;
       const byId = new Map(s.journal.map((d) => [d.id, d]));
@@ -288,7 +296,12 @@ export class Bot {
     this.phase = "ready";
     this.role = "runner";
     this.dirty.core = true; // ulozeni na konci zabere rizeni
+    this.serverRun = true;
+    const t0 = Date.now();
     await this.tick();
+    // fronta AI ve zbytku casu (beh ma limit 60 s)
+    await this.drainAi(45_000 - (Date.now() - t0));
+    await this.sync();
     const s = this.state;
     return `bot ${s.settings.botOn ? "běží" : "je vypnutý"}, ${s.broker.positions.length} pozic, balance ${s.broker.account.balance.toFixed(2)} $`;
   }
@@ -561,6 +574,7 @@ export class Bot {
       this.emit();
     }
     await this.sync();
+    this.kickAi();
   }
 
   // ---------------------------------------------------------- pozice a stiny
@@ -674,9 +688,19 @@ export class Bot {
     s.seen.push(sig.id); // hned, aby stejny signal behem cekani na AI nesel podruhe
     if (s.seen.length > 2000) s.seen = s.seen.slice(-1500);
     const base = codeOpinions(ctx);
-    const ai = await this.askAi(sig, system, candles, base.opinions, ctx.mid);
+    // AI jen radi -> rozhodnuti hned a posudek se dopise z fronty; ceka se jen, kdyz si AI vyslouzilo veto
+    let ai: { op: Opinion | null; note: string } = { op: null, note: "" };
+    const vetoEarned = s.settings.aiVeto === "auto" && aiScore(s.shadows).earned;
+    if (s.settings.ai && this.mode === "server") {
+      const actx = this.aiContext(sig, system, candles, base.opinions, ctx.mid);
+      if (vetoEarned) ai = await this.askAiNow(actx);
+      else {
+        s.aiQueue.push({ id: sig.id, ctx: actx, at: Date.now(), tries: 0 });
+        ai.note = AI_LATE;
+      }
+    }
     // NE od AI je tvrde veto, jen kdyz si to AI vyslouzilo na zivych signalech (lib/aiScore.ts)
-    if (ai.op?.vote === "ne" && s.settings.aiVeto === "auto" && aiScore(s.shadows).earned) {
+    if (ai.op?.vote === "ne" && vetoEarned) {
       ai.op = { ...ai.op, hard: true, role: `${ai.op.role} · veto (vysloužené)` };
     }
     const v = judge(ctx, ai.op ? [...base.opinions, ai.op] : base.opinions, base.lots, ai.note);
@@ -705,16 +729,11 @@ export class Bot {
   }
 
   /**
-   * AI analytik (Gemini pres server): dostane signal, trend, volatilitu, spread vuci SL a nazory
-   * ostatnich agentu. Jen radi. Kdyz je nedostupny, signal se rozhodne bez nej (poznamka v souhrnu).
+   * AI analytik (Gemini pres server): dostane signal, trend, volatilitu, spread vuci SL, zpravy a nazory
+   * ostatnich agentu. Kontext se sklada hned pri signalu (posudek muze prijit z fronty pozdeji).
    */
-  private async askAi(sig: Signal, system: SystemDef, candles: Candle[], opinions: Opinion[], mid: number) {
+  private aiContext(sig: Signal, system: SystemDef, candles: Candle[], opinions: Opinion[], mid: number): AiContext {
     const s = this.state;
-    const none = (note: string) => ({ op: null as Opinion | null, note: note ? ` (AI analytik: ${note}.)` : "" });
-    if (!s.settings.ai) return none("");
-    if (this.mode !== "server") return none("běží jen s účtem na serveru");
-    if (Date.now() - this.aiLast < 5000) return none("přeskočen – víc signálů najednou");
-    this.aiLast = Date.now();
     const m = MARKETS[sig.market];
     const close = candles.map((c) => c.close);
     const lastOf = (a: (number | null)[]) => (a.length ? a[a.length - 1] : null);
@@ -722,7 +741,7 @@ export class Bot {
     const spread = quote(m, mid, nowSec()).spread;
     const tail = candles.slice(-40);
     const done = s.shadows.filter((x) => x.system === sig.system && x.r != null);
-    const r = await this.backend.ai({
+    return {
       market: m.id, marketName: m.name, systemName: system.name, tf: system.tf, dir: sig.dir, price: sig.price,
       sl: sig.sl, tp: sig.tp, rrr: sig.tp == null ? null : Math.abs(sig.tp - sig.price) / slDist, spread,
       spreadPctOfSl: (spread / slDist) * 100, atr: lastAtr(candles), ema20: lastOf(ema(close, 20)), ema50: lastOf(ema(close, 50)),
@@ -738,18 +757,77 @@ export class Bot {
         .slice(0, 6).map((e) => `${e.currency} ${e.title} (${e.impact === "High" ? "vysoký" : "střední"} dopad) za ${inMinutes(e.time - nowSec())}`) : [],
       released: releasesFor(this.releases, m, nowSec() - 86400, nowSec()).slice(0, 8)
         .map((e) => `${releaseText(e)} (${e.impact === "High" ? "vysoký" : "střední"} dopad, před ${inMinutes(nowSec() - e.time)})`),
-    });
+    };
+  }
+
+  /** Jeden dotaz na AI (nejvys jeden za 5 s). */
+  private async callAi(actx: AiContext): Promise<{ op: Opinion | null; status: number }> {
+    const wait = this.aiLast + AI_GAP_MS - Date.now();
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    this.aiLast = Date.now();
+    const r = await this.backend.ai(actx);
     if (r.status !== 200 || !r.data.vote) {
       this.aiNote = r.data.error ?? `chyba ${r.status}`;
-      return none(`nedostupný – ${this.aiNote}`);
+      return { op: null, status: r.status };
     }
     this.aiNote = "";
     const a = r.data;
     const risks = a.risks?.length ? ` Rizika: ${a.risks.join("; ")}.` : "";
-    return {
-      op: { agent: AI_AGENT, role: `Gemini · jistota ${a.confidence ?? 0} %${a.news ? ` · ${a.news} titulků` : ""}`, vote: a.vote, hard: false, reason: `${a.reason}${risks}` } as Opinion,
-      note: "",
-    };
+    const op: Opinion = { agent: AI_AGENT, role: `Gemini · jistota ${a.confidence ?? 0} %${a.news ? ` · ${a.news} titulků` : ""}`,
+      vote: a.vote === "ano" ? "ano" : "ne", hard: false, reason: `${a.reason}${risks}` };
+    return { op, status: 200 };
+  }
+
+  /** Posudek hned (kdyz ma AI vyslouzene veto, rozhodnuti na nej musi pockat). */
+  private async askAiNow(actx: AiContext) {
+    const { op } = await this.callAi(actx);
+    return { op, note: op ? "" : ` (AI analytik: nedostupný – ${this.aiNote}.)` };
+  }
+
+  /**
+   * Odbavi frontu AI: po jednom dotazu za 5 s, dokud zbyva cas. Posudek se dopise k rozhodnuti v deniku
+   * a ke stinovemu obchodu (skore AI). Vycerpany limit -> zkusi se pozdeji; starsi nez 2 h se zahodi.
+   */
+  private async drainAi(budgetMs: number) {
+    const s = this.state;
+    const end = Date.now() + budgetMs;
+    const before = s.aiQueue.length;
+    s.aiQueue = s.aiQueue.filter((j) => Date.now() - j.at < 2 * 3600_000);
+    if (s.aiQueue.length !== before) this.dirty.core = true;
+    while (s.aiQueue.length && this.role === "runner" && s.settings.ai) {
+      if (Math.max(this.aiLast + AI_GAP_MS, Date.now()) + 18_000 > end) break; // na dalsi dotaz uz neni cas
+      const job = s.aiQueue[0];
+      const { op, status } = await this.callAi(job.ctx);
+      if (status === 429) break; // limit - fronta pocka
+      s.aiQueue.shift();
+      this.dirty.core = true;
+      if (!op) {
+        if (++job.tries < 3) s.aiQueue.push(job);
+        continue;
+      }
+      const d = s.journal.find((j) => j.id === job.id);
+      if (d && !d.opinions.some((o) => o.agent === AI_AGENT)) {
+        d.opinions.push(op);
+        d.summary = d.summary.replace(AI_LATE, "") + ` (AI analytik dodatečně: ${op.vote.toUpperCase()}.)`;
+        this.recordJournal(d, false);
+      }
+      const x = s.shadows.find((y) => y.signalId === job.id);
+      if (x && !x.ai) {
+        x.ai = op.vote;
+        this.recordShadow(x, false);
+      }
+      this.emit();
+    }
+  }
+
+  /** V prohlizeci bezi fronta AI na pozadi (tick na ni neceka). */
+  private kickAi() {
+    if (this.aiDraining || this.serverRun || !this.state.aiQueue.length || this.role !== "runner" || this.mode !== "server") return;
+    this.aiDraining = true;
+    this.drainAi(120_000).finally(() => {
+      this.aiDraining = false;
+      void this.sync();
+    });
   }
 
   private async runBarSystem(systemId: string, id: string, now: number) {
@@ -904,6 +982,11 @@ export class Bot {
       book = { dir: tgt, since: now, pending: tgt !== 0, attempts: 0 };
     }
     const holding = s.broker.positions.some((x) => x.market === id && x.system === MOMENTUM);
+    // ucici rezim: pozici, kterou drive zastavil Statistik nebo denni limit, zkusi znovu pri kazdem dennim rozhodnuti
+    if (!book.pending && !holding && book.dir !== 0 && !s.settings.statistikBlocks) {
+      book.pending = true;
+      book.attempts = 0;
+    }
     if (book.pending && !holding) {
       const dir = book.dir > 0 ? "long" : "short";
       const price = store.lastPrice.get(id)?.mid ?? closes[closes.length - 1];

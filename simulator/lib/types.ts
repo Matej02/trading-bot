@@ -1,3 +1,4 @@
+import type { AiContext } from "./aiPrompt";
 export type Dir = "long" | "short";
 export type TF = "1m" | "5m" | "15m" | "1h" | "1d";
 
@@ -138,6 +139,9 @@ export interface Lease {
 }
 
 /** Stav bez historie: ukada se na server jako jeden zaznam, historie zvlast (denik, obchody, stiny). */
+/** Dotaz na AI analytika ve fronte: rozhodnuti padlo hned, posudek se k nemu dopise dodatecne. */
+export interface AiJob { id: string; ctx: AiContext; at: number; tries: number }
+
 export interface CoreState {
   version: 1;
   settings: Settings;
@@ -145,6 +149,7 @@ export interface CoreState {
   lastBar: Record<string, number>;
   momentum: { book: Record<string, MomentumBook>; lastRun: Record<string, string> };
   seen: string[];
+  aiQueue?: AiJob[];
 }
 
 export interface LoadResult {
