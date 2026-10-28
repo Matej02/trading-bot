@@ -57,6 +57,24 @@
 > Kdyby ses někdy vracel: každý nový nápad jde tímhle aparátem ověřit
 > během hodin, ne měsíců. To je hlavní hodnota, která zbyla.
 
+## F5 – 6 strategií z S/R, SMC a volume profile na 39 trzích (2026-10-28) → nic neprošlo
+
+`research_f5.py` (plán a přesná pravidla předem v hlavičce), výstup `research_data/f5_vystup.txt`, obchody
+`f5_obchody.csv`. Hodinové svíčky MT5 s tick volume (forex od 2009–10, indexy/ropa od 2019), BTC/ETH Binance.
+
+| strategie | do 2023: n · win · ⌀ R | 2024+: n · win · ⌀ R | bez nákladů (vše) ⌀ R |
+|---|---|---|---|
+| S1 S/R breakout + retest (objem) | 18 272 · 31 % · −0,11 | 4 521 · 29 % · −0,18 | +0,02 |
+| S2 fakeout / sweep likvidity (PDH/PDL) | 19 878 · 28 % · −0,20 | 4 499 · 28 % · −0,21 | −0,01 |
+| S3 SMC BOS + FVG + order block | 13 257 · 28 % · −0,19 | 2 985 · 27 % · −0,23 | +0,02 |
+| S4 S/D zóny 4h + FRVP HVN | 379 · 23 % · −0,35 | 81 · 30 % · −0,13 | −0,11 |
+| S5 range VAL/VAH → POC | 21 581 · 29 % · −0,28 | 5 502 · 31 % · −0,25 | −0,04 |
+| S6 denní open + asijská likvidita | 27 718 · 25 % · −0,26 | 7 264 · 26 % · −0,24 | −0,07 |
+
+Výběr strategie × trh (n ≥ 40, ⌀ ≥ +0,05 R, t ≥ 2 do 2023): žádná dvojice. **Závěr:** i bez spreadu a swapů
+jsou všechny kolem nuly (úspěšnost ~33 % při TP 2R = náhoda) – koncepty v téhle mechanické podobě nemají
+výhodu; náklady brokera na 1h z nich dělají −0,1 až −0,3 R na obchod.
+
 ## F4 – denní signál, vstup až na menším timeframu (2026-10-28) → neprošlo
 
 `research_f4.py` (plán předem v hlavičce), obchody `research_data/f4_obchody.csv`. Denní signál = průraz z F2,
