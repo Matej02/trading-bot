@@ -57,6 +57,23 @@
 > Kdyby ses někdy vracel: každý nový nápad jde tímhle aparátem ověřit
 > během hodin, ne měsíců. To je hlavní hodnota, která zbyla.
 
+## F4 – denní signál, vstup až na menším timeframu (2026-10-28) → neprošlo
+
+`research_f4.py` (plán předem v hlavičce), obchody `research_data/f4_obchody.csv`. Denní signál = průraz z F2,
+po něm se až 5 dní čeká na vstup: B retest proražené úrovně (SL 1 ATR), C1/C15 návrat k EMA20 na 1h / 15m
+a zavření zpět (SL za minimem/maximem 10 svíček). Srovnání s A = vstup hned (F2). Vše se spreadem a swapy.
+
+| varianta | do 2023: n · win · ⌀ R | 2024+: n · win · ⌀ R | SL ⌀ |
+|---|---|---|---|
+| A vstup hned (F2) | 669 · 34 % · −0,03 | 185 · 48 % · **+0,31** | 2,0 ATR |
+| B retest úrovně | 698 · 31 % · −0,08 | 212 · 32 % · −0,09 | 1,0 ATR |
+| C1 pullback 1h | 1508 · 27 % · −0,19 | 430 · 31 % · −0,07 | 0,36 ATR |
+| C15 pullback 15m | 601 · 30 % · −0,11 | 575 · 32 % · −0,05 | 0,16–0,24 ATR |
+
+**Závěr:** užší SL z menšího timeframu jen zvýší počet vyražení šumem – úspěšnost i výsledek klesnou. Vstup hned
+zůstává nejlepší. Navíc: v období 2009–2023 (kde jsou 1h data) byl i vstup hned zhruba na nule → výsledek F2
+stojí hlavně na letech 2024–26 (silné trendy zlata, indexů, BTC).
+
 ## F3 – průraz z F2 na 30 trzích, na kterých se nevybíral (2026-10-27) → neprošlo
 
 `research_f3.py` (plán předem v hlavičce), výstup `research_data/f3_verdikt.json`. Setup beze změny
