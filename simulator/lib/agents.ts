@@ -3,7 +3,7 @@
 import registry from "./registry.json";
 import { atr, ema, rollingMedian } from "./indicators";
 import { currencies, fmt, isCrypto, MARKETS, quote } from "./markets";
-import { lotsFor, pnlMoney, sign, type BrokerState } from "./sim";
+import { lotsFor, pnlMoney, sign, type BrokerState, dailyLimitOf } from "./sim";
 import { eventsFor, inMinutes, marketCurrencies, NEWS_AFTER_MIN, NEWS_BEFORE_MIN, releasesFor, releaseText, type CalEvent, type Release } from "./calendar";
 import { momentumReturn, type SystemDef } from "./strategies";
 import type { Candle, ClosedTrade, Market, Opinion, Settings, Signal } from "./types";
@@ -124,9 +124,9 @@ function risk(x: AgentCtx): { op: Opinion; lots: number | null } {
   const base = { agent: "Risk", role: "hlídá limity prop firmy, velikost a expozici", hard: true };
   const a = x.broker.account;
   const no = (reason: string) => ({ op: { ...base, vote: "ne" as const, reason }, lots: null });
-  const limit = x.settings.dailyLossPct;
+  const limit = dailyLimitOf(x.settings); // null = ucici rezim, denni limit neplati
   if (a.halted) return no(`Challenge neprošla (${a.halted}) – živé obchody neberu, signály jen sbírám do statistiky.`);
-  if (a.pausedDay === a.dayKey) {
+  if (limit != null && a.pausedDay === a.dayKey) {
     return no(`Dnes padl denní limit ztráty ${limit} % – do konce dne neberu živé obchody, signály jen sbírám do statistiky.`);
   }
   if (a.passed) return no("Cíl challenge je splněný – dál neriskovat.");
@@ -143,7 +143,7 @@ function risk(x: AgentCtx): { op: Opinion; lots: number | null } {
 
   const riskMoney = Math.abs(pnlMoney({ market: x.market.id, dir: x.signal.dir, lots, entry }, x.signal.sl));
   const dailyLoss = Math.max(0, a.dayStart - x.equity);
-  if (((dailyLoss + riskMoney) / a.start) * 100 > limit) {
+  if (limit != null && ((dailyLoss + riskMoney) / a.start) * 100 > limit) {
     return no(`Při zásahu SL by denní ztráta byla ${(((dailyLoss + riskMoney) / a.start) * 100).toFixed(2)} % – nad limitem ${limit} %.`);
   }
   const cur = currencies(x.market);

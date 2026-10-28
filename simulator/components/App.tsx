@@ -8,6 +8,7 @@ import { AccountPanel, ExportButtons, JournalPanel, Log, ManualTrade, NewsPanel,
 import { getBot, type Bot } from "@/lib/bot";
 import { store } from "@/lib/data";
 import { BROKER_ACCOUNT, CHART_ORDER, fmt, MARKETS, quote } from "@/lib/markets";
+import { dailyLimitOf } from "@/lib/sim";
 import { SYSTEM } from "@/lib/strategies";
 import type { Deliberation, TF } from "@/lib/types";
 
@@ -200,7 +201,7 @@ export default function App() {
           </div>
         </section>
         <aside className="right">
-          <AccountPanel broker={s.broker} eq={bot.equityNow()} dailyLimit={s.settings.dailyLossPct} />
+          <AccountPanel broker={s.broker} eq={bot.equityNow()} dailyLimit={dailyLimitOf(s.settings)} />
           <div className="room-title">Místnost agentů</div>
           <AgentRoom journal={s.journal} onPick={pick} />
         </aside>

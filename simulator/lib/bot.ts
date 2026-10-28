@@ -13,7 +13,7 @@ import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from 
 import { eventsFor, inMinutes, releasesFor, releaseText, type CalEvent, type Release } from "./calendar";
 import {
   closePosition, DAILY_LOSS_DEFAULT, dayKey, equity, exitPrice, findHit, freshBroker, lotsFor, openPosition, swapBetween,
-  updateAccount, type BrokerState,
+  updateAccount, dailyLimitOf, type BrokerState,
 } from "./sim";
 import {
   barSignal, barStatus, dailyCloses, lastAtr, MANUAL, manualLevels, MOM_RISK_PCT, MOM_SL_SIGMA, momentumReturn,
@@ -563,7 +563,7 @@ export class Bot {
       const eq = this.equityNow();
       const a = s.broker.account;
       const was = { passed: a.passed, day: a.dayKey };
-      const { hit } = updateAccount(s.broker, eq, now, s.settings.dailyLossPct);
+      const { hit } = updateAccount(s.broker, eq, now, dailyLimitOf(s.settings));
       if (hit || was.passed !== a.passed || was.day !== a.dayKey) this.dirty.core = true;
       if (hit) {
         this.log(`${hit} – zavírám pozice, živé obchody stop, signály dál sbírám do statistiky.`);
@@ -749,7 +749,7 @@ export class Bot {
       closes: tail.map((c) => c.close), rangeHigh: Math.max(...tail.map((c) => c.high)), rangeLow: Math.min(...tail.map((c) => c.low)),
       reason: sig.reason, opinions: opinions.map((o) => ({ agent: o.agent, vote: o.vote, reason: o.reason })),
       dailyLossPct: Math.max(0, ((s.broker.account.dayStart - this.equityNow()) / s.broker.account.start) * 100),
-      dailyLimitPct: s.settings.dailyLossPct, openPositions: s.broker.positions.length,
+      dailyLimitPct: dailyLimitOf(s.settings), openPositions: s.broker.positions.length,
       history: done.length ? { n: done.length, winrate: (done.filter((x) => x.r! > 0).length / done.length) * 100,
         avgR: done.reduce((a, x) => a + x.r!, 0) / done.length } : null,
       digits: m.digits,

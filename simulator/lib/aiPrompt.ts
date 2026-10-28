@@ -23,7 +23,7 @@ export interface AiContext {
   reason: string; // proc strategie signal dala
   opinions: { agent: string; vote: string; reason: string }[];
   dailyLossPct: number;
-  dailyLimitPct: number;
+  dailyLimitPct: number | null; // null = ucici rezim, denni limit vypnuty
   openPositions: number;
   history: { n: number; winrate: number; avgR: number } | null; // vysledky teto strategie v simulaci (stinove)
   digits: number;
@@ -64,7 +64,9 @@ export function buildPrompt(c: AiContext) {
     `Spread ${f(c.spread)} = ${c.spreadPctOfSl.toFixed(0)} % vzdálenosti SL. ATR(14) ${f(c.atr)}.`,
     `EMA20 ${f(c.ema20)} (${rel(c.ema20)}), EMA50 ${f(c.ema50)} (${rel(c.ema50)}), EMA200 ${f(c.ema200)} (${rel(c.ema200)}). RSI(14) ${c.rsi14 == null ? "?" : c.rsi14.toFixed(0)}.`,
     `Rozsah posledních ${c.closes.length} svíček: ${f(c.rangeLow)} – ${f(c.rangeHigh)}. Zavírací ceny (nejstarší → nejnovější): ${c.closes.map((x) => x.toFixed(c.digits)).join(", ")}.`,
-    `Účet: denní ztráta ${c.dailyLossPct.toFixed(2)} % z limitu ${c.dailyLimitPct} %, otevřených pozic ${c.openPositions}.`,
+    c.dailyLimitPct == null
+      ? `Účet: učící režim – denní limit ztráty je vypnutý (sbírají se data), při hodnocení ho neber v úvahu. Otevřených pozic ${c.openPositions}.`
+      : `Účet: denní ztráta ${c.dailyLossPct.toFixed(2)} % z limitu ${c.dailyLimitPct} %, otevřených pozic ${c.openPositions}.`,
     h ? `Tato strategie v simulaci: ${h.n} uzavřených signálů, úspěšnost ${h.winrate.toFixed(0)} %, průměr ${h.avgR.toFixed(2)} R.` : "Tato strategie zatím nemá v simulaci výsledky.",
     c.events?.length ? `Zprávy pro tento trh v příštích 24 h: ${c.events.join("; ")}.` : "Žádné důležité zprávy pro tento trh v příštích 24 h.",
     c.released?.length ? `Vyhlášená čísla za posledních 24 h: ${c.released.join("; ")}.` : "Za posledních 24 h nevyšla žádná důležitá čísla pro tento trh (nebo je nemám).",

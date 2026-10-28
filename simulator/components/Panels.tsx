@@ -29,7 +29,7 @@ function Bar({ label, value, limit, good }: { label: string; value: number; limi
   );
 }
 
-export function AccountPanel({ broker, eq, dailyLimit }: { broker: BrokerState; eq: number; dailyLimit: number }) {
+export function AccountPanel({ broker, eq, dailyLimit }: { broker: BrokerState; eq: number; dailyLimit: number | null }) {
   const a = broker.account;
   const daily = Math.max(0, ((a.dayStart - eq) / a.start) * 100);
   const dd = Math.max(0, ((a.peak - eq) / a.start) * 100);
@@ -56,11 +56,12 @@ export function AccountPanel({ broker, eq, dailyLimit }: { broker: BrokerState; 
         Dnes uzavřeno {closedToday.length} {closedToday.length === 1 ? "obchod" : closedToday.length >= 2 && closedToday.length <= 4 ? "obchody" : "obchodů"}:{" "}
         <span className={realizedToday >= 0 ? "up" : "down"}>{money(realizedToday)}</span>.
       </div>
-      <Bar label="Denní ztráta" value={daily} limit={dailyLimit} />
+      {dailyLimit != null ? <Bar label="Denní ztráta" value={daily} limit={dailyLimit} />
+        : <div className="small muted">Denní ztráta {daily.toFixed(2)} % · limit vypnutý (učící režim)</div>}
       <Bar label="Drawdown" value={dd} limit={MAX_DD_LIMIT} />
       <Bar label="Zisk k cíli" value={Math.max(0, profit)} limit={PROFIT_TARGET} good />
       {a.halted && <div className="alert down">Challenge NEPROŠLA: {a.halted}. Signály se dál sbírají do statistiky, reset v Nastavení.</div>}
-      {!a.halted && a.pausedDay === a.dayKey && (
+      {!a.halted && dailyLimit != null && a.pausedDay === a.dayKey && (
         <div className="alert down">Dnes padl denní limit {dailyLimit} % – živé obchody stop do zítřka, signály se dál sbírají do statistiky.</div>
       )}
       {a.passed && !a.halted && <div className="alert up">Cíl {PROFIT_TARGET} % splněn – v simulaci.</div>}
@@ -483,7 +484,7 @@ export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
           Učící režim – brát všechno
         </button>
         <span className="muted small">Všechny strategie obchodují na simulovaném účtu (i neověřené a ztrátové), aby bylo co
-          nejvíc obchodů a šlo poznat, co funguje. Tvrdé kontroly platí dál – po denní ztrátě 2 % se do konce dne jen sbírají data.</span>
+          nejvíc obchodů a šlo poznat, co funguje. Denní limit ztráty se v něm neuplatňuje; ostatní tvrdé kontroly platí dál.</span>
       </div>
       <div className="row gap">
         <button className={`btn ${s.statistikBlocks ? "on" : ""}`} onClick={() => bot.update((st) => {
@@ -527,7 +528,7 @@ export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
         </select>
       </label>
       <label className="row">
-        <span>Denní limit ztráty (pak do konce dne jen sběr dat)</span>
+        <span>Denní limit ztráty (pak do konce dne jen sběr dat){!s.statistikBlocks && <b> – v učícím režimu neplatí</b>}</span>
         <select value={s.dailyLossPct} onChange={(e) => bot.update((st) => { st.settings.dailyLossPct = +e.target.value; })}>
           {[1, 1.5, 2, 3, 4].map((v) => <option key={v} value={v}>{v} %</option>)}
         </select>

@@ -129,7 +129,12 @@ export function equity(s: BrokerState, prices: Map<string, { mid: number; t: num
  * Denni limit = do konce dne jen sber dat, drawdown limit = challenge neprosla.
  * hit = prave ted se neco zaslo (bot pak zavre pozice).
  */
-export function updateAccount(s: BrokerState, eq: number, t: number, dailyLimitPct: number) {
+/** Denni limit ztraty, ktery opravdu plati: v ucicim rezimu (Statistik nevetuje) je vypnuty - jde o data. */
+export function dailyLimitOf(st: { statistikBlocks: boolean; dailyLossPct: number }): number | null {
+  return st.statistikBlocks ? st.dailyLossPct : null;
+}
+
+export function updateAccount(s: BrokerState, eq: number, t: number, dailyLimitPct: number | null) {
   const a = s.account;
   const day = dayKey(t);
   if (day !== a.dayKey) {
@@ -144,7 +149,7 @@ export function updateAccount(s: BrokerState, eq: number, t: number, dailyLimitP
     a.halted = `drawdown ${dd.toFixed(2)} % (limit ${MAX_DD_LIMIT} %)`;
     hit = `DRAWDOWN ${dd.toFixed(2)} % – challenge neprošla`;
   }
-  if (a.pausedDay !== day && daily >= dailyLimitPct) {
+  if (dailyLimitPct != null && a.pausedDay !== day && daily >= dailyLimitPct) {
     a.pausedDay = day;
     hit ??= `DENNÍ LIMIT ${daily.toFixed(2)} % (limit ${dailyLimitPct} %)`;
   }
