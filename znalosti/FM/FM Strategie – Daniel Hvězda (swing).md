@@ -75,3 +75,6 @@ Filtry trend (2 HH + 2 HL), lokace v třetinách a COT extrém. Srovnání s [[N
 - **COT na grafech:** svislé čáry v extrémech commercials (oranžová = extrém long, modrá = extrém short) se kryjí s dny a vrcholy
   týdenních grafů futures (6B, 6A, 6S). Indikátor je TradingView „COT“ (legacy).
 - **Svíčky:** hammer a engulfing na dně nebo vrcholu po pohybu do zóny (fialové šipky).
+
+## Otestováno – F10 (2026-10-29)
+Entry model přesně podle PDF na minutových datech, OOS 2022–26: **D1 zóna + svíčka −0,21 R (n 187)**, bez výhody. → [[F10 Entry modely mentorů FM]]

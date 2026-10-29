@@ -70,3 +70,6 @@ To je blízké [[F7 Dokument 6 strategií SMC]] S6. Na zlatě M15 v F7 vyšlo �
 - **nPOC:** SVP (session volume profile, row size 148, VA 70 %, „Extend POC Right“).
   Na XAU a GBPUSD se nPOC (červené čáry) testují o dny později.
 - **Zprávy:** NFP, FOMC a Core PPI na M5 dávají prudké svíčky oběma směry, proto se neobchodují.
+
+## Otestováno – F10 (2026-10-29)
+Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,44 R (n 153)**, bez výhody. → [[F10 Entry modely mentorů FM]]

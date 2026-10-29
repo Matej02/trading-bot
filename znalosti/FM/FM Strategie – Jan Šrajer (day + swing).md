@@ -101,3 +101,6 @@ Skóre každé měny (EUR, GBP, USD, AUD, NZD, CAD, CHF, JPY) se skládá ze slo
 - **Entry model 1 a 3:** viz text výše (EURUSD M15, 14. 3. 2024). RR na obrázcích ~3–4.
 - **Score overview:** po změně skóre retest zóny (šedá linie) a short se SL nad zónou. Tabulka skóre všech párů obsahuje sloupce Score, COT, Retail sentiment a Seasonality.
 - **COT (EUR, USD):** zakroužkované extrémy, kde se long a short křivky protnou nebo rozevřou, předcházejí otočkám.
+
+## Otestováno – F10 (2026-10-29)
+Entry model přesně podle PDF na minutových datech, OOS 2022–26: **day trading −0,29 R (n 97)**, bez výhody. → [[F10 Entry modely mentorů FM]]

@@ -85,3 +85,6 @@ Strategie je postavená na „pravděpodobnostech a statistikách“. Viz [[FM m
 - **Equity křivka** statistik je hladce rostoucí bez zdroje dat (marketing).
 - **COT EUR:** report z 4. 2. 2025, commercials long 348k / short 311k, změna −6 476 / −1 352.
 - **Zprávy:** 674 obchodů kolem zpráv, 40,8 % vs 59,2 % (bez popisu, co je co).
+
+## Otestováno – F10 (2026-10-29)
+Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,23 R (n 5 150)**, bez výhody. → [[F10 Entry modely mentorů FM]]

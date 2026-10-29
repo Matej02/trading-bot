@@ -86,3 +86,6 @@ Objem je u forexu jen tickový, viz [[Futures data a objem]].
 - **Skóre momentum:** GBPCAD skóre 10 → 8 → −1 a cena pak sweepne equal highs a padá.
   EURGBP skóre −1 → +2 a cena sweepne lows a roste. Vstup = změna skóre + sweep likvidity.
 - **Zprávy:** 0,74% pohyb na FOMC v řádu minut, proto nevstupovat před red news.
+
+## Otestováno – F10 (2026-10-29)
+Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,36 R (n 306)**, bez výhody. → [[F10 Entry modely mentorů FM]]

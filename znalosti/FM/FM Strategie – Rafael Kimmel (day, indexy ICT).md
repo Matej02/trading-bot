@@ -65,3 +65,6 @@ Přístup je ICT: „funkční koncepty, jednoduchost“. Viz [[FM materiály]].
   - TP se bere před extreme zónou nebo na poslední interní likviditě.
 - **Bias (cvičení):** horizontály předchozího high a low dne, cíl = nejbližší likvidita.
 - **NQ vs ES:** stejná seance, jeden víc bullish (best pair).
+
+## Otestováno – F10 (2026-10-29)
+Entry model přesně podle PDF na minutových datech, OOS 2022–26: **model 1 −0,04 R (n 186), model 2 −0,11 R**, bez výhody. → [[F10 Entry modely mentorů FM]]

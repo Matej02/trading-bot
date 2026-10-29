@@ -63,3 +63,6 @@ RR na obrázcích ~2:1.
   „Poslední high před průrazem“ je spouštěč.
 - **Multičasová analýza NQ:** D1 downtrend (trendline), na M30 boxy uptrendu v downtrendu = pullbacky na short.
 - Svíčky: doji, hammer, engulfing a hanging man na M5 v zóně (zelené boxy).
+
+## Otestováno – F10 (2026-10-29)
+Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,05 R (n 2 868), NQ −0,01 R**, bez výhody. → [[F10 Entry modely mentorů FM]]
