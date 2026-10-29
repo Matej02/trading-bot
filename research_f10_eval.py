@@ -60,7 +60,10 @@ def random_m1(tr, reps=3, seed=7):
                 risk = x.risk_atrD * a
                 E = M["o"][i0]
                 SL, TP = E - x.d * risk, E + x.d * x.Rt * risk
-                iex = den[k] if x.exit_rule == "den" else i0 + int(x.hold) + 1
+                if x.exit_rule == "den":
+                    iex = den[k]
+                else:  # pevna maximalni doba drzeni (ne skutecna doba obchodu - ta zavisi na vysledku)
+                    iex = i0 + int(str(x.exit_rule).rstrip("d")) * 1440
                 s = X.sim(M, x.d, E, SL, TP, i0, i0, 1, iex)
                 if s:
                     res.append(s["R"])

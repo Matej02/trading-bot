@@ -51,3 +51,5 @@ Všechny strategie z FM PDF jsou teď otestované:
 - entry modely všech 9 mentorů (F10).
 
 Žádná nemá doloženou výhodu. Do simulátoru se nic dalšího nepřidává; experiment F9 v simulátoru dál sbírá live data.
+
+**Pozor:** výsledky Hakimi a srovnání s náhodou u Valcháře a Hakimi měly chybu, opraveno v [[F11 Mentoři FM znovu a podrobně]].
