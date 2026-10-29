@@ -836,7 +836,7 @@ export class Bot {
     const closed = closedCandles(await store.get(m, sys.tf, POLL[sys.tf]), sys.tf, now);
     const key = `${systemId}|${id}`;
     // denni systemy potrebuji celou historii (tydenni EMA50), ostatnim staci 400 svicek
-    const win = sys.tf === "1d" ? closed : closed.slice(-400);
+    const win = sys.tf === "1d" ? closed : closed.slice(-(sys.window ?? 400));
     const st = barStatus(systemId, win, m.digits);
     this.radar.set(key, { system: systemId, market: id, text: st.text, tone: st.tone, t: now });
     if (closed.length < 150) return;
@@ -851,7 +851,7 @@ export class Bot {
     // cas signalu = uzavreni svicky (jako v Python botovi) - po otevreni stranky s pauzou
     // validator stary signal zamitne, misto aby se vstupovalo na zastaralou cenu
     // SL podle strategie, TP podle nastaveneho pomeru zisk : riziko
-    const rrr = this.state.settings.rrr;
+    const rrr = sys.rrr ?? this.state.settings.rrr;
     await this.handleSignal({
       id: `${systemId}-${id}-${last.time}`, system: systemId, market: id, dir: bs.dir, price: last.close,
       time: last.time + TF_SEC[sys.tf], barTime: last.time, sl: bs.sl,

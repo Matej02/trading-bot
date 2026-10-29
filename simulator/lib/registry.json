@@ -54,5 +54,23 @@
    "status": "unvalidated",
    "note": "Kandidát F6 (2026-10-28): RSI(2) < 10 nad SMA200, long, ven nad SMA5. Úspěšnost 67–72 % ve všech obdobích; indexy celkem: kontrola 2019–23 t 0,6 (neprošlo), holdout 2024+ +0,08 R; US indexy 2019+ PF 1,9, t 2,8 (výběr USA až dodatečně) → ověřuje se živě"
   }
+ },
+ "fm_mss_h4": {
+  "*": {
+   "status": "unvalidated",
+   "note": "F9 2026-10-29: nejlepší kombinace FM konceptů na vývoji (+0,05 R), validace −0,06 R, holdout 2022–26 −0,03 R – live experiment"
+  }
+ },
+ "fm_pruraz_h4": {
+  "*": {
+   "status": "unvalidated",
+   "note": "F9 2026-10-29: vývoj +0,03 R, validace −0,07 R, holdout −0,05 R – live experiment"
+  }
+ },
+ "fm_zona_h4": {
+  "*": {
+   "status": "unvalidated",
+   "note": "F9 2026-10-29: S/D zóny po FM na H4 s potvrzením; vývoj −0,07 R, validace 0,00 R, holdout −0,08 R – live experiment"
+  }
  }
 }

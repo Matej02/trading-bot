@@ -57,6 +57,33 @@
 > Kdyby ses někdy vracel: každý nový nápad jde tímhle aparátem ověřit
 > během hodin, ne měsíců. To je hlavní hodnota, která zbyla.
 
+## F7 – 6 strategií z dokumentu uživatele (SMC + Volume Profile, vstup MSS na M1–M15) (2026-10-28) → nic neprošlo
+
+Plán a výsledky jsou v `F7_PLAN.md`. Bloky a simulace jsou v `f7_lib.py`, strategie v `research_f7.py`, vyhodnocení v `research_f7_eval.py` a koncepty v `research_f7_koncepty.py`. Data jsou v `research_data/f7`:
+- krypto M1 Binance 09/2022–10/2026 (9 mincí),
+- forex a komodity z MT5 na M15 (~4 roky) a na M5 (~1,5 roku).
+
+Vývoj trvá do 2025-02, OOS od 2025-03. Počítá se po nákladech brokera.
+
+| strategie | věrná pravidla: obchodů/rok/trh (krypto) | nejlepší uvolněná varianta krypto: vývoj → OOS |
+|---|---|---|
+| S1 Sweep & Shift | 0,03 | jádro: −0,51 R (n 92) → −0,21 R (n 63) |
+| S2 zpřesněná S/D zóna | 0,05 | okno20: n 11 → n 8, málo dat |
+| S3 rotace ve VA / 80 % | 0,22 | 80 %: +0,00 R (n 42) → −0,76 R (n 24) |
+| S4 VWAP trend pullback | 0,08 | n ≤ 7, málo dat |
+| S5 breakout z balance | 0,00 | přímo: +0,09 R (n 17) → −0,79 R (n 9) |
+| S6 Daily Open (Power of 3) | 0,05 | jádro: −0,35 R (n 42) → −0,17 R (n 27) |
+
+Koncepty s velkým vzorkem (krypto, vstup trhem, TP 2R):
+- SFP na PDH/PDL, PWH/PWL, EQH, Asii, Londýně a VAH/VAL dává po nákladech −0,12 až −0,36 R. Bez nákladů je to −0,03 R (n 11 895).
+- Pullback k VWAP v trendu: −0,18 R (n 2 495).
+
+**Závěr:**
+- Pravidla jsou tak přísná, že skoro neobchodují. Dokument čeká 1–5 obchodů týdně, realita je méně než 1 za rok.
+- Uvolněné verze jsou ztrátové a horší než náhodné vstupy.
+- Koncepty nemají výhodu ani před spreadem.
+- Forex a komodity s M1 vstupem (MT5 od 2020, doplněno 2026-10-29): stejně – S1-jádro −0,8 R, VWAP pullback −0,16 / −0,03 R, žádná varianta nemá ani 30 obchodů ve vývoji.
+
 ## F5 – 6 strategií z S/R, SMC a volume profile na 39 trzích (2026-10-28) → nic neprošlo
 
 `research_f5.py` (plán a přesná pravidla předem v hlavičce), výstup `research_data/f5_vystup.txt`, obchody
@@ -504,3 +531,16 @@ pullback – to je vědomý kompromis: spolehlivost před rychlostí.
 Všechny tyhle hodnoty jsou startovní bod, ne dogma – další úpravy dělej
 stejnou disciplínou jako tuhle: diagnóza na trénovacích datech, ověření
 na datech, která jsi při ladění neviděl.
+
+## F8 a F9 – strategie a kombinace konceptů z PDF kurzu (2026-10-29) → nic neprošlo, 3 kombinace jako live experiment
+
+**F8** (`F8_PLAN.md`, `research_f8*.py`): S/D zóny podle kurzu na D1, H4 a D1 uvnitř W1, daily bias a makro skóre.
+Testováno na 26 trzích 2009–2026 po nákladech brokera.
+- S/D zóny: OOS 2020–26 −0,17 R (H4) a −0,22 R (D1), náhodné vstupy −0,04 až −0,07 R.
+- Daily bias: obchod −0,06 R. Makro skóre: ~0.
+- První běh S/D zón (+0,54 R) byl pohled do budoucnosti. Kontrola zpožděným vstupem je v `research_f8_kontrola.py`.
+
+**F9** (`F9_PLAN.md`, `research_f9*.py`): 8 spouštěčů × 0–2 filtry z 9 × TP 1,5/2/3R, na H1 i H4 základu, tedy 2 208 kombinací na 28 trzích.
+- **0 prošlo výběrem 2010–17.**
+- Tři nejlepší H4 kombinace podle vývoje běží v simulátoru jako neověřený live experiment: `fm_mss_h4`, `fm_pruraz_h4` a `fm_zona_h4`
+  (`simulator/lib/fm.ts`, shoda TS/Python 119/120 signálů v `simulator/scripts/compare-fm.ts`).
