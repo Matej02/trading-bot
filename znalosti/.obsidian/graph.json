@@ -1,0 +1,79 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
+  "showAttachments": true,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": true,
+  "colorGroups": [
+    {
+      "query": "path:Výzkum",
+      "color": {
+        "a": 1,
+        "rgb": 15167313
+      }
+    },
+    {
+      "query": "path:Strategie",
+      "color": {
+        "a": 1,
+        "rgb": 2792847
+      }
+    },
+    {
+      "query": "path:Koncepty",
+      "color": {
+        "a": 1,
+        "rgb": 15320170
+      }
+    },
+    {
+      "query": "path:Metodika",
+      "color": {
+        "a": 1,
+        "rgb": 9089405
+      }
+    },
+    {
+      "query": "path:Infrastruktura",
+      "color": {
+        "a": 1,
+        "rgb": 7114431
+      }
+    },
+    {
+      "query": "path:Trhy",
+      "color": {
+        "a": 1,
+        "rgb": 11566278
+      }
+    },
+    {
+      "query": "path:Projekt",
+      "color": {
+        "a": 1,
+        "rgb": 16032353
+      }
+    },
+    {
+      "query": "tag:#rozcestnik",
+      "color": {
+        "a": 1,
+        "rgb": 16777215
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1.2,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": true,
+  "centerStrength": 0.518713248970312,
+  "repelStrength": 12,
+  "linkStrength": 1,
+  "linkDistance": 180,
+  "scale": 0.2588386562181616,
+  "close": false
+}

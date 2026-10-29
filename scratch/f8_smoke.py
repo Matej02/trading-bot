@@ -1,0 +1,15 @@
+import sys, time
+sys.path.insert(0, r"D:\Trading bot")
+import numpy as np, pandas as pd
+import research_f8 as F
+t0 = time.time()
+H = F.load("EURUSD"); T = F.tfs(H)
+for tf in ("W1", "D1", "H4"):
+    Z = F.find_zones(T[tf], 1.5)
+    print(tf, len(T[tf]["c"]), "zon", len(Z), "pivot", sum(z["piv"] for z in Z), "trend shoda", sum(z["tr"] == z["d"] for z in Z))
+Z = F.find_zones(T["D1"], 1.5)
+z = Z[len(Z) // 2]
+print(z, pd.to_datetime(H["t"][T["D1"]["st"][z["b0"]]], unit="s"), pd.to_datetime(H["t"][T["D1"]["en"][z["act"]]], unit="s"))
+v = dict(piv=True, trend=False, sl20=False, tp="2", be=False)
+tr = F.one_per_dir(F.zone_trades(H, T["D1"], Z, Z, v, "D1"))
+print("obchodu", len(tr), "prum R", round(np.mean([x["R"] for x in tr]), 3), "win", round(np.mean([x["R"] > 0 for x in tr]), 2), round(time.time() - t0, 1), "s")
