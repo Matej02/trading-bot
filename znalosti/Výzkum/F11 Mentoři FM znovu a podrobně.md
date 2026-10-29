@@ -26,7 +26,10 @@ To odpovídá původnímu F2. **Motor umí ukázat zisk, když výhoda existuje*
 | [[FM Strategie – Sunita Hakimi (day, zlato)\|Hakimi]] | SL pod zónou/0,75, H4+M15 zóny + FVG, limit / M15 potvrzení | limit −0,36 R; **M15 potvrzení −0,08 R** (n 781) | −0,06 R |
 | [[FM Strategie – Rafael Kimmel (day, indexy ICT)\|Kimmel]] | 15m PDA z předchozího dne, best pair NQ/ES, FVG vstup, TP nad range | +0,08 R (n 196) | +0,08 R |
 | [[FM Strategie – Oliver Pátek (scalping NQ)\|Pátek]] | odmítnutí na H4 úrovni, LH/HL, TP další pivot | −0,05 R (n 1 464), všech 6 variant −0,03 až −0,10 | −0,05 R |
-| [[FM Strategie – Daniel Hvězda (swing)\|Hvězda]] | rozpad long na zlatě a indexech | malé n (14–35), náhodné longy +0,14 R | – |
+| [[FM Strategie – Daniel Valchář (swing)\|Valchář]] | OB 1–3 svíčky, POC v OB, sweep, trend D1 i v den vstupu, limit hrana / 50 % / H1 potvrzení, RR 1,8–3 | −0,30 R (n 335); 50 % se sweepem +0,03 R (n 125) | −0,06 R |
+| [[FM Strategie – Petr Můčka (day, pravděpodobnosti)\|Můčka]] | bias barvou svíčky, shift M5/M1 od swingu s momentem, trh/FVG/GP, SL na extrému 6–20 pipů, TP Asie/PD | −0,32 R (n 40); všech 12 variant −0,08 až −0,59 | 0,00 R |
+| [[FM Strategie – Jan Šrajer (day + swing)\|Šrajer DT]] | M15 zóna ve 4H zóně + likvidita + discount, limit / M5 potvrzení, jeho okna / celý den | −0,14 R (n 89); limit −0,26 až −0,32 | −0,11 R |
+| [[FM Strategie – Daniel Hvězda (swing)\|Hvězda]] | plný plán: trend, D v W, lokace v třetinách, limit/svíčka, TP protizóna/2R, BE 1R, 26 trhů | −0,32 R (n 49); ostatní −0,02 až −0,30; D v W jen 1–11 obchodů za 17 let | – |
 
 ## 4. Co se ukázalo napříč
 - **Limit do zóny je ztrátový** (Veselovský, Hakimi, Valchář: −0,36 až −0,47 R). Když cena limit dotkne, častěji zónou projede, než se odrazí.
@@ -42,6 +45,6 @@ Simulace prop challenge (1 % riziko, RR 1:2, 2 obchody denně):
 Výplaty tedy existují, ale z výsledků vidíme jen ty, kterým to vyšlo. Ostatní kupují další challenge. Nedokazuje to, že pravidla mají výhodu.
 
 ## Závěr
-Ani po opravách a podrobném převodu nemá žádná ze strategií mentorů doloženou výhodu. Do simulátoru se nic nového nepřidává.
+Ani po opravách a podrobném převodu nemá žádná z 8 strategií mentorů doloženou výhodu (všech 8 ve v2, 2026-10-29). Do simulátoru se nic nového nepřidává.
 Co funguje, je dál [[Průraz F2 (proraz_d1)]] a [[RSI(2) pullback (mr_rsi2_d1)]].
 Nejbližší ke kladu: Hakimi s M15 potvrzením na zlatě a EURUSD (+0,06 až +0,08 R, neprůkazné) a Kimmel best pair na US30 (+0,33 R, n 62).
