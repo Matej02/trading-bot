@@ -68,6 +68,8 @@ Dílčí prvky už byly negativní v [[F5 SMC a volume profile na 1h]] a [[F7 Do
 Nový je **daily bias filtr** a **vstup pod/nad NY DO**.
 
 ## Z grafů v PDF (prohlédnuto všech obrázků, 2026-10-29)
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Michal Veselovský (day)]] (49)
+
 - **Daily bias na D1 v praxi** (číslované kroky na denním grafu):
   1. Cena dojde pro low (externí LQ).
   2. Cestou vznikne imbalance (FVG, interní LQ) a čeká se její vyplnění.

@@ -57,6 +57,8 @@ Návrh testu: zóny W1 a D1 podle pravidel výše, vstup limitem, SL za zónu (+
 Filtry trend (2 HH + 2 HL), lokace v třetinách a COT extrém. Srovnání s [[Náhodné vstupy|náhodnými vstupy]].
 
 ## Z grafů v PDF (prohlédnuto všech 117 obrázků, 2026-10-29)
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Daniel Hvězda (swing)]] (128)
+
 - **Zóny jsou na výrazném swingu** (vrchol nebo dno, odkud přišel silný pohyb). Kreslí se od extrému knotu po okraj těl báze.
   Báze má 1–3 svíčky na W a 2–6 na D. Zóna je relativně vysoká, na W zhruba výška 1–2 svíček.
 - **„Denní level v týdenním levelu“:** W zóna se zakreslí na W grafu a na D grafu pak D zóna, která se s ní **překrývá**

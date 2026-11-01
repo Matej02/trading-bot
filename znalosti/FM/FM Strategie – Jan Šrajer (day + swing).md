@@ -88,6 +88,8 @@ Skóre každé měny (EUR, GBP, USD, AUD, NZD, CAD, CHF, JPY) se skládá ze slo
   srovnání s [[Carry]] a [[COT]] z v1–v6.
 
 ## Z grafů v PDF (prohlédnuto všech obrázků, 2026-10-29)
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Jan Šrajer (day)]] (18) · [[FM obrázky – Jan Šrajer (swing)]] (71)
+
 - **Swing S/D na EURUSD D1:**
   - Supply (Daily TF) je pásmo na začátku poklesu, demand (Daily TF) pásmo u dna.
   - Mezi ně se natáhne Fibo: **Top Premium = supply zóna**, Premium 0,666–1, „Rovnováha mezi S&D“ 0,333–0,666, Discount 0–0,333, **Top Discount = demand zóna**.

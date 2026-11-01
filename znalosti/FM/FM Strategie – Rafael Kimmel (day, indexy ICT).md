@@ -51,6 +51,8 @@ Přístup je ICT: „funkční koncepty, jednoduchost“. Viz [[FM materiály]].
 - Souvisí s [[SFP – sweep likvidity]] na PDH/PDL; F7 ho na indexech moc nezkoušelo (hlavně krypto, forex a zlato).
 
 ## Z grafů v PDF (prohlédnuto všech obrázků, 2026-10-29)
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Rafael Kimmel (day)]] (34)
+
 - **Entry model #1 (diagram):**
   - Range nad **15m PDA** (premium/discount array, zóna z předchozího dne, šedý box).
   - Cena sweepne pod 15m PDA (stop hunt), vrátí se nad **market structure shift** a vznikne **LTF FVG**.

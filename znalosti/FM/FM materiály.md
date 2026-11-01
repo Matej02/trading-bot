@@ -10,6 +10,7 @@ Kurz **Funded Mind** od uživatele. Původní soubory leží v `D:\youtube\FM pd
 - 314 PDF (1 968 stran) a 28 CSV.
 - Text vytažen do `scratch/fm/txt` a zhuštěný korpus po modulech do `scratch/fm/korpus`.
 - **Všechny grafy (1 172 obsahových obrázků ve 247 PDF) jsou prohlédnuté.** Zjištění jsou v sekcích „Z grafů v PDF“ u každého autora.
+- **Obrázky samotné jsou ve vaultu** (`Přílohy/FM/`, 2026-11-01), galerie po lekcích: [[FM obrázky – Daniel Hvězda (swing)]] · [[FM obrázky – Daniel Valchář (swing)]] · [[FM obrázky – Jan Šrajer (day)]] · [[FM obrázky – Jan Šrajer (swing)]] · [[FM obrázky – Michal Veselovský (day)]] · [[FM obrázky – Oliver Pátek (scalping)]] · [[FM obrázky – Petr Můčka (day)]] · [[FM obrázky – Rafael Kimmel (day)]] · [[FM obrázky – Sunita Hakimi (day)]] · [[FM obrázky – Základy – Likvidita]] · [[FM obrázky – Základy – Price Action]] · [[FM obrázky – Základy – Risk Management]] · [[FM obrázky – Základy – Supply a Demand]] · [[FM obrázky – Základy – Volume]]
   Popisky z grafů (OCR) jsou v `scratch/fm/ocr_vse.txt`, listy s grafy v `scratch/fm/listy/`.
 - **Backtest strategií z PDF:** [[F8 Strategie z FM PDF]] (S/D zóny D1/H4/W1, daily bias, makro skóre) – bez výhody.
 

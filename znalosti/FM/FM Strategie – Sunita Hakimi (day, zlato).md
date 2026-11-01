@@ -50,6 +50,8 @@ Mechanicky jde vzít: pullback v trendu (H4) do průniku Fibo 0,618–0,66 se S/
 To je blízké [[F7 Dokument 6 strategií SMC]] S6. Na zlatě M15 v F7 vyšlo „nic konzistentního“.
 
 ## Z grafů v PDF (prohlédnuto všech obrázků, 2026-10-29)
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Sunita Hakimi (day)]] (125)
+
 - **Modelový obchod (popisky z grafu, XAU):**
   - Dokončení 5. vlny, očekávám korekci.
   - Nižší high s odrazem od 0,5 Fibo + korekční Elliottova vlna.

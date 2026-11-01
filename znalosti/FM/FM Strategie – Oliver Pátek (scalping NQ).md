@@ -39,6 +39,8 @@ Kandidát na test: **US100 na M5**, průraz pivotu ve směru H4 trendu (EMA nebo
 Pozor na náklady: spread US100 u brokera, viz [[Náklady brokera]].
 
 ## Z grafů v PDF (prohlédnuto všech obrázků, 2026-10-29) – entry model mechanicky
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Oliver Pátek (scalping)]] (80)
+
 **Short v H4 downtrendu** (popisky přímo z grafů):
 1. **Odmítnutí:** cena dojde k rezistenci, tedy k H4 zóně nebo H4 trendline (zelený box).
 2. **Vytvoření nižšího high** na M5/M15.

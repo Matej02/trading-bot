@@ -133,6 +133,8 @@ Patří do [[FM materiály]].
 3. Konfluence, které autor kombinuje: zóna + POC/nPOC + Fibo 50 % + trendline + session level. Zóna v LVN je slabá.
 
 ## Z grafů v PDF (prohlédnuto všech obrázků, 2026-10-29)
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Základy – Likvidita]] (12) · [[FM obrázky – Základy – Price Action]] (32) · [[FM obrázky – Základy – Risk Management]] (22) · [[FM obrázky – Základy – Supply a Demand]] (136) · [[FM obrázky – Základy – Volume]] (49)
+
 - **Šablony v TradingView:** Parallel Channel uložený jako šablony „Monthly / Weekly / Daily / 4H supply and demand“, „SCALP ZONE“ a „Channel 1“.
   Každý TF má vlastní barvu zóny, hierarchie je tedy M → W → D → 4H → scalp.
 - **Validita zóny:** na grafu je u **prvního návratu** do zóny štítek „je validní“ (zelený) a u dalšího „není validní“ (červený).

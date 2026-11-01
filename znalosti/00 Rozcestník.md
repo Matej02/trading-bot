@@ -40,7 +40,7 @@ Všechno, co jsme o projektu zjistili, jako propojená síť poznámek. Graf (Ct
 
 ## Infrastruktura
 [[Simulátor]] · [[Agenti]] · [[AI analytik]] · [[Zprávy a kalendář]] · [[Bot 24-7]] · [[Učící režim]] ·
-[[Stínové obchody a verdikty]] · [[Python bot tv_agent]] · [[MT5 napojení]] · [[Zdroje dat]]
+[[Stínové obchody a verdikty]] · [[Python bot tv_agent]] · [[MT5 napojení]] · [[Zdroje dat]] · [[Day-trader skilly]]
 
 ## Trhy
 [[Broker GlobalDynamicMarkets]] · [[Zlato]] · [[Bitcoin a krypto]] · [[US indexy]] · [[Forex]]

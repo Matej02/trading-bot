@@ -56,6 +56,8 @@ Strategie je postavená na „pravděpodobnostech a statistikách“. Viz [[FM m
 - Frankfurt session na zlatě = pravděpodobnostní level pro vstup (bez definice, ověřit).
 
 ## Z grafů v PDF (prohlédnuto všech obrázků, 2026-10-29)
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Petr Můčka (day)]] (196)
+
 - **Trading plán „TECH“** (OCR z Notionu):
   - Rating: **EPIC** = nejlepší trade 1:3, **CLASIC** = normální trade 1:2, BUG = špatný trade.
   - Strategie: **FLOW + SFP + KEY level + FB + ABSORBCE**:

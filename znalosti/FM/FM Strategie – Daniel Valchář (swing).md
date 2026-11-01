@@ -61,6 +61,8 @@ Fundamentální skóre (Trading Analyzer) nemáme. Nahradit jde COT (CFTC zdarma
 Objem je u forexu jen tickový, viz [[Futures data a objem]].
 
 ## Z grafů v PDF (prohlédnuto všech 214 obrázků, 2026-10-29)
+Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Daniel Valchář (swing)]] (220)
+
 **Entry model krok za krokem** (z modelového obchodu EURUSD):
 1. **Trend D1 nahoru** (HH/HL označené kolečky).
 2. **Fundament:** skóre Trading Analyzeru se otáčí nahoru (například z −7 na +2), COT EUR long, retail (DXM) short.
