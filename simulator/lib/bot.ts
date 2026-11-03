@@ -8,7 +8,7 @@ import type { AiContext } from "./aiPrompt";
 import { blockedBy, decisionVerdict } from "./verdict";
 import { ema, rsiLast } from "./indicators";
 import { closedCandles, nowSec, store } from "./data";
-import { isCrypto, MARKET_IDS, MARKETS, quote } from "./markets";
+import { isCrypto, MARKETS, quote, TRADE_IDS } from "./markets";
 import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from "./remote";
 import { eventsFor, inMinutes, releasesFor, releaseText, type CalEvent, type Release } from "./calendar";
 import {
@@ -860,8 +860,9 @@ export class Bot {
     await this.handleSignal({
       id: `${systemId}-${id}-${last.time}`, system: systemId, market: id, dir: bs.dir, price: last.close,
       time: last.time + TF_SEC[sys.tf], barTime: last.time, sl: bs.sl,
-      tp: sys.noTp ? null : last.close + (bs.dir === "long" ? 1 : -1) * rrr * Math.abs(last.close - bs.sl),
-      reason: sys.noTp ? bs.reason : `${bs.reason} RRR 1:${rrr}.`, riskPct: this.state.settings.riskPct,
+      // TP od strategie (napr. cil daily biasu), jinak podle pomeru zisk : riziko
+      tp: sys.noTp ? null : bs.tp ?? last.close + (bs.dir === "long" ? 1 : -1) * rrr * Math.abs(last.close - bs.sl),
+      reason: sys.noTp || bs.tp != null ? bs.reason : `${bs.reason} RRR 1:${rrr}.`, riskPct: this.state.settings.riskPct,
     }, closed);
   }
 
@@ -946,7 +947,7 @@ export class Bot {
     const book = Object.values(s.momentum.book);
     const longs = book.filter((b) => b.dir > 0).length, shorts = book.filter((b) => b.dir < 0).length;
     const held = s.broker.positions.filter((p) => p.system === MOMENTUM).length;
-    const hours = [...new Set(MARKET_IDS.map((id) => MARKETS[id].decisionHour))].sort((a, b) => a - b);
+    const hours = [...new Set(TRADE_IDS.map((id) => MARKETS[id].decisionHour))].sort((a, b) => a - b);
     let next = "";
     for (let add = 0; add < 8 && !next; add++) {
       for (const h of hours) {
@@ -971,13 +972,13 @@ export class Bot {
     const d = new Date(now * 1000);
     const day = dayKey(now);
     const weekday = (d.getUTCDay() + 6) % 7;
-    const hours = [...new Set(MARKET_IDS.map((id) => MARKETS[id].decisionHour))];
+    const hours = [...new Set(TRADE_IDS.map((id) => MARKETS[id].decisionHour))];
     for (const h of hours) {
       const due = force || (weekday < 5 && d.getUTCHours() >= h && s.momentum.lastRun[h] !== day);
       if (!due) continue;
       s.momentum.lastRun[h] = day;
       this.dirty.core = true;
-      const ids = MARKET_IDS.filter((id) => MARKETS[id].decisionHour === h);
+      const ids = TRADE_IDS.filter((id) => MARKETS[id].decisionHour === h);
       this.log(`Momentum: denní rozhodnutí pro ${ids.length} trhů (${h}:00 UTC)`);
       for (const id of ids) {
         try {

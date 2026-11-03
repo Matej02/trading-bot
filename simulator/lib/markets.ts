@@ -10,6 +10,8 @@ export const MARKETS: Record<string, Market> = Object.fromEntries(
 );
 
 export const MARKET_IDS = Object.keys(MARKETS);
+/** Trhy pro systemy nad vsemi trhy (momentum) - bez pomocnych datovych zdroju. */
+export const TRADE_IDS = MARKET_IDS.filter((id) => !MARKETS[id].feedOnly);
 
 /** Poradi v nabidce grafu: nejdriv to, co je videt nejvic zive */
 export const CHART_ORDER = [

@@ -78,5 +78,11 @@
    "status": "unvalidated",
    "note": "F12 2026-11-03: Můčka podle PDF + doplňujících pravidel, nejlepší na vývoji −0,18 R, OOS +0,06 R (n 98), náhoda −0,08 R – live experiment"
   }
+ },
+ "fm13_ves_m1": {
+  "*": {
+   "status": "unvalidated",
+   "note": "F13 2026-11-03: Veselovský podle PDF + B2, všechny trhy OOS +0,07 R (n 388, náhoda −0,08); NAS100+SPX500 vývoj +0,26 R, OOS +0,23 R; US30/DAX mimo test v OOS ne – live experiment"
+  }
  }
 }

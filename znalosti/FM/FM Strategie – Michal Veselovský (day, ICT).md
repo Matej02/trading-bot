@@ -95,3 +95,6 @@ Viz [[Doplňující pravidla k FM PDF]], B2 (OB jen těly, platnost po close, HV
 
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,24 R (n 485)**, bez výhody. → [[F10 Entry modely mentorů FM]]
+
+## Otestováno – F13 (2026-11-03)
+PDF + 49 obrázků + B2 jako dodatek: všechny trhy OOS +0,07 R (náhoda −0,08 R); **NAS100 + SPX500 vývoj +0,26 R, OOS +0,23 R** (náhoda −0,02 / +0,07), daily bias pomáhá v obou obdobích; US30/DAX mimo test v OOS ne. Nejlepší FM výsledek, neověřený → live kandidát. → [[F13 Veselovský podle PDF a doplňujících pravidel]]

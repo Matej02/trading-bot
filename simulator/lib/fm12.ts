@@ -11,18 +11,18 @@ export interface Fm12Input { c1: Candle[]; c15: Candle[]; c1h: Candle[]; pip: nu
 const K = 1.5, EPS = 0.1, FIB = 0.35;
 const DAY = 86400;
 
-interface Tb { t: number[]; o: number[]; h: number[]; l: number[]; c: number[]; a: number[]; sec: number }
-interface Ev { i: number; d: number; flip: boolean; lvl: number; orig: number; brk: number; st: number; sti: number }
-interface Ms { tr: number[]; bosI: number[]; ev: Ev[] }
+export interface Tb { t: number[]; o: number[]; h: number[]; l: number[]; c: number[]; a: number[]; sec: number }
+export interface Ev { i: number; d: number; flip: boolean; lvl: number; orig: number; brk: number; st: number; sti: number }
+export interface Ms { tr: number[]; bosI: number[]; ev: Ev[] }
 
-function bars(c: Candle[], sec: number): Tb {
+export function bars(c: Candle[], sec: number): Tb {
   const o = c.map((x) => x.open), h = c.map((x) => x.high), l = c.map((x) => x.low), cl = c.map((x) => x.close);
   return { t: c.map((x) => x.time), o, h, l, c: cl, a: wilderAtr(h, l, cl, 14), sec };
 }
 
 // posun casoveho pasma se meni jen pri zmene casu (DST) - staci ho spocitat jednou za hodinu (Intl je pomale)
 const ltOff = new Map<number, number>();
-function lt(t: number): number {
+export function lt(t: number): number {
   const hk = Math.floor(t / 3600);
   let off = ltOff.get(hk);
   if (off === undefined) {
@@ -34,7 +34,7 @@ function lt(t: number): number {
 }
 
 /** Slozi svicky podle klice (lt // blok) - 4H a den od 17:00 NY jako v Pythonu (agg). */
-function groupBy(c: Candle[], block: number): Tb {
+export function groupBy(c: Candle[], block: number): Tb {
   const out: Candle[] = [];
   let key = NaN;
   for (const x of c) {
@@ -51,7 +51,7 @@ function groupBy(c: Candle[], block: number): Tb {
 }
 
 /** Stroj market structure (research_f12_ms.ms_machine). Objem z Yahoo u forexu chybi -> podminka objemu vzdy projde. */
-function ms(T: Tb): Ms {
+export function ms(T: Tb): Ms {
   const { o, h, l, c, a } = T;
   const n = c.length;
   const tr = new Array<number>(n).fill(0), bosI = new Array<number>(n).fill(-1);
@@ -131,7 +131,7 @@ function ms(T: Tb): Ms {
 }
 
 /** Index posledni svicky TF, ktera je uz zavrena v case t (konec svicky <= t). */
-function closedIdx(T: Tb, t: number): number {
+export function closedIdx(T: Tb, t: number): number {
   let lo = 0, hi = T.t.length - 1, r = -1;
   while (lo <= hi) { const m = (lo + hi) >> 1; if (T.t[m] + T.sec <= t) { r = m; lo = m + 1; } else hi = m - 1; }
   return r;
@@ -203,7 +203,7 @@ function balances(T: Tb, S: Ms, T15: Tb, age: number): Bal[] {
 const czFmt = new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Prague", hourCycle: "h23", hour: "numeric", minute: "numeric" });
 const czOff = new Map<number, number>();
 /** Prazsky cas jako hodina dne (9,5 = 9:30); posun pasma se pamatuje po hodinach. */
-function czHour(t: number): number {
+export function czHour(t: number): number {
   const hk = Math.floor(t / 3600);
   let off = czOff.get(hk);
   if (off === undefined) {

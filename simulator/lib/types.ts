@@ -31,6 +31,7 @@ export interface Market {
   volMax: number;
   decisionHour: number;
   priceScale: number; // cena Yahoo x tohle = cena brokera (GAUUSD je v gramech, Yahoo v uncich)
+  feedOnly?: boolean; // jen datovy zdroj pro vybrane systemy (napr. index z futures 23 h) - momentum ho neobchoduje
 }
 
 export interface Signal {

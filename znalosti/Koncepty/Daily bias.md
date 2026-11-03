@@ -37,3 +37,6 @@ Obchod open → PDH/PDL, SL opačný extrém: **−0,06 R** (DEV i OOS), opačn�
 Slabý směrový náklon, samostatně neobchodovatelné. → [[F8 Strategie z FM PDF]]
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.
+
+## Otestováno – F13 (2026-11-03)
+Veselovského bias (close vs PDH/PDL, sweep a close zpět, 50 % wicku, range = nic) jako filtr entry modelu: s biasem vývoj −0,06 R / OOS +0,07 R, bez biasu −0,17 / −0,03 R (3× víc obchodů). **První FM koncept, který přidal v obou obdobích.** [[F13 Veselovský podle PDF a doplňujících pravidel]]

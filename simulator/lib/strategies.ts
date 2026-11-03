@@ -2,7 +2,8 @@
 import { atr, ema, rollingMedian, rollingRankPct, rsiLast, sma, stdev } from "./indicators";
 import { fmSignal, ltOf, type FmSystem } from "./fm";
 import { fm12Signal } from "./fm12";
-import { MARKET_IDS, MARKETS } from "./markets";
+import { fm13Signal } from "./fm13";
+import { MARKET_IDS, MARKETS, TRADE_IDS } from "./markets";
 import type { Candle, Dir, TF } from "./types";
 
 export interface SystemDef {
@@ -23,6 +24,8 @@ export interface SystemDef {
 
 /** Experiment F12: trhy z testu, kde Yahoo dava 24h data (NAS100 je z Yahoo jen v hodinach burzy). */
 const F12_MARKETS = ["EURUSD", "GBPUSD", "XAUUSD", "XAGUSD"];
+/** Experiment F13: trhy z testu; indexy z futures dat (23 h), protoze Yahoo ^NDX/^GSPC ma jen hodiny burzy. */
+const F13_MARKETS = ["NAS100fut", "SPX500fut", "EURUSD", "GBPUSD", "XAUUSD"];
 
 /** Experiment F9: trhy z vyzkumu (26 + krypto), na kterych byly kombinace FM konceptu testovane. */
 export const FM_MARKETS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD", "EURJPY", "GBPJPY",
@@ -100,7 +103,17 @@ export const SYSTEMS: SystemDef[] = [
       "náhoda −0,08 R. Živě je vstup trhem na 1m svíčce, která 0,618 zasáhne (v testu limit).",
   },
   {
-    id: "momentum_d1_L250", name: "Momentum 250 dní (40 trhů)", tf: "1d", markets: MARKET_IDS, kind: "momentum",
+    id: "fm13_ves_m1", name: "FM: Veselovský – bias → sweep LQ pod NY open → MSS 1m → 50 % OB (experiment F13)", tf: "1m",
+    markets: F13_MARKETS, kind: "bar", holdsWeekends: false, maxHoldBars: 450, window: 7000, htf: ["15m", "1h"],
+    desc: "Experiment F13 (Veselovský podle PDF a obrázků, doplňující pravidla B2 jako dodatek): daily bias (close vs PDH/PDL, " +
+      "sweep a close zpět, 50 % wicku, range = nic), killzone Londýn 8–11 / NY 14–17 (Praha), sweep Asie, PDL/PDH nebo 15m swingu " +
+      "pod/nad NY daily open, MSS na 1m s FVG v noze, vstup na 50 % OB, SL 2 pipy za sweep, TP = cíl biasu (PDH/PDL, 2–10 R). " +
+      "NEOVĚŘENO – test 2017–26: NAS100 + SPX500 vývoj +0,26 R (n 121), OOS +0,23 R (n 194), náhoda −0,02 / +0,07 R; " +
+      "forex a zlato bez výhody; US30 a DAX mimo test v OOS −0,03 a −0,27 R. Indexy živě z dat futures NQ/ES (23 h). " +
+      "V testu TP1 na Asii (50 %) + BE, živě celý TP na cíl biasu; vstup trhem na 1m svíčce, která 50 % OB zasáhne.",
+  },
+  {
+    id: "momentum_d1_L250", name: "Momentum 250 dní (40 trhů)", tf: "1d", markets: TRADE_IDS, kind: "momentum",
     holdsWeekends: true,
     desc: "Long/short podle znaménka výnosu za 250 dní, 1× denně. Hrubě edge má, po swapu brokera ne.",
   },
@@ -155,6 +168,12 @@ export function weeklyTrend(c: Candle[]): number {
 
 /** Signal na posledni UZAVRENE svicce (c uz neobsahuje tvorici se svicku). */
 export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF, Candle[]>>, marketId?: string): BarSignal | null {
+  if (system === "fm13_ves_m1") {
+    const m = marketId ? MARKETS[marketId] : undefined;
+    if (!m || !extra?.["15m"] || !extra?.["1h"]) return null;
+    const s = fm13Signal({ c1: c, c15: extra["15m"], c1h: extra["1h"], pip: m.pip, fx: m.group === "FOREX" });
+    return s ? { dir: s.dir, sl: s.sl, tp: s.tp, reason: s.reason } : null;
+  }
   if (system === "fm12_mucka_m1") {
     const m = marketId ? MARKETS[marketId] : undefined;
     if (!m || !extra?.["15m"] || !extra?.["1h"]) return null;
@@ -258,6 +277,13 @@ export type Tone = "wait" | "near" | "off";
 /** Lidsky popis, na co strategie na posledni uzavrene svicce ceka (panel "Bot zive"). */
 export function barStatus(system: string, c: Candle[], digits: number): { text: string; tone: Tone } {
   if (c.length < 150) return { text: `načítám data (${c.length}/150 svíček)`, tone: "off" };
+  if (system === "fm13_ves_m1") {
+    const h = +new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Prague", hourCycle: "h23", hour: "numeric" })
+      .format(new Date(c[c.length - 1].time * 1000));
+    const kz = (h >= 8 && h < 12) || (h >= 14 && h < 17);
+    return { text: kz ? "experiment F13 – killzone: hlídá sweep likvidity a MSS na 1m ve směru daily biasu" :
+      "experiment F13 – mimo killzone (Londýn 8–11, NY 14–17 Praha)", tone: kz ? "near" : "wait" };
+  }
   if (system === "fm12_mucka_m1") {
     const h = +new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Prague", hourCycle: "h23", hour: "numeric" })
       .format(new Date(c[c.length - 1].time * 1000));

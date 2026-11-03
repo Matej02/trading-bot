@@ -47,7 +47,7 @@ export function wilderAtr(h: number[], l: number[], c: number[], n = 14): number
   return out;
 }
 
-function pivots(h: number[], l: number[], N: number) {
+export function pivots(h: number[], l: number[], N: number) {
   const n = h.length, ph = new Array<boolean>(n).fill(false), pl = new Array<boolean>(n).fill(false);
   for (let i = N; i < n - N; i++) {
     let okh = true, okl = true;
