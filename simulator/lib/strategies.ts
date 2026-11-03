@@ -1,6 +1,7 @@
 // Strategie prevedene 1:1 z Python bota (strategy.py, strategy_bbsqueeze.py, strategy_momentum.py).
 import { atr, ema, rollingMedian, rollingRankPct, rsiLast, sma, stdev } from "./indicators";
 import { fmSignal, ltOf, type FmSystem } from "./fm";
+import { fm12Signal } from "./fm12";
 import { MARKET_IDS, MARKETS } from "./markets";
 import type { Candle, Dir, TF } from "./types";
 
@@ -17,7 +18,11 @@ export interface SystemDef {
   exitRule?: "sma5"; // ven, kdyz denni svicka zavre nad SMA5 (long) / pod (short)
   window?: number; // kolik uzavrenych svicek dostane strategie (vychozi 400 u intradennich)
   rrr?: number; // vlastni TP v R (jinak podle nastaveni)
+  htf?: TF[]; // dalsi timeframy, ktere strategie potrebuje (bot je nacte a preda v barSignal)
 }
+
+/** Experiment F12: trhy z testu, kde Yahoo dava 24h data (NAS100 je z Yahoo jen v hodinach burzy). */
+const F12_MARKETS = ["EURUSD", "GBPUSD", "XAUUSD", "XAGUSD"];
 
 /** Experiment F9: trhy z vyzkumu (26 + krypto), na kterych byly kombinace FM konceptu testovane. */
 export const FM_MARKETS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD", "EURJPY", "GBPJPY",
@@ -86,6 +91,15 @@ export const SYSTEMS: SystemDef[] = [
       "(Hvězda), jen ve směru struktury D1 i H4; SL za distal. Test: 2010–17 −0,07 R, 2018–21 0,00 R, 2022–26 −0,08 R (n 323).",
   },
   {
+    id: "fm12_mucka_m1", name: "FM: Můčka – sweep v zóně → MSS 1m → 0,618 (experiment F12)", tf: "1m", markets: F12_MARKETS,
+    kind: "bar", holdsWeekends: false, maxHoldBars: 300, window: 7000, rrr: 2.5, htf: ["15m", "1h"],
+    desc: "Experiment F12 (Můčka podle PDF + doplňujících pravidel uživatele): v killzone 9–11 a 13:30–17 (Praha) cena vybere " +
+      "likviditu v zóně, která udělala BOS (4H/15m, první dotek, pravidlo 25 %), nebo na prvním návratu na úroveň BOS; " +
+      "na 1m změna struktury (close tělem za strong levelem) a návrat na 0,618; jen ve směru daily biasu a 4H struktury. " +
+      "SL přímo na sweepu (6–15 pipů), TP 2,5 R, nejdéle 5 h. NEOVĚŘENO – test 2017–26: vývoj −0,18 R, OOS +0,06 R (n 98), " +
+      "náhoda −0,08 R. Živě je vstup trhem na 1m svíčce, která 0,618 zasáhne (v testu limit).",
+  },
+  {
     id: "momentum_d1_L250", name: "Momentum 250 dní (40 trhů)", tf: "1d", markets: MARKET_IDS, kind: "momentum",
     holdsWeekends: true,
     desc: "Long/short podle znaménka výnosu za 250 dní, 1× denně. Hrubě edge má, po swapu brokera ne.",
@@ -140,7 +154,13 @@ export function weeklyTrend(c: Candle[]): number {
 }
 
 /** Signal na posledni UZAVRENE svicce (c uz neobsahuje tvorici se svicku). */
-export function barSignal(system: string, c: Candle[]): BarSignal | null {
+export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF, Candle[]>>, marketId?: string): BarSignal | null {
+  if (system === "fm12_mucka_m1") {
+    const m = marketId ? MARKETS[marketId] : undefined;
+    if (!m || !extra?.["15m"] || !extra?.["1h"]) return null;
+    const s = fm12Signal({ c1: c, c15: extra["15m"], c1h: extra["1h"], pip: m.pip, fx: m.group === "FOREX" });
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
   if (system.startsWith("fm_")) {
     const s = fmSignal(system as FmSystem, c);
     return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
@@ -238,6 +258,13 @@ export type Tone = "wait" | "near" | "off";
 /** Lidsky popis, na co strategie na posledni uzavrene svicce ceka (panel "Bot zive"). */
 export function barStatus(system: string, c: Candle[], digits: number): { text: string; tone: Tone } {
   if (c.length < 150) return { text: `načítám data (${c.length}/150 svíček)`, tone: "off" };
+  if (system === "fm12_mucka_m1") {
+    const h = +new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Prague", hourCycle: "h23", hour: "numeric" })
+      .format(new Date(c[c.length - 1].time * 1000));
+    const kz = (h >= 9 && h < 11) || (h >= 13 && h < 17);
+    return { text: kz ? "experiment F12 – killzone: hlídá sweep v zóně a MSS na 1m" : "experiment F12 – mimo killzone (9–11, 13:30–17 Praha)",
+      tone: kz ? "near" : "wait" };
+  }
   if (system.startsWith("fm_")) {
     const lt = ltOf(c[c.length - 1].time);
     const h = Math.floor((((lt % 14400) + 14400) % 14400) / 3600);

@@ -9,7 +9,7 @@ aktualizovano: 2026-10-29
 | Validátor | čerstvost, utečená cena, duplicita | veto |
 | Trh teď | víkend, rollover, spread | veto |
 | Kalendář | zprávy 30 min před / 15 po ([[Zprávy a kalendář]]) | veto |
-| Risk | limity a velikost ([[Risk management]]) | veto |
+| Risk | limity a velikost ([[Risk management]]); od 2026-11-03 i SL aspoň 3× spread od vstupu | veto |
 | Statistik | jen ověřené setupy (`lib/registry.json`) | radí / veto |
 | Ďáblův advokát | důvody proti | radí |
 | [[AI analytik]] | Gemini posudek | radí, veto až si ho vyslouží |

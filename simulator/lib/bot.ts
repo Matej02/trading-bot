@@ -846,7 +846,12 @@ export class Bot {
     // prvni beh si jen zapamatuje svicku - na starou svicku se neobchoduje
     if (prev == null || last.time <= prev) return;
     if (sys.exitRule) this.ruleExit(systemId, id, closed);
-    const bs = barSignal(systemId, win);
+    let extra: Partial<Record<TF, Candle[]>> | undefined;
+    if (sys.htf?.length) {
+      extra = {};
+      for (const tf of sys.htf) extra[tf] = closedCandles(await store.get(m, tf, POLL[tf]), tf, now);
+    }
+    const bs = barSignal(systemId, win, extra, id);
     if (!bs) return;
     // cas signalu = uzavreni svicky (jako v Python botovi) - po otevreni stranky s pauzou
     // validator stary signal zamitne, misto aby se vstupovalo na zastaralou cenu

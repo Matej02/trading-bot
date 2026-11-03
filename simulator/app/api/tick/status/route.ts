@@ -11,6 +11,8 @@ export async function GET() {
   const last = typeof raw === "string" ? (JSON.parse(raw) as { at: number; msg: string }) : null;
   if (!last) return NextResponse.json({ ok: false, msg: "cron bota zatím nikdy nespustil" });
   const state = last.msg.startsWith("chyba") ? "chyba" : last.msg.includes("čeká") ? "čeká – bota řídí otevřená stránka" : "řídil server";
-  return NextResponse.json({ ok: true, lastAt: new Date(last.at).toISOString(), agoMin: Math.round((Date.now() - last.at) / 60_000), state },
+  // build = commit nasazene verze (Vercel ho nastavuje sam) - kontrola, ze push se opravdu nasadil
+  const build = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? null;
+  return NextResponse.json({ ok: true, lastAt: new Date(last.at).toISOString(), agoMin: Math.round((Date.now() - last.at) / 60_000), state, build },
     { headers: { "Cache-Control": "no-store" } });
 }

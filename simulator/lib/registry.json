@@ -72,5 +72,11 @@
    "status": "unvalidated",
    "note": "F9 2026-10-29: S/D zóny po FM na H4 s potvrzením; vývoj −0,07 R, validace 0,00 R, holdout −0,08 R – live experiment"
   }
+ },
+ "fm12_mucka_m1": {
+  "*": {
+   "status": "unvalidated",
+   "note": "F12 2026-11-03: Můčka podle PDF + doplňujících pravidel, nejlepší na vývoji −0,18 R, OOS +0,06 R (n 98), náhoda −0,08 R – live experiment"
+  }
  }
 }
