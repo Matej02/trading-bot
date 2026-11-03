@@ -13,8 +13,8 @@ vše ať je v obsidiánu a pak testuj vše jak jsme se domluvili když budeš sp
 
 | # | Strategie | Test | Live |
 |---|---|---|---|
-| 1 | Můčka (B1) | F12 hotovo 2026-11-03 | `fm12_mucka_m5` (vstup 5m, 4H z 1h, zóny 15m) |
-| 2 | Veselovský (B2: OB, likvidita, FVG, SVP) | | |
+| 1 | Můčka (B1) | F12 hotovo 2026-11-03: OOS +0,06 R, bez výhody | `fm12_mucka_m1` pushnuto (shoda 19/21) |
+| 2 | Veselovský (B2: OB, likvidita, FVG, SVP) | F13 hotovo: indexy OOS +0,23 R, nejlepší FM, neověřeno | `fm13_ves_m1` pushnuto (shoda 49/49) |
 | 3 | Pátek (B3: S/R, trendovky, fakeout) | | |
 | 4 | Hvězda (B4: S/D W1/D1, base 1–3, COT) | | |
 | 5 | Hakimi (B5: Elliott, zóny) | | |
@@ -25,3 +25,5 @@ vše ať je v obsidiánu a pak testuj vše jak jsme se domluvili když budeš sp
 
 **Omezení simulátoru:** Yahoo 1m jen 5 dní, 5m/15m 1 měsíc, 1h 1 rok. Vstup je trhem na zavření svíčky; limit se nahrazuje
 signálem na svíčce, která úroveň zasáhne. FM systémy blokuje Risk expozicí měn, kterou zaplní Momentum (export 2026-11-03).
+
+**2026-11-03: Vercel nenasazuje od 2026-10-29** (pole `build` v `/api/tick/status` chybí) – opravuje uživatel ve Vercelu.
