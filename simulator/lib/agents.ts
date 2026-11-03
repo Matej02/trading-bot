@@ -35,6 +35,8 @@ export interface Verdict {
 
 // denni swing setup drzi ~2 tydny - vstup az 12 h po zavreni svicky je v poradku (drift hlida limit ceny)
 const MAX_AGE: Record<string, number> = { "1m": 90, "5m": 300, "15m": 600, "1h": 900, "1d": 12 * 3600 };
+// SL musi byt od ceny vstupu aspon tolik spreadu (vstup je na ask/bid, stop se spousti na druhe strane spreadu)
+const SL_MIN_SPREADS = 3;
 
 function validator(x: AgentCtx): Opinion {
   const base = { agent: "Validátor", role: "kontroluje, jestli je signál čerstvý a cena neutekla", hard: true };
@@ -139,6 +141,14 @@ function risk(x: AgentCtx): { op: Opinion; lots: number | null } {
 
   const q = quote(x.market, x.mid, x.now);
   const entry = x.signal.dir === "long" ? q.ask : q.bid;
+  // stop uvnitr spreadu (nebo hned za nim) by se zavrel hned po vstupu a ztrata by byla mnohonasobek rizika –
+  // realny broker takovy stop odmitne (stop level), viz export 2026-11-03
+  const spread = q.ask - q.bid;
+  const slDist = (entry - x.signal.sl) * sign(x.signal.dir);
+  if (slDist <= 0) return no("SL je na špatné straně ceny vstupu – obchod by se hned zavřel.");
+  if (spread > 0 && slDist < SL_MIN_SPREADS * spread) {
+    return no(`SL je jen ${(slDist / spread).toFixed(1)}× spread od vstupu (minimum ${SL_MIN_SPREADS}×) – stop by vyrazil hned spread a ztráta by byla mnohem větší než plánované riziko.`);
+  }
   const { lots, raw } = lotsFor(x.market, entry, x.signal.sl, x.signal.riskPct, a.balance);
   if (!lots) return no(`Velikost ${raw.toFixed(3)} lotu je pod minimem brokera (${x.market.volMin}) – větší pozice by nesla víc rizika, než je dovoleno.`);
 
