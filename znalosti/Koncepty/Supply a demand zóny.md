@@ -51,7 +51,11 @@ Podrobně v [[FM Základy tradingu]], [[FM Strategie – Daniel Hvězda (swing)]
 
 **Otázka pro uživatele:** kreslíš zóny takhle (celá konsolidace, D1/W1 nebo H4, impulz s BOS)? Případně doplň rozdíly v sekci výše.
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A4 (1D/4H/15m, hranice přes těla, příchod+base+odchod, BOS + HVN/POC, neplatí po průrazu > 25 %).
+
 ## Otestováno – F8 (2026-10-29)
+- **F12 (2026-11-03):** zóny jen s BOS, hranice přes těla, první dotek a pravidlo 25 %: zlepší OOS, ale ne vývoj, malé vzorky ([[F12 Můčka podle doplňujících pravidel]]).
 Zóny kreslené podle FM (báze, impulz s BOS, první dotek, limit, SL za distal) na **D1, H4 a D v W**, 26 trhů, 2009–2026:
 OOS −0,17 R (H4) a −0,22 R (D1), náhodné vstupy −0,04 až −0,07 R. Plato záporné, žádná z 192 variant neprošla.
 Detail v [[F8 Strategie z FM PDF]]. Výhodu zóny nemají na žádném TF (F5 1h, F7 M1–M15, F8 H4–W1).

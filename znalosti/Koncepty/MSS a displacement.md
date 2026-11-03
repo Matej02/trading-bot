@@ -31,3 +31,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 - **Kimmel:** rozhodují close svíček. Model 2 vyžaduje **2 po sobě jdoucí změny struktury ve směru biasu**.
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A2 (BOS jen close tělem, ne knot, ne news svíčka) a A6 (MSS na 5/3/1m).

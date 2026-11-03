@@ -32,7 +32,11 @@ Vstupní spouštěč je MSS na LTF ([[MSS a displacement]]).
 ## Souvisí s
 [[MSS a displacement]] · [[Trendline a kanály]] · [[Daily bias]] · [[Režim trhu]]
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A2 (jen 4H a 15m, hlavní/interní, BOS tělem s momentem, strong/weak po 0,382, stáří 30/15/5 dní).
+
 ## Otestováno
+- **F12 (2026-11-03):** struktura podle pravidel uživatele (BOS tělem s momentem, weak po 0,382 s posuvnou kotvou, strong = extrém mezi swingem a průrazem) jako 4H filtr nic nepřidá; MSS na 1m/5m jako vstup = mince ([[F12 Můčka podle doplňujících pravidel]]).
 Pivoty a BOS v [[F7 Dokument 6 strategií SMC]] jako součást setupů (samy netestovány).
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.

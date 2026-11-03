@@ -1,6 +1,6 @@
 ---
 tags: [od-uzivatele, projekt]
-aktualizovano: 2026-10-29
+aktualizovano: 2026-11-03
 ---
 # Požadavky a nápady uživatele (chronologicky)
 
@@ -25,3 +25,12 @@ aktualizovano: 2026-10-29
 - 2026-10-29: Obsidian má fungovat jako společný mozek, ne jen složka ([[Jak spolupracujeme s Claude]]).
 - 2026-10-29: **FM PDF, část 1 („dodatek“)** v `D:\youtube\FM pdfka`: přečíst a projít, zbytek pošle
   ([[FM materiály]], [[Databáze konceptů]]).
+- 2026-10-29: projet **všechny** obrázky z FM PDF, prop firmy neřešit, backtestovat koncepty a strategie, S/D na vyšších TF ([[F8 Strategie z FM PDF]]).
+- 2026-10-29: koncepty nechat, měnit jen strategii a kombinovat, dát na web a testovat live ([[F9 Kombinace FM konceptů]]).
+- 2026-10-29: otestovat i Veselovského, Kimmela a Pátka, Word dokument už nepoužívat ([[F10 Entry modely mentorů FM]]).
+- 2026-10-30: „není to možné, strategie lidem vydělávají“ → testovat pomalu, po jednom mentorovi, víc propojit věci ([[F11 Mentoři FM znovu a podrobně]]).
+- 2026-10-30: prověřit a nainstalovat day-trader-skill ([[Day-trader skilly]]).
+- 2026-11-01: obrázky mají být ve vaultu a při práci se mají kontrolovat i obrázky, ne jen text ([[Jak spolupracujeme s Claude]]).
+- 2026-11-01: při testech projít **všechno** k dané strategii, ať je test co nejpřesnější.
+- 2026-11-03: **doplňující pravidla k FM PDF** (obecná pravidla + mentoři, z Playbooku a odpovědí uživatele), pak testovat
+  ([[Doplňující pravidla k FM PDF]]); export simulátoru za týden ([[Export simulátoru 2026-11-03]]); pošle ještě, co se stalo na live botovi.

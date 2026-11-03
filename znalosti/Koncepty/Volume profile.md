@@ -25,3 +25,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 - **Session profily:** Asie má profil D (mean reversion), Londýn průraz nebo fakeout Asie, NY testuje POC/VAH/VAL Londýna.
 - **Fixed range** přes trend nebo korekci (Valchář): POC/HVN, který se kryje se S/D zónou, je potvrzení.
 - U forexu je profil jen z tick volume → [[Futures data a objem]].
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A7 (FRVP row size 250, VAH/VAL 70 %, SVP POC minulého dne) a A6 (SFP: 2 ze 3 VAH/VAL/POC v knotu).

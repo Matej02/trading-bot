@@ -164,3 +164,6 @@ Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Základy – Lik
 - **Fixed range:** popisky „předchozí range POC“, „key level“, **„kombinace demand levelu“** (POC uvnitř demand zóny) a „odraz z VAH“.
 - **Volume bars:** šipky na velké objemové svíčky při průrazu z konsolidace (breakout) a na sweepy.
 - **Seance:** Asie 02–08, Londýn 08–14:30, NY 14:30–22 (CET), overlapy mezi nimi. Session profily mají barvu podle seance a NY testuje VAH/VAL Londýna.
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], Část A (obecná pravidla uživatele napříč koncepty).

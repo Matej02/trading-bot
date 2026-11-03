@@ -88,5 +88,11 @@ Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Petr Můčka (da
 - **COT EUR:** report z 4. 2. 2025, commercials long 348k / short 311k, změna −6 476 / −1 352.
 - **Zprávy:** 674 obchodů kolem zpráv, 40,8 % vs 59,2 % (bez popisu, co je co).
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B1 (struktura: swing, BOS tělem, strong/weak, stáří; entry model 0,618–0,66 / FVG).
+
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,23 R (n 5 150)**, bez výhody. → [[F10 Entry modely mentorů FM]]
+
+## Otestováno – F12 (2026-11-03)
+Podle doplňujících pravidel uživatele, po prohlédnutí všech 196 obrázků: nejlepší varianta vývoj −0,18 R, OOS +0,06 R, náhoda −0,08 R; bez výhody. → [[F12 Můčka podle doplňujících pravidel]]

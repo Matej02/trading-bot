@@ -104,5 +104,8 @@ Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Jan Šrajer (day
 - **Score overview:** po změně skóre retest zóny (šedá linie) a short se SL nad zónou. Tabulka skóre všech párů obsahuje sloupce Score, COT, Retail sentiment a Seasonality.
 - **COT (EUR, USD):** zakroužkované extrémy, kde se long a short křivky protnou nebo rozevřou, předcházejí otočkám.
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B6 (MS + S/D, volume profile jako filtr).
+
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **day trading −0,29 R (n 97)**, bez výhody. → [[F10 Entry modely mentorů FM]]

@@ -34,3 +34,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 - Můčka: sweep Asia H/L v Londýně platí jen při **asijském range ≤ 35 pipů** (EURUSD).
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A1 (sessions v místním čase, UTC+1/+2) a B1/B2 (killzones Petra a Michala).

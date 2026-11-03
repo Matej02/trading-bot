@@ -26,3 +26,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 - **Objem:** sweep má mít velký objem (stažená svíčka), jinak je to slabý low-volume grab ([[Likvidita]]).
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A6 (SFP v 15m svíčce, FRVP do svíčky, 2–3 ze VAH/VAL/POC v knotu).

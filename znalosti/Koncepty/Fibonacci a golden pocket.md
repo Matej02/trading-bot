@@ -23,5 +23,8 @@ Zóna vstupu po MSS: průnik golden pocketu s FVG, OB nebo S/D.
 ## Souvisí s
 [[Premium a discount]] · [[FVG]] · [[MSS a displacement]] · [[Elliottovy vlny]]
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A3 (0,382 min. pullback, 0,618–0,66 GP, 0,786 v trendu, 0,9 pro SL, od strong levelu).
+
 ## Otestováno
 Vstup na Fibo ve variantách F7 (OTE 0,62–0,79 v S1/S5) bez výhody.

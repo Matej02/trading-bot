@@ -1,6 +1,6 @@
 ---
 tags: [rozcestnik]
-aktualizovano: 2026-10-29
+aktualizovano: 2026-11-03
 ---
 # Trading bot – mozek projektu
 
@@ -15,7 +15,7 @@ Všechno, co jsme o projektu zjistili, jako propojená síť poznámek. Graf (Ct
 ## Výzkum (časová osa)
 [[Historie v1–v6]] → [[F1 Nové třídy signálů]] → [[F2 Více timeframů]] → [[F3 Průraz na nových trzích]] →
 [[F4 Vstup na menším timeframu]] → [[F5 SMC a volume profile na 1h]] → [[F6 Denní strategie]] →
-[[F7 Dokument 6 strategií SMC]] → [[F8 Strategie z FM PDF]] → [[F9 Kombinace FM konceptů]] → [[F10 Entry modely mentorů FM]] → [[F11 Mentoři FM znovu a podrobně]]
+[[F7 Dokument 6 strategií SMC]] → [[F8 Strategie z FM PDF]] → [[F9 Kombinace FM konceptů]] → [[F10 Entry modely mentorů FM]] → [[F11 Mentoři FM znovu a podrobně]] → [[F12 Můčka podle doplňujících pravidel]]
 
 ## Strategie
 [[Průraz F2 (proraz_d1)]] · [[RSI(2) pullback (mr_rsi2_d1)]] · [[Momentum L=250]] · [[Time-of-day AUDJPY 23-00]]
@@ -47,4 +47,4 @@ Všechno, co jsme o projektu zjistili, jako propojená síť poznámek. Graf (Ct
 
 ## Od uživatele
 [[Požadavky a nápady uživatele]] · [[Dokument 6 strategií SMC + Volume Profile]] · [[Export simulátoru 2026-10-28]] ·
-[[Export simulátoru 2026-10-29]] · [[Přílohy]] · [[Databáze konceptů]] · [[Šablona konceptu]]
+[[Export simulátoru 2026-10-29]] · [[Export simulátoru 2026-11-03]] · [[Doplňující pravidla k FM PDF]] · [[Přílohy]] · [[Databáze konceptů]] · [[Šablona konceptu]]

@@ -27,3 +27,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 - **Bez výběru likvidity nevstupovat** (Veselovský, Můčka, Valchář: „vstupuji až po vybrání likvidity“).
 - **Equal highs a pivotní likvidita** jako spouštěč do zóny: [[FM Strategie – Jan Šrajer (day + swing)|Šrajerovy entry modely 1–3]].
 - Session H/L (Londýn, Asie) = zásobník stop lossů → [[Killzones a session]].
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B2 (externí = swingy, interní = FVG; když se vybírá externí, Michal neobchoduje).

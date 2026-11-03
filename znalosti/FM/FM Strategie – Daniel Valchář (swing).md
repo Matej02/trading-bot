@@ -89,5 +89,8 @@ Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Daniel Valchář
   EURGBP skóre −1 → +2 a cena sweepne lows a roste. Vstup = změna skóre + sweep likvidity.
 - **Zprávy:** 0,74% pohyb na FOMC v řádu minut, proto nevstupovat před red news.
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B2 – Michal bere OB limitkou „stejně jako Valchář“; obecná pravidla OB a S/D v A4.
+
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,36 R (n 306)**, bez výhody. → [[F10 Entry modely mentorů FM]]

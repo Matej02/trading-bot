@@ -23,5 +23,8 @@ Kanál = dvě rovnoběžky (rostoucí, klesající, boční).
 ## Souvisí s
 [[Market structure]] · [[Support a rezistence]] · [[Elliottovy vlny]]
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B3 (2–3 body přes těla, víc dotyků = silnější).
+
 ## Otestováno
 Ne (kreslení od ruky je těžko mechanizovatelné; náhrada = lineární regrese přes swingy).

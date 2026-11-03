@@ -9,6 +9,8 @@ Soubory ve složce `Přílohy`:
 - `Trading bot – 6 strategií (SMC + Volume Profile).docx`
 - ![[f7_kontrola_detekci_BTCUSD.png]] – kontrola detekcí z [[F7 Dokument 6 strategií SMC]]
 
+- `Doplňující pravidla k FM PDF.docx` (2026-11-03) – viz [[Doplňující pravidla k FM PDF]]
+
 ## FM (Funded Mind)
 - Originály (část 1: 314 PDF + 28 CSV, 180 MB) zůstávají v `D:\youtube\FM pdfka`. Do vaultu se nekopírují, přehled je v [[FM materiály]].
 - Historie Trading Analyzer skóre (28 CSV) je zkopírovaná do `research_data/fm_score`, viz [[Makro skóre měn]].

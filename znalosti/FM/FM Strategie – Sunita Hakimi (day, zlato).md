@@ -73,5 +73,8 @@ Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Sunita Hakimi (d
   Na XAU a GBPUSD se nPOC (červené čáry) testují o dny později.
 - **Zprávy:** NFP, FOMC a Core PPI na M5 dávají prudké svíčky oběma směry, proto se neobchodují.
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B5 (Elliottovy vlny, zóny místo sessions).
+
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,44 R (n 153)**, bez výhody. → [[F10 Entry modely mentorů FM]]

@@ -63,3 +63,6 @@ Méně vhodné: Elliottovy vlny (subjektivní) a fundamentální skóre Valchá�
   a nástroje (Trading Analyzer, TradeZella se slevovým kódem). Tvrzení typu „backtestování ukázalo, že skóre funguje perfektně“ je reklama.
 - FM backtestuje ručně (FxReplay, 20–30 obchodů). To je pro závěry málo, viz [[Plán předem]], [[Výběr, kontrola, holdout]] a [[Náhodné vstupy]].
 - Objem: mentoři používají futures data. My máme pro forex a zlato jen tick volume → [[Futures data a objem]].
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], doplňky k PDF od uživatele (obecná pravidla A1–A8, mentoři B0–B6, rozpory).

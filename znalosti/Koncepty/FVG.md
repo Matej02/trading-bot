@@ -23,3 +23,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 - Vstup po MSS do **první FVG s 0,382** (Veselovský), na M5 přednostně FVG (Můčka).
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B2 (interní likvidita, OB navázaný na FVG) a B1 (vstup do FVG na 5m).

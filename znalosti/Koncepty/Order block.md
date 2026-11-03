@@ -22,3 +22,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 - **FM day trading v kostce** (Launchpad): vytvoření likvidity → **HTF OB s velkým objemem** → návrat → entry model v OB → potvrzení RSI.
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B2 (OB = řada svíček opačné barvy před impulzem, jen těly, platí po close za začátkem zóny, HVN, FVG).

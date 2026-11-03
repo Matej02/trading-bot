@@ -19,3 +19,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 - Nad VWAP je trh býčí, pod ním medvědí. V balanci je VWAP magnet. **Velký odstup s klesajícím objemem** = přetažený trh, čeká se pullback.
 - **Close VWAP předchozího dne** = bias a pravděpodobnostní target (Můčka).
 - VWAP je jeden ze 3 typů poolu likvidity (instituce a algoritmy obchodují kolem něj).
+
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A7 (HLC3, dynamická S/R).

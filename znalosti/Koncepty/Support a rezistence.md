@@ -26,6 +26,9 @@ Vyšší TF dává silnější levely.
 ## Souvisí s
 [[Horizontální levely]] · [[Trendline a kanály]] · [[Likvidita]] · [[Market structure]]
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], A5 a B3 (od oka včetně knotů, víc dotyků = silnější, BOS protažený doprava = S/R).
+
 ## Otestováno
 Zatím ne samostatně. Fakeouty S/R v [[F5 SMC a volume profile na 1h]] (SFP).
 

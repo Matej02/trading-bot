@@ -90,5 +90,8 @@ Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Michal Veselovsk
 - **Horizontals:** NY dOpen a NY wOpen (kroužky). Reakce na NY DO na H1. „Efektivita NY DO a NY WO na 4h timeframu.“
 - **SVP:** VAH/VAL 70 %, POC+HVN, LVN. Pád z VAL rovnou do další LVN.
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B2 (OB jen těly, platnost po close, HVN, navázání na FVG, likvidita externí/interní).
+
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,24 R (n 485)**, bez výhody. → [[F10 Entry modely mentorů FM]]

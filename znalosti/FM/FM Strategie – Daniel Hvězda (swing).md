@@ -78,5 +78,8 @@ Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Daniel Hvězda (
   týdenních grafů futures (6B, 6A, 6S). Indikátor je TradingView „COT“ (legacy).
 - **Svíčky:** hammer a engulfing na dně nebo vrcholu po pohybu do zóny (fialové šipky).
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B4 (W1/D1, base 1–3 svíčky, hranice přes těla, neplatí po průrazu > 25 %, COT).
+
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **D1 zóna + svíčka −0,21 R (n 187)**, bez výhody. → [[F10 Entry modely mentorů FM]]

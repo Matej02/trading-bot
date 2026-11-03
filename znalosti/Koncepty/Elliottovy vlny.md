@@ -21,5 +21,8 @@ Trend tvoří 5 impulzních vln (1–5), korekce 3 vlny (A-B-C). Popisují psych
 ## Souvisí s
 [[Fibonacci a golden pocket]] · [[Trendline a kanály]] · [[Market structure]]
 
+## Doplněno uživatelem (2026-11-03)
+Viz [[Doplňující pravidla k FM PDF]], B5.
+
 ## Otestováno
 Ne. **Subjektivní**: „různí analytici mají různé vlny“. Mechanizace je sporná.
