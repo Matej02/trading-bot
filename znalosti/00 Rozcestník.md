@@ -15,7 +15,7 @@ Všechno, co jsme o projektu zjistili, jako propojená síť poznámek. Graf (Ct
 ## Výzkum (časová osa)
 [[Historie v1–v6]] → [[F1 Nové třídy signálů]] → [[F2 Více timeframů]] → [[F3 Průraz na nových trzích]] →
 [[F4 Vstup na menším timeframu]] → [[F5 SMC a volume profile na 1h]] → [[F6 Denní strategie]] →
-[[F7 Dokument 6 strategií SMC]] → [[F8 Strategie z FM PDF]] → [[F9 Kombinace FM konceptů]] → [[F10 Entry modely mentorů FM]] → [[F11 Mentoři FM znovu a podrobně]] → [[F12 Můčka podle doplňujících pravidel]] → [[F13 Veselovský podle PDF a doplňujících pravidel]] → [[F14 Pátek podle PDF a doplňujících pravidel]]
+[[F7 Dokument 6 strategií SMC]] → [[F8 Strategie z FM PDF]] → [[F9 Kombinace FM konceptů]] → [[F10 Entry modely mentorů FM]] → [[F11 Mentoři FM znovu a podrobně]] → [[F12 Můčka podle doplňujících pravidel]] → [[F13 Veselovský podle PDF a doplňujících pravidel]] → [[F14 Pátek podle PDF a doplňujících pravidel]] → [[F15 Hvězda podle PDF, doplňujících pravidel a COT]] → [[F16 Hakimi podle PDF a doplňujících pravidel]]
 
 ## Strategie
 [[Průraz F2 (proraz_d1)]] · [[RSI(2) pullback (mr_rsi2_d1)]] · [[Momentum L=250]] · [[Time-of-day AUDJPY 23-00]]

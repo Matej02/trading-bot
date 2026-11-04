@@ -83,3 +83,6 @@ Viz [[Doplňující pravidla k FM PDF]], B4 (W1/D1, base 1–3 svíčky, hranice
 
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **D1 zóna + svíčka −0,21 R (n 187)**, bez výhody. → [[F10 Entry modely mentorů FM]]
+
+## Otestováno – F15 (2026-11-04)
+PDF + 128 obrázků + B4 + COT z CFTC: vybraná (D1 zóna, H4 zóna uvnitř, level nad levelem) vývoj +0,22 R / OOS −0,17 R (n 13); COT filtr nepomohl. Bez výhody. → [[F15 Hvězda podle PDF, doplňujících pravidel a COT]]

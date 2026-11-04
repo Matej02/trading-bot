@@ -28,3 +28,4 @@ Viz [[Doplňující pravidla k FM PDF]], A3 (0,382 min. pullback, 0,618–0,66 G
 
 ## Otestováno
 Vstup na Fibo ve variantách F7 (OTE 0,62–0,79 v S1/S5) bez výhody.
+- **F16 (2026-11-04):** limit do pásma 0,618–0,75 vlny −0,34 / −0,23 R, vstup po zavření zpět nad 0,618 −0,12 / −0,05 R ([[F16 Hakimi podle PDF a doplňujících pravidel]]).

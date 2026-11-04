@@ -90,5 +90,17 @@
    "status": "unvalidated",
    "note": "F14 2026-11-04: Pátek podle PDF + B3, vybraná varianta vývoj +0,27 R / OOS +0,12 R (n 59), náhoda OOS +0,21 R – bez výhody, live experiment"
   }
+ },
+ "fm15_hve_h1": {
+  "*": {
+   "status": "unvalidated",
+   "note": "F15 2026-11-04: Hvězda podle PDF + B4 + COT, vybraná vývoj +0,22 R / OOS −0,17 R (n 13), COT nepomohl – live experiment"
+  }
+ },
+ "fm16_hak_m15": {
+  "*": {
+   "status": "unvalidated",
+   "note": "F16 2026-11-04: Hakimi podle PDF + B5, vybraná vývoj +0,04 R / OOS +0,07 R (n 45), náhoda −0,27/−0,07 R – live experiment"
+  }
  }
 }

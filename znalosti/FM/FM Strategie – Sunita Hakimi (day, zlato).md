@@ -78,3 +78,6 @@ Viz [[Doplňující pravidla k FM PDF]], B5 (Elliottovy vlny, zóny místo sessi
 
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,44 R (n 153)**, bez výhody. → [[F10 Entry modely mentorů FM]]
+
+## Otestováno – F16 (2026-11-04)
+PDF + 125 obrázků + B5: vybraná (vlna 4, FVG ve Fibo 0,618–0,75, potvrzení) vývoj +0,04 R / OOS +0,07 R (n 45), mimo XAU/XAG ztráta; limit −0,23 R OOS. Bez výhody. → [[F16 Hakimi podle PDF a doplňujících pravidel]]

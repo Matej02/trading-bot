@@ -61,3 +61,4 @@ OOS −0,17 R (H4) a −0,22 R (D1), náhodné vstupy −0,04 až −0,07 R. Pla
 Detail v [[F8 Strategie z FM PDF]]. Výhodu zóny nemají na žádném TF (F5 1h, F7 M1–M15, F8 H4–W1).
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.
+- **F15 (2026-11-04):** Hvězda – zóna nižšího TF v zóně vyššího a level nad levelem zlepšují proti holé zóně, ale v OOS stále ztráta ([[F15 Hvězda podle PDF, doplňujících pravidel a COT]]).

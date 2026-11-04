@@ -27,3 +27,5 @@ Doplněno 2026-10-29 ([[F8 Strategie z FM PDF]]):
 - **Entry modely všech mentorů FM přesně podle PDF** (Veselovský, Kimmel, Pátek, Šrajer DT, Můčka, Valchář, Hakimi, Hvězda): OOS −0,04 až −0,44 R ([[F10 Entry modely mentorů FM]]).
 - **Můčka podle doplňujících pravidel uživatele** (struktura tělem s momentem, strong/weak po 0,382, zóny s BOS a 25 %, balanční level, killzones, bias, 4H, sweep → MSS → 0,618): nejlepší varianta vývoj −0,18 R, OOS +0,06 R; entry model bez nákladů na nule; NAS100 +0,7 R se na S&P/Dow/DAX neopakuje ([[F12 Můčka podle doplňujících pravidel]]).
 - **Pátek podle PDF + B3** (H4 zóny z pivotů, odmítnutí, LH/HL, průraz M5/M15): 2R model −0,07 R, nejlepší varianta v OOS pod náhodou ([[F14 Pátek podle PDF a doplňujících pravidel]]).
+- **Hvězda podle PDF + B4 + COT** (D v W, level nad levelem, COT index): nejlepší vývoj +0,22 R → OOS −0,17 R, COT filtr nepomohl ([[F15 Hvězda podle PDF, doplňujících pravidel a COT]]).
+- **Hakimi podle PDF + B5** (Elliott ZigZagem, Fibo 0,618–0,75, FVG/zóna, RR ≥ 2,5): vybraná +0,07 R OOS jen na zlatě, jinde ztráta ([[F16 Hakimi podle PDF a doplňujících pravidel]]).

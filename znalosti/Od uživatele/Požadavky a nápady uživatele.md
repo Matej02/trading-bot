@@ -34,3 +34,5 @@ aktualizovano: 2026-11-03
 - 2026-11-01: při testech projít **všechno** k dané strategii, ať je test co nejpřesnější.
 - 2026-11-03: **doplňující pravidla k FM PDF** (obecná pravidla + mentoři, z Playbooku a odpovědí uživatele), pak testovat
   ([[Doplňující pravidla k FM PDF]]); export simulátoru za týden ([[Export simulátoru 2026-11-03]]); pošle ještě, co se stalo na live botovi.
+- 2026-11-03: Word s doplňujícími pravidly je jen **dodatek**, hlavní zdroj jsou PDF a obrázky; vše testovat a dát live ([[F13 Veselovský podle PDF a doplňujících pravidel]], [[F14 Pátek podle PDF a doplňujících pravidel]]).
+- 2026-11-04: souhlas se stažením COT z cftc.gov ([[F15 Hvězda podle PDF, doplňujících pravidel a COT]]).

@@ -4,6 +4,8 @@ import { fmSignal, ltOf, type FmSystem } from "./fm";
 import { fm12Signal } from "./fm12";
 import { fm13Signal } from "./fm13";
 import { fm14Signal } from "./fm14";
+import { fm15Signal } from "./fm15";
+import { fm16Signal } from "./fm16";
 import { MARKET_IDS, MARKETS, TRADE_IDS } from "./markets";
 import type { Candle, Dir, TF } from "./types";
 
@@ -29,6 +31,8 @@ const F12_MARKETS = ["EURUSD", "GBPUSD", "XAUUSD", "XAGUSD"];
 const F13_MARKETS = ["NAS100fut", "SPX500fut", "EURUSD", "GBPUSD", "XAUUSD"];
 /** Experiment F14: Patkovy trhy (NQ z futures dat 23 h). */
 const F14_MARKETS = ["NAS100fut", "GBPUSD", "XAUUSD"];
+/** Experiment F15: trhy s COT z testu, ktere maji z Yahoo 24h data. */
+const F15_MARKETS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD", "XAUUSD", "XAGUSD", "CRUDE_OIL", "NAS100fut", "SPX500fut"];
 
 /** Experiment F9: trhy z vyzkumu (26 + krypto), na kterych byly kombinace FM konceptu testovane. */
 export const FM_MARKETS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD", "EURJPY", "GBPJPY",
@@ -124,6 +128,22 @@ export const SYSTEMS: SystemDef[] = [
       "ale náhoda v OOS +0,21 R; základní model 2R −0,07 R.",
   },
   {
+    id: "fm15_hve_h1", name: "FM: Hvězda – H4 zóna v D1 zóně, level nad levelem (experiment F15)", tf: "1h",
+    markets: F15_MARKETS, kind: "bar", holdsWeekends: true, maxHoldBars: 240, window: 6500,
+    desc: "Experiment F15 (Hvězda podle PDF a obrázků, B4 jako dodatek): denní příjem – H4 S/D zóna (base 1–3, BOS) uvnitř D1 zóny " +
+      "ve směru trendu D1, první dotek proximal = vstup, SL pod 2. zónou (level nad levelem), TP nejbližší protější D1 zóna (2–6 R), " +
+      "nejdéle 10 dní. NEOVĚŘENO – test 2009–26 (13 trhů): vývoj +0,22 R (n 44), OOS −0,17 R (n 13); COT filtr nepomohl. " +
+      "Živě jen ~13 měsíců historie z Yahoo (starší D1 zóny chybí), bez BE při 1R, vstup trhem na hodině doteku.",
+  },
+  {
+    id: "fm16_hak_m15", name: "FM: Hakimi – vlna 4 do Fibo 0,618–0,75 s FVG, potvrzení (experiment F16)", tf: "15m",
+    markets: ["XAUUSD", "XAGUSD"], kind: "bar", holdsWeekends: false, maxHoldBars: 56, window: 3000, htf: ["1h"],
+    desc: "Experiment F16 (Hakimi podle PDF a obrázků, B5 jako dodatek): trend H4, Elliottovy vlny ZigZagem na 15m (2 ATR), vlna 3 " +
+      "delší než vlna 1 a pullback (vlna 4) do Fibo 0,618–0,75 s FVG; 15m svíčka zavře zpět za 0,618 → vstup trhem; SL pod pásmem, " +
+      "TP high vlny 3 (LOC likvidita), RR ≥ 2,5, bez BE, do 22:00 Praha. NEOVĚŘENO – test 2017–26: vývoj +0,04 R (n 40), " +
+      "OOS +0,07 R (n 45), náhoda −0,27 / −0,07 R; na forexu a NQ ztráta.",
+  },
+  {
     id: "momentum_d1_L250", name: "Momentum 250 dní (40 trhů)", tf: "1d", markets: TRADE_IDS, kind: "momentum",
     holdsWeekends: true,
     desc: "Long/short podle znaménka výnosu za 250 dní, 1× denně. Hrubě edge má, po swapu brokera ne.",
@@ -179,6 +199,15 @@ export function weeklyTrend(c: Candle[]): number {
 
 /** Signal na posledni UZAVRENE svicce (c uz neobsahuje tvorici se svicku). */
 export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF, Candle[]>>, marketId?: string): BarSignal | null {
+  if (system === "fm16_hak_m15") {
+    if (!extra?.["1h"]) return null;
+    const s = fm16Signal(c, extra["1h"]);
+    return s ? { dir: s.dir, sl: s.sl, tp: s.tp, reason: s.reason } : null;
+  }
+  if (system === "fm15_hve_h1") {
+    const s = fm15Signal(c);
+    return s ? { dir: s.dir, sl: s.sl, tp: s.tp, reason: s.reason } : null;
+  }
   if (system === "fm14_pat_m15") {
     const m = marketId ? MARKETS[marketId] : undefined;
     if (!m || !extra?.["1h"]) return null;
@@ -294,6 +323,12 @@ export type Tone = "wait" | "near" | "off";
 /** Lidsky popis, na co strategie na posledni uzavrene svicce ceka (panel "Bot zive"). */
 export function barStatus(system: string, c: Candle[], digits: number): { text: string; tone: Tone } {
   if (c.length < 150) return { text: `načítám data (${c.length}/150 svíček)`, tone: "off" };
+  if (system === "fm16_hak_m15") {
+    return { text: "experiment F16 – na zavření 15m svíčky hlídá pullback vlny 4 do Fibo 0,618–0,75 s FVG", tone: "wait" };
+  }
+  if (system === "fm15_hve_h1") {
+    return { text: "experiment F15 – na každé hodině hlídá první dotek H4 zóny uvnitř D1 zóny", tone: "wait" };
+  }
   if (system === "fm14_pat_m15") {
     return { text: "experiment F14 – na zavření 15m svíčky hledá LH/HL a průraz pivotu po odmítnutí v H4 zóně", tone: "wait" };
   }

@@ -16,8 +16,8 @@ vše ať je v obsidiánu a pak testuj vše jak jsme se domluvili když budeš sp
 | 1 | Můčka (B1) | F12 hotovo 2026-11-03: OOS +0,06 R, bez výhody | `fm12_mucka_m1` pushnuto (shoda 19/21) |
 | 2 | Veselovský (B2: OB, likvidita, FVG, SVP) | F13 hotovo: indexy OOS +0,23 R, nejlepší FM, neověřeno | `fm13_ves_m1` pushnuto (shoda 49/49) |
 | 3 | Pátek (B3: S/R, trendovky, fakeout) | F14 hotovo 2026-11-04: OOS +0,12 R, náhoda +0,21 R → bez výhody | `fm14_pat_m15` pushnuto (shoda 33/34) |
-| 4 | Hvězda (B4: S/D W1/D1, base 1–3, COT) | rozpracováno: text + 128 obrázků prošlé, plán `F15_PLAN.md`, kód zatím ne; COT data chybí (stažení z cftc.gov čeká na souhlas) | |
-| 5 | Hakimi (B5: Elliott, zóny) | | |
+| 4 | Hvězda (B4: S/D W1/D1, base 1–3, COT) | F15 hotovo 2026-11-04 (COT z CFTC): OOS −0,17 R, COT nepomohl → bez výhody | `fm15_hve_h1` pushnuto (shoda 7/11 při stejné délce historie) |
+| 5 | Hakimi (B5: Elliott, zóny) | F16 hotovo 2026-11-04: OOS +0,07 R jen zlato, jinde ztráta → bez výhody | `fm16_hak_m15` pushnuto (shoda 35/35) |
 | 6 | Šrajer DT + swing (B6) | | |
 | 7 | Valchář (OB limitkou, POC) | | |
 | 8 | Kimmel (indexy ICT) | | |

@@ -16,3 +16,6 @@ aktualizovano: 2026-10-29
 
 ## Doplněno uživatelem (2026-11-03)
 Viz [[Doplňující pravidla k FM PDF]], B4.
+
+## Otestováno – F15 (2026-11-04)
+Data CFTC 2009–2026 v `research_data/cot/`. Commercials extrém (COT index 26 t., 20/80) ve směru: +0,05 σ / 13 t. vývoj, +0,15 σ OOS; fondy zrcadlově, retail nic. Jako filtr Hvězdových zón nepomohl. → [[F15 Hvězda podle PDF, doplňujících pravidel a COT]]

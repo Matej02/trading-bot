@@ -26,3 +26,6 @@ Viz [[Doplňující pravidla k FM PDF]], B5.
 
 ## Otestováno
 Ne. **Subjektivní**: „různí analytici mají různé vlny“. Mechanizace je sporná.
+
+## Otestováno – F16 (2026-11-04)
+Vlny 2 a 4 ZigZagem (pravidla 1 a 3) + Fibo 0,618–0,75: bez výhody, potvrzení zavřením kolem nuly ([[F16 Hakimi podle PDF a doplňujících pravidel]]).
