@@ -357,6 +357,9 @@ def cycle(state, live, force=False):
                     journal(dict(strategy=name, market=mk, dir="long" if d == 1 else "short", signal_t=sig_end, action="neprovedeno", why=why))
                     log(f"  --- neprovedeno: {why}")
     save_state(state)
+    if int(now) % 900 < 60:                     # zivotni znamka kazdych 15 min, at je videt, ze runner bezi
+        n_pos = sum(1 for n in STRATS for p in (mt5.positions_get() or []) if p.magic == STRATS[n]["magic"])
+        log(f"kontrola {', '.join(sorted(todo))} na {len(last_m1)}/{len(mks)} trzich | otevrenych pozic {n_pos}")
 
 
 def main():
