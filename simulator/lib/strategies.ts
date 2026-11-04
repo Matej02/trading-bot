@@ -3,6 +3,7 @@ import { atr, ema, rollingMedian, rollingRankPct, rsiLast, sma, stdev } from "./
 import { fmSignal, ltOf, type FmSystem } from "./fm";
 import { fm12Signal } from "./fm12";
 import { fm13Signal } from "./fm13";
+import { fm14Signal } from "./fm14";
 import { MARKET_IDS, MARKETS, TRADE_IDS } from "./markets";
 import type { Candle, Dir, TF } from "./types";
 
@@ -26,6 +27,8 @@ export interface SystemDef {
 const F12_MARKETS = ["EURUSD", "GBPUSD", "XAUUSD", "XAGUSD"];
 /** Experiment F13: trhy z testu; indexy z futures dat (23 h), protoze Yahoo ^NDX/^GSPC ma jen hodiny burzy. */
 const F13_MARKETS = ["NAS100fut", "SPX500fut", "EURUSD", "GBPUSD", "XAUUSD"];
+/** Experiment F14: Patkovy trhy (NQ z futures dat 23 h). */
+const F14_MARKETS = ["NAS100fut", "GBPUSD", "XAUUSD"];
 
 /** Experiment F9: trhy z vyzkumu (26 + krypto), na kterych byly kombinace FM konceptu testovane. */
 export const FM_MARKETS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD", "EURJPY", "GBPJPY",
@@ -113,6 +116,14 @@ export const SYSTEMS: SystemDef[] = [
       "V testu TP1 na Asii (50 %) + BE, živě celý TP na cíl biasu; vstup trhem na 1m svíčce, která 50 % OB zasáhne.",
   },
   {
+    id: "fm14_pat_m15", name: "FM: Pátek – odmítnutí v H4 zóně → LH/HL → průraz pivotu M15 (experiment F14)", tf: "15m",
+    markets: F14_MARKETS, kind: "bar", holdsWeekends: false, maxHoldBars: 52, window: 3000, htf: ["1h"],
+    desc: "Experiment F14 (Pátek podle PDF a obrázků, B3 jako dodatek): trend H4 ze struktury pivotů, pullback odmítnutý v H4 S/R " +
+      "zóně (≥ 2 pivoty), na M15 nižší high / vyšší low a close za posledním pivotem → vstup trhem; SL za LH/HL, TP nejbližší " +
+      "protější H4 zóna (2–5 R), session 9–22 Praha. NEOVĚŘENO – test 2017–26: vývoj +0,27 R (n 50), OOS +0,12 R (n 59), " +
+      "ale náhoda v OOS +0,21 R; základní model 2R −0,07 R.",
+  },
+  {
     id: "momentum_d1_L250", name: "Momentum 250 dní (40 trhů)", tf: "1d", markets: TRADE_IDS, kind: "momentum",
     holdsWeekends: true,
     desc: "Long/short podle znaménka výnosu za 250 dní, 1× denně. Hrubě edge má, po swapu brokera ne.",
@@ -168,6 +179,12 @@ export function weeklyTrend(c: Candle[]): number {
 
 /** Signal na posledni UZAVRENE svicce (c uz neobsahuje tvorici se svicku). */
 export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF, Candle[]>>, marketId?: string): BarSignal | null {
+  if (system === "fm14_pat_m15") {
+    const m = marketId ? MARKETS[marketId] : undefined;
+    if (!m || !extra?.["1h"]) return null;
+    const s = fm14Signal({ c15: c, c1h: extra["1h"], tick: 10 ** -m.digits });
+    return s ? { dir: s.dir, sl: s.sl, tp: s.tp, reason: s.reason } : null;
+  }
   if (system === "fm13_ves_m1") {
     const m = marketId ? MARKETS[marketId] : undefined;
     if (!m || !extra?.["15m"] || !extra?.["1h"]) return null;
@@ -277,6 +294,9 @@ export type Tone = "wait" | "near" | "off";
 /** Lidsky popis, na co strategie na posledni uzavrene svicce ceka (panel "Bot zive"). */
 export function barStatus(system: string, c: Candle[], digits: number): { text: string; tone: Tone } {
   if (c.length < 150) return { text: `načítám data (${c.length}/150 svíček)`, tone: "off" };
+  if (system === "fm14_pat_m15") {
+    return { text: "experiment F14 – na zavření 15m svíčky hledá LH/HL a průraz pivotu po odmítnutí v H4 zóně", tone: "wait" };
+  }
   if (system === "fm13_ves_m1") {
     const h = +new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Prague", hourCycle: "h23", hour: "numeric" })
       .format(new Date(c[c.length - 1].time * 1000));

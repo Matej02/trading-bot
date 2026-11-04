@@ -33,3 +33,4 @@ Viz [[Doplňující pravidla k FM PDF]], A5 a B3 (od oka včetně knotů, víc d
 Zatím ne samostatně. Fakeouty S/R v [[F5 SMC a volume profile na 1h]] (SFP).
 
 F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace FM konceptů]]) – bez výhody.
+- **F14 (2026-11-04):** H4 S/R zóna z ≥ 2 pivotů jako místo odmítnutí před průrazem M15 zlepšila výsledek (bez ní −0,01 R OOS), ale nad náhodu se nedostalo ([[F14 Pátek podle PDF a doplňujících pravidel]]).

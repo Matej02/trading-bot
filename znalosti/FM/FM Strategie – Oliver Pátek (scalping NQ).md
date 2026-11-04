@@ -71,3 +71,6 @@ Viz [[Doplňující pravidla k FM PDF]], B3 (S/R po 2 dotycích, vyšší low p�
 
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,05 R (n 2 868), NQ −0,01 R**, bez výhody. → [[F10 Entry modely mentorů FM]]
+
+## Otestováno – F14 (2026-11-04)
+PDF + 80 obrázků + B3 jako dodatek: vybraná varianta (M15, odmítnutí v H4 zóně, TP protější zóna) vývoj +0,27 R / OOS +0,12 R (n 59), náhoda v OOS +0,21 R → bez výhody; 2R model −0,07 R. → [[F14 Pátek podle PDF a doplňujících pravidel]]

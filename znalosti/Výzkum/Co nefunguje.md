@@ -26,3 +26,4 @@ Doplněno 2026-10-29 ([[F8 Strategie z FM PDF]]):
 - **Kombinace FM konceptů** (8 spouštěčů × filtry × TP, H1 i H4, 2 208 kombinací): 0 prošlo výběrem ([[F9 Kombinace FM konceptů]]).
 - **Entry modely všech mentorů FM přesně podle PDF** (Veselovský, Kimmel, Pátek, Šrajer DT, Můčka, Valchář, Hakimi, Hvězda): OOS −0,04 až −0,44 R ([[F10 Entry modely mentorů FM]]).
 - **Můčka podle doplňujících pravidel uživatele** (struktura tělem s momentem, strong/weak po 0,382, zóny s BOS a 25 %, balanční level, killzones, bias, 4H, sweep → MSS → 0,618): nejlepší varianta vývoj −0,18 R, OOS +0,06 R; entry model bez nákladů na nule; NAS100 +0,7 R se na S&P/Dow/DAX neopakuje ([[F12 Můčka podle doplňujících pravidel]]).
+- **Pátek podle PDF + B3** (H4 zóny z pivotů, odmítnutí, LH/HL, průraz M5/M15): 2R model −0,07 R, nejlepší varianta v OOS pod náhodou ([[F14 Pátek podle PDF a doplňujících pravidel]]).
