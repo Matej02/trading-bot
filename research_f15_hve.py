@@ -151,7 +151,7 @@ def run_market(mk, var):
             if risk > 0 and Rt >= 2:
                 for i in range(i_touch, Tl["en"][t0] + 1):
                     if (d == 1 and H["l"][i] <= z["prox"]) or (d == -1 and H["h"][i] >= z["prox"]):
-                        out.append([int(H["t"][i]), d, float(SL)])
+                        out.append([int(H["t"][i]), d, float(SL), float(z["prox"] + d * min(Rt, 6.0) * risk)])
                         break
             continue
         if var["entry"] == "limit":

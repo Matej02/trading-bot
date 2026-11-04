@@ -70,3 +70,6 @@ Obrázky z PDF (všechny grafy, po lekcích): [[FM obrázky – Rafael Kimmel (d
 
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **model 1 −0,04 R (n 186), model 2 −0,11 R**, bez výhody. → [[F10 Entry modely mentorů FM]]
+
+## Otestováno – F19 (2026-11-04)
+Entry model 2 (dotek 15m zóny, 2× MSS, SL za 3./4. POI, best pair): OOS −0,05 R (n 39), náhoda +0,09 R. Bez výhody. → [[F19 Kimmel entry model 2]]

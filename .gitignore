@@ -23,3 +23,8 @@ scratch/*.json
 # Obsidian – rozložení oken je osobní, poznámky do repa patří
 znalosti/.obsidian/workspace*.json
 znalosti/.trash/
+
+# live test FM na MT5 demu (data)
+fm_demo_journal.jsonl
+fm_demo_state.json
+scratch/live_mt5/

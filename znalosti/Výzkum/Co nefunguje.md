@@ -29,3 +29,4 @@ Doplněno 2026-10-29 ([[F8 Strategie z FM PDF]]):
 - **Pátek podle PDF + B3** (H4 zóny z pivotů, odmítnutí, LH/HL, průraz M5/M15): 2R model −0,07 R, nejlepší varianta v OOS pod náhodou ([[F14 Pátek podle PDF a doplňujících pravidel]]).
 - **Hvězda podle PDF + B4 + COT** (D v W, level nad levelem, COT index): nejlepší vývoj +0,22 R → OOS −0,17 R, COT filtr nepomohl ([[F15 Hvězda podle PDF, doplňujících pravidel a COT]]).
 - **Hakimi podle PDF + B5** (Elliott ZigZagem, Fibo 0,618–0,75, FVG/zóna, RR ≥ 2,5): vybraná +0,07 R OOS jen na zlatě, jinde ztráta ([[F16 Hakimi podle PDF a doplňujících pravidel]]).
+- **Šrajer (F17), Valchář (F18), Kimmel model 2 (F19)** podle PDF a všech obrázků: nic nad náhodou; skóre Trading Analyzeru jako filtr OOS zhoršuje ([[F17 Šrajer day a swing podle PDF]], [[F18 Valchář podle PDF a obrázků]], [[F19 Kimmel entry model 2]]).

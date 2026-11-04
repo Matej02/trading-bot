@@ -94,3 +94,6 @@ Viz [[Doplňující pravidla k FM PDF]], B2 – Michal bere OB limitkou „stejn
 
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **−0,36 R (n 306)**, bez výhody. → [[F10 Entry modely mentorů FM]]
+
+## Otestováno – F18 (2026-11-04)
+PDF + 220 obrázků: OB + POC + sweep + D1 zóna + momentum skóre: vybraná OOS −0,21 R, momentum skóre OOS −0,42 R. Bez výhody. → [[F18 Valchář podle PDF a obrázků]]

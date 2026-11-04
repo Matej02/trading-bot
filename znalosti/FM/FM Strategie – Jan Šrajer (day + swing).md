@@ -109,3 +109,6 @@ Viz [[Doplňující pravidla k FM PDF]], B6 (MS + S/D, volume profile jako filtr
 
 ## Otestováno – F10 (2026-10-29)
 Entry model přesně podle PDF na minutových datech, OOS 2022–26: **day trading −0,29 R (n 97)**, bez výhody. → [[F10 Entry modely mentorů FM]]
+
+## Otestováno – F17 (2026-11-04)
+PDF + 89 obrázků + B6: day trading OOS +0,07 R (n 74, náhoda −0,10), swing OOS −0,27 R; skóre Trading Analyzeru jako filtr OOS zhoršilo. Bez výhody. → [[F17 Šrajer day a swing podle PDF]]

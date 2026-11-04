@@ -18,12 +18,14 @@ vše ať je v obsidiánu a pak testuj vše jak jsme se domluvili když budeš sp
 | 3 | Pátek (B3: S/R, trendovky, fakeout) | F14 hotovo 2026-11-04: OOS +0,12 R, náhoda +0,21 R → bez výhody | `fm14_pat_m15` pushnuto (shoda 33/34) |
 | 4 | Hvězda (B4: S/D W1/D1, base 1–3, COT) | F15 hotovo 2026-11-04 (COT z CFTC): OOS −0,17 R, COT nepomohl → bez výhody | `fm15_hve_h1` pushnuto (shoda 7/11 při stejné délce historie) |
 | 5 | Hakimi (B5: Elliott, zóny) | F16 hotovo 2026-11-04: OOS +0,07 R jen zlato, jinde ztráta → bez výhody | `fm16_hak_m15` pushnuto (shoda 35/35) |
-| 6 | Šrajer DT + swing (B6) | | |
-| 7 | Valchář (OB limitkou, POC) | | |
-| 8 | Kimmel (indexy ICT) | | |
+| 6 | Šrajer DT + swing (B6) | F17 hotovo: DT OOS +0,07 R (n 74), swing −0,27 R → bez výhody | – (bez výhody, bez kandidátního režimu) |
+| 7 | Valchář (OB limitkou, POC) | F18 hotovo: OOS −0,21 R, momentum skóre −0,42 R → bez výhody | – |
+| 8 | Kimmel (indexy ICT) | F19 model 2 hotovo: OOS −0,05 R, náhoda +0,09 → bez výhody | – |
 | 9 | Obecná strategie uživatele (část A: ranní top-down, SFP s FRVP) | | |
 
 **Omezení simulátoru:** Yahoo 1m jen 5 dní, 5m/15m 1 měsíc, 1h 1 rok. Vstup je trhem na zavření svíčky; limit se nahrazuje
 signálem na svíčce, která úroveň zasáhne. FM systémy blokuje Risk expozicí měn, kterou zaplní Momentum (export 2026-11-03).
 
 **2026-11-03: Vercel nenasazuje od 2026-10-29** (pole `build` v `/api/tick/status` chybí) – opravuje uživatel ve Vercelu.
+
+**2026-11-04: live na MT5 demu** – `run_fm_demo.py --live` (F12–F16, jen DEMO účet, 0,25 % riziko), viz vault Infrastruktura/FM live test na MT5 demu.

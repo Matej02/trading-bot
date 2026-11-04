@@ -175,7 +175,7 @@ def run_market(mk, var):
                 Ec = X15["c"][ck]
                 rk = (Ec - SL) * d
                 if rk > 0 and (TPx - Ec) * d / rk >= 2.5:
-                    out.append([int(M["t"][int(X15["st"][ck])]), d, float(SL)])
+                    out.append([int(M["t"][int(X15["st"][ck])]), d, float(SL), float(Ec + d * min((TPx - Ec) * d / rk, 8.0) * rk)])
                 continue
             E, kind, iv = M["o"][fill0] + (M["spr"][fill0] if d == 1 else 0), 1, fill0
         risk = (E - SL) * d

@@ -36,3 +36,4 @@ aktualizovano: 2026-11-03
   ([[Doplňující pravidla k FM PDF]]); export simulátoru za týden ([[Export simulátoru 2026-11-03]]); pošle ještě, co se stalo na live botovi.
 - 2026-11-03: Word s doplňujícími pravidly je jen **dodatek**, hlavní zdroj jsou PDF a obrázky; vše testovat a dát live ([[F13 Veselovský podle PDF a doplňujících pravidel]], [[F14 Pátek podle PDF a doplňujících pravidel]]).
 - 2026-11-04: souhlas se stažením COT z cftc.gov ([[F15 Hvězda podle PDF, doplňujících pravidel a COT]]).
+- 2026-11-04: pokračovat Šrajer, Valchář, Kimmel; jako poslední krok vše nasadit a testovat live „na našem demu“ ([[FM live test na MT5 demu]]).

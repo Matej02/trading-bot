@@ -42,3 +42,6 @@ Pár se změnou skóre ≥ 2 → zóna ve směru změny → pullback → vstup, 
 ## Otestováno – F8 (2026-10-29)
 Změna skóre o ≥ 2 body → výnos za 5–20 dní −0,07 až +0,03 ATR, zásah ~49 % (DEV 2017–21 i OOS 2022–24). Bias |skóre| ≥ 5 → ~0.
 **Bez výhody.** → [[F8 Strategie z FM PDF]]
+
+## Otestováno – F17/F18 (2026-11-04)
+Skóre jako filtr Šrajerova swingu (bias ±5 / změna ±2) a Valchářových OB (momentum): v OOS vždy horší než bez filtru (−0,37 až −0,42 R). [[F17 Šrajer day a swing podle PDF]], [[F18 Valchář podle PDF a obrázků]]
