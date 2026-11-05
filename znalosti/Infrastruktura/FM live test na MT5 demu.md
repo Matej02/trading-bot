@@ -54,3 +54,18 @@ Zadání uživatele (2026-11-04): „jako poslední task to celé nasadíme a bu
   - Runner to od té doby hlásí při startu, v každé 15min kontrole i v deníku u odmítnutého signálu.
 - **Runner v MT5 není vidět jako robot na grafu:** je to externí Python přes API. Obchody se ukážou v záložkách Obchodování a Historie s komentářem názvu strategie a magic číslem.
 - **Ukázkové 1m systémy v simulátoru** uživatel vypnul 2026-11-05 (dělaly 99 % ztráty simulátoru).
+
+## Možnost: virtuální PC (VPS) pro běh 24/7 (návrh 2026-11-05)
+- **Musí to být Windows:** MT5 i Python balík MetaTrader5 jsou jen pro Windows. Linux přes Wine jde, ale je křehký.
+- **Naměřeno 2026-11-05:**
+  - runner 250 MB RAM, špička 430 MB;
+  - MT5 320 MB RAM, špička 370 MB;
+  - CPU v průměru zhruba 15 % jednoho jádra.
+  - S Windows tedy **min. 2 GB RAM, lépe 4 GB a 2 vCPU**. Bezplatné virtuály mívají 1 GB, to je málo.
+- **MQL5 VPS od MetaQuotes nejde:** spouští jen roboty v MQL5, ne Python. Runner by se musel přepsat.
+- **Přesun:**
+  - `git clone` repa, Python 3.13 + balíky (pandas, numba, MetaTrader5, matplotlib);
+  - MT5 přihlášený na demo, zapnuté Algoritmické obchodování;
+  - `start_fm_demo.cmd` + zástupce ve složce Po spuštění;
+  - konec dne vrátit na 22:00 jako v testech.
+- **Pozor:** nikdy neběžet zároveň na PC i na VPS se stejným účtem. Mutex chrání jen jeden počítač, dva by mohly zdvojit příkazy. Na PC pak smazat zástupce `FM demo live.lnk`.
