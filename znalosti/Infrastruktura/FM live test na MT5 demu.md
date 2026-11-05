@@ -26,6 +26,7 @@ Zadání uživatele (2026-11-04): „jako poslední task to celé nasadíme a bu
   - riziko 0,25 % zůstatku, SL aspoň 3× spread;
   - jedna pozice na strategii a trh;
   - intradenní obchody zavře ve 22:00 Praha, F15 nejdéle po 10 dnech.
+  - **Od 2026-11-05:** uživatel vypíná PC kolem 20:00, proto se intradenní obchody zavírají v **19:45** a nové se otevírají jen do **19:00**. Test počítá s 22:00; obchod, který by běžel po 19:45, se zavře dřív. F15 (swing) beze změny.
 - **Deník** `fm_demo_journal.jsonl`, stav `fm_demo_state.json`.
 - **Spuštění:** `py run_fm_demo.py --live` (bez `--live` suchý běh, `--once` jeden cyklus).
   - Spouštět v **samostatném okně Windows**: `Start-Process cmd -ArgumentList '/k','title FM demo live && python -u "D:\Trading bot\run_fm_demo.py" --live'`.
@@ -52,3 +53,4 @@ Zadání uživatele (2026-11-04): „jako poslední task to celé nasadíme a bu
   - 2026-11-05 bylo vypnuté (`terminal_info().trade_allowed = False`). Uživatel ho zapnul v 11:55 a kontrola ve 12:00 proběhla bez varování na 13/13 trzích.
   - Runner to od té doby hlásí při startu, v každé 15min kontrole i v deníku u odmítnutého signálu.
 - **Runner v MT5 není vidět jako robot na grafu:** je to externí Python přes API. Obchody se ukážou v záložkách Obchodování a Historie s komentářem názvu strategie a magic číslem.
+- **Ukázkové 1m systémy v simulátoru** uživatel vypnul 2026-11-05 (dělaly 99 % ztráty simulátoru).

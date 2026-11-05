@@ -5,7 +5,7 @@ shoda TS/Python 19/21, 49/49, 33/34, 7/11 pri stejne historii, 35/35).
 Kazdou minutu: stahne z MT5 posledni M1 (75 dni) a H1 (6500), prevede cas serveru (Londyn) na UTC jako testy, spocita
 kandidaty signalu kazde strategie a pokud nejaky vznikl na prave uzavrene svicce, posle na DEMO market order se SL/TP.
 Pojistky: obchoduje JEN kdyz MT5 hlasi ucet jako DEMO (jinak konec), SL >= 3x spread, riziko 0,25 % zustatku na obchod,
-jedna pozice na strategii a trh, casove vystupy jako v testu (intradenni do 22:00 Praha, F15 nejdyl 10 dni).
+jedna pozice na strategii a trh, casove vystupy (intradenni do 19:45 Praha - PC se vecer vypina, test 22:00; F15 nejdyl 10 dni).
 Denik: fm_demo_journal.jsonl, stav: fm_demo_state.json (vse v D:\\Trading bot).
 
 Spusteni:  py run_fm_demo.py            (suchy beh: jen vypise, co by udelal)
@@ -45,6 +45,9 @@ STATE = os.path.join(ROOT, "fm_demo_state.json")
 RISK_PCT = 0.25
 SL_MIN_SPREADS = 3
 M1_DAYS = 75
+# uzivatel vypina PC kolem 20:00 (2026-11-05) -> intradenni obchody zavrit pred vypnutim, nove jen do 19:00 (test: 22:00)
+INTRADAY_CLOSE_H = 19.75
+INTRADAY_LAST_OPEN_H = 19.0
 M1_DAYS_F20 = 180                    # 4H struktura F20 se ustali az od ~180 dni historie (SPX500: 75 d 36/50, 180 d 50/50)
 F12.KS = (1.5,)                      # live jen vybrana varianta (k = 1,5)
 
@@ -265,6 +268,8 @@ def open_trade(name, mk, d, sl, tp, sig_t, live):
         return "uz otevreno"
     if live and not algo_on():
         return ALGO_OFF
+    if cfg["intraday"] and prague_hour(time.time())[0] >= INTRADAY_LAST_OPEN_H:
+        return f"po {int(INTRADAY_LAST_OPEN_H)}:00 se intradenni obchod neotvira (PC se vecer vypina)"
     tick = mt5.symbol_info_tick(mk)
     si = mt5.symbol_info(mk)
     if tick is None or si is None:
@@ -303,8 +308,8 @@ def time_exits(live):
             for p in mc.get_open_positions(mk, magic=cfg["magic"]):
                 _, od = prague_hour(p.time_msc / 1000 if p.time_msc else p.time)
                 why = None
-                if cfg["intraday"] and (h >= 22.0 or today != od):
-                    why = "konec dne 22:00 (jako test)"
+                if cfg["intraday"] and (h >= INTRADAY_CLOSE_H or today != od):
+                    why = f"konec dne {int(INTRADAY_CLOSE_H)}:{int(INTRADAY_CLOSE_H % 1 * 60):02d} (PC se vecer vypina; test 22:00)"
                 if not cfg["intraday"] and now - p.time > cfg["hold_days"] * 86400 + 3 * 3600:
                     why = f"max {cfg['hold_days']} dni"
                 if why:
