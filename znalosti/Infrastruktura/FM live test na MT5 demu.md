@@ -43,6 +43,10 @@ Zadání uživatele (2026-11-04): „jako poslední task to celé nasadíme a bu
   - spustí runner `--live`;
   - když spadne, restartuje ho do minuty, nejvýš 30× po sobě.
 - **Jen jedna instance:** Windows mutex `fm_demo_runner`. Druhé spuštění se samo ukončí, takže se příkazy nezdvojí.
+- **Vyskakovací upozornění** (od 2026-11-05):
+  - když je v MT5 vypnuté Algoritmické obchodování (nejvýš 1× za hodinu);
+  - po 5 chybách cyklu po sobě;
+  - když spouštěcí soubor vzdá restart po 30 pádech.
 - **Znovupřipojení:** po uspání PC nebo restartu terminálu se MT5 připojí znovu a znovu se ověří, že je účet DEMO.
 - **Automatický start po přihlášení** si nastavuje uživatel sám. Claude Code ho nesmí vytvořit (bezpečnostní pravidlo proti trvalému spouštění):
   - zástupce `start_fm_demo.cmd` ve složce `shell:startup`, nebo naplánovaná úloha.

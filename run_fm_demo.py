@@ -351,6 +351,20 @@ def algo_on():
     return bool(ti is not None and ti.trade_allowed)
 
 
+_POPUP_AT = {}
+
+
+def popup(msg, key, every_s=3600):
+    """Vyskakovaci okno s upozornenim (neblokuje runner), stejny problem nejvys jednou za hodinu."""
+    if os.name != "nt" or time.time() - _POPUP_AT.get(key, 0) < every_s:
+        return
+    _POPUP_AT[key] = time.time()
+    import ctypes
+    import threading
+    threading.Thread(target=lambda: ctypes.windll.user32.MessageBoxW(None, msg, "FM demo live - POZOR", 0x30 | 0x40000),
+                     daemon=True).start()
+
+
 def single_instance():
     """Jen jedna bezici instance (dve by zdvojily prikazy). Windows mutex zmizi sam s koncem procesu."""
     global _MUTEX
@@ -419,6 +433,9 @@ def cycle(state, live, force=False):
         n_pos = sum(1 for n in STRATS for p in (mt5.positions_get() or []) if p.magic == STRATS[n]["magic"])
         log(f"kontrola {', '.join(sorted(todo))} na {len(last_m1)}/{len(mks)} trzich | otevrenych pozic {n_pos}"
             + ("" if algo_on() else " | POZOR: " + ALGO_OFF))
+    if live and not algo_on():
+        popup("V MT5 je vypnute Algoritmicke obchodovani.\n\nKlikni v MT5 v horni liste na 'Algoritmicke Obchodovani' "
+              "(ikona musi byt zelena), jinak broker obchody z runneru odmitne.", "algo")
 
 
 def main():
@@ -433,17 +450,23 @@ def main():
     if live and not algo_on():
         log("POZOR: " + ALGO_OFF)
     state = load_state()
+    errs = 0
     if once:
         cycle(state, live, force=True)
         return
     while True:
         try:
             cycle(state, live)
+            errs = 0
         except SystemExit:
             raise
         except Exception as e:
+            errs += 1
             log("chyba cyklu:", e)
             traceback.print_exc(limit=2)
+            if errs >= 5:
+                popup(f"Runner {errs}x po sobe hlasi chybu:\n{e}\n\nZkontroluj, ze bezi MT5 a je pripojeny k internetu "
+                      "(log: fm_demo_log.txt ve slozce Trading bot na disku D).", "errs")
         time.sleep(60 - time.time() % 60 + 8)   # 8 s po uzavreni minuty
 
 
