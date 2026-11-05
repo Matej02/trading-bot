@@ -263,6 +263,8 @@ def open_trade(name, mk, d, sl, tp, sig_t, live):
         raise SystemExit("UCET NENI DEMO - konec, nic se neposila.")
     if mc.get_open_positions(mk, magic=cfg["magic"]):
         return "uz otevreno"
+    if live and not algo_on():
+        return ALGO_OFF
     tick = mt5.symbol_info_tick(mk)
     si = mt5.symbol_info(mk)
     if tick is None or si is None:
@@ -336,6 +338,12 @@ def ensure_connected():
 
 
 _MUTEX = None
+ALGO_OFF = "v MT5 je vypnute Algoritmicke obchodovani (tlacitko v horni liste) - prikaz by broker odmitl"
+
+
+def algo_on():
+    ti = mt5.terminal_info()
+    return bool(ti is not None and ti.trade_allowed)
 
 
 def single_instance():
@@ -404,7 +412,8 @@ def cycle(state, live, force=False):
     save_state(state)
     if int(now) % 900 < 60:                     # zivotni znamka kazdych 15 min, at je videt, ze runner bezi
         n_pos = sum(1 for n in STRATS for p in (mt5.positions_get() or []) if p.magic == STRATS[n]["magic"])
-        log(f"kontrola {', '.join(sorted(todo))} na {len(last_m1)}/{len(mks)} trzich | otevrenych pozic {n_pos}")
+        log(f"kontrola {', '.join(sorted(todo))} na {len(last_m1)}/{len(mks)} trzich | otevrenych pozic {n_pos}"
+            + ("" if algo_on() else " | POZOR: " + ALGO_OFF))
 
 
 def main():
@@ -416,6 +425,8 @@ def main():
     if not mc.is_demo_account():
         raise SystemExit("Ucet v MT5 neni DEMO - live test FM strategii bezi jen na demu. Konec.")
     log(f"FM demo runner {'LIVE NA DEMU' if live else 'SUCHY BEH'} | strategie: {', '.join(STRATS)} | riziko {RISK_PCT} %")
+    if live and not algo_on():
+        log("POZOR: " + ALGO_OFF)
     state = load_state()
     if once:
         cycle(state, live, force=True)
