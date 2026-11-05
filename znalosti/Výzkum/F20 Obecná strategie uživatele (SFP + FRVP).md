@@ -63,14 +63,22 @@ Plán s odkazy na lekce: `F20_PLAN.md`. Kód: `research_f20_user.py`, vyhodnocen
 
 Vybraná varianta vydělala hlavně 2021–2023, od 2023 je plochá. 2025–26 kolem nuly.
 
+## Ověření na trzích mimo test (2026-11-05)
+Vybraná varianta zafixovaná, beze změny parametrů. Trhy AUDUSD, USDCAD, XAGUSD, US30, ropa, BTC, ETH:
+- **vybraná −0,43 R (n 48)**, z toho 2022+ −0,60 R (n 25). Kladný jen US30 (n 7), ostatní ztrátové;
+- rodina 8 variant −0,11 R (n 249), náhoda se stejným SL/TP −0,28 R;
+- jádro SFP bez filtrů (close, 2R) −0,21 R (n 12 120).
+
+→ **Na nových trzích neprošlo.** Kladný výsledek na původních 7 trzích byl nejspíš náhoda výběru ze 486 variant, stejně jako F13 na US30/DAX.
+
 ## Závěr
-**NEOVĚŘENO, slabý náznak** podobně jako [[F13 Veselovský podle PDF a doplňujících pravidel|F13]]:
+**BEZ VÝHODY** (na nových trzích neprošlo; původně „neověřeno, slabý náznak“) podobně jako [[F13 Veselovský podle PDF a doplňujících pravidel|F13]]:
 - Kombinace 4H/15m bias + S/D zóna + SFP + cíl na nahém denním POC vychází kladně na OOS u celé rodiny variant a je lepší než náhoda.
 - Jenže na vývoji kladná není (kromě vybrané varianty), obchodů je jen asi 5 za rok na 7 trzích a poslední 2 roky jsou ploché.
 - Samotné SFP + FRVP výhodu nemá. Případná výhoda je v kontextu (směr, zóna) a v cíli na POC.
 
 ## Live
-Od 2026-11-04 běží jako `F20_user` (magic 20261120) na MT5 demu v [[FM live test na MT5 demu|runneru]].
+Na demu dál běží jako experiment pro sběr živých dat, i když na nových trzích neprošla. Od 2026-11-04 běží jako `F20_user` (magic 20261120) na MT5 demu v [[FM live test na MT5 demu|runneru]].
 - **Shoda** kandidátů SFP a filtrů ze živých dat MT5 s historií:
   - EURUSD 51/51, GBPUSD 221/221, SPX500 288/288, NAS100 236/236, DAX 114/114, zlato 86/86;
   - USDJPY 186/198;
