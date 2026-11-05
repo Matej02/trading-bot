@@ -29,3 +29,6 @@ F9 (2026-10-29): jako spouštěč i filtr v 2 208 kombinacích ([[F9 Kombinace F
 
 ## Doplněno uživatelem (2026-11-03)
 Viz [[Doplňující pravidla k FM PDF]], A6 (SFP v 15m svíčce, FRVP do svíčky, 2–3 ze VAH/VAL/POC v knotu).
+
+## F20 (2026-11-04)
+SFP v 15m svíčce + FRVP (2–3 ze VAH/VAL/POC v knotu) bez dalších filtrů: bez nákladů −0,04 R (n 2 100) → samo bez výhody. S 4H/15m biasem, S/D zónou a TP na nahém denním POC OOS +0,78 R (n 27), vývoj +0,28 R – neověřeno, viz [[F20 Obecná strategie uživatele (SFP + FRVP)|F20]].

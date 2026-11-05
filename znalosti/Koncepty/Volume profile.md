@@ -28,3 +28,6 @@ Zdroj: [[Dokument 6 strategií SMC + Volume Profile|dokumentu 6 strategií]].
 
 ## Doplněno uživatelem (2026-11-03)
 Viz [[Doplňující pravidla k FM PDF]], A7 (FRVP row size 250, VAH/VAL 70 %, SVP POC minulého dne) a A6 (SFP: 2 ze 3 VAH/VAL/POC v knotu).
+
+## F20 (2026-11-04)
+FRVP do jedné 15m svíčky (250 řádků, VA 70 %, z M1): filtr 2/3 v knotu na OOS lehce lepší než bez filtru (−0,13 vs −0,15 R přes varianty), 3/3 nepomáhá. Nahý denní POC jako TP = nejlepší cíl v průměru (−0,12 R vs 2R −0,15 R). Viz [[F20 Obecná strategie uživatele (SFP + FRVP)|F20]].

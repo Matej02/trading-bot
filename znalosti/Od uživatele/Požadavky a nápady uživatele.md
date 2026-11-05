@@ -37,3 +37,5 @@ aktualizovano: 2026-11-03
 - 2026-11-03: Word s doplňujícími pravidly je jen **dodatek**, hlavní zdroj jsou PDF a obrázky; vše testovat a dát live ([[F13 Veselovský podle PDF a doplňujících pravidel]], [[F14 Pátek podle PDF a doplňujících pravidel]]).
 - 2026-11-04: souhlas se stažením COT z cftc.gov ([[F15 Hvězda podle PDF, doplňujících pravidel a COT]]).
 - 2026-11-04: pokračovat Šrajer, Valchář, Kimmel; jako poslední krok vše nasadit a testovat live „na našem demu“ ([[FM live test na MT5 demu]]).
+- 2026-11-04: po nasazení „hotovo pokračuj“ → poslední položka fronty, obecná strategie uživatele (část A) otestována v [[F20 Obecná strategie uživatele (SFP + FRVP)|F20]] a dána live na demo.
+- 2026-11-05: runner přes noc neběžel, protože uživatel vypnul počítač. „Vše commitni, ať to můžeme live testovat na demu, vše zapiš; nevadí, že je repozitář otevřený, a pak pokračuj.“ → repozitář GitHub zůstává veřejný (rozhodnutí uživatele).

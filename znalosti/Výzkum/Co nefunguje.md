@@ -9,6 +9,7 @@ aktualizovano: 2026-10-29
 | Technické indikátory na H1 | [[Historie v1–v6]] | po nákladech 0 z 60 |
 | Krátké timeframy (1m–15m) | [[F2 Více timeframů]], [[F7 Dokument 6 strategií SMC]] | spread velká část SL ([[Náklady brokera]]) |
 | SMC: [[SFP – sweep likvidity|SFP]], [[FVG]], [[Order block|OB]], [[MSS a displacement|MSS]] | [[F5 SMC a volume profile na 1h]], [[F7 Dokument 6 strategií SMC]] | ~0 R i bez nákladů |
+| SFP v 15m svíčce + FRVP (VAH/VAL/POC v knotu) | [[F20 Obecná strategie uživatele (SFP + FRVP)|F20]] | samo −0,04 R bez nákladů; s biasem/zónou/TP POC neověřeno |
 | [[Volume profile]] (VA, POC, HVN) | F5, F7 | žádná výhoda |
 | Průraz mimo zlato/US indexy/BTC | [[F3 Průraz na nových trzích]] | −0,11 R |
 | Vstup na menším TF po denním signálu | [[F4 Vstup na menším timeframu]] | užší SL = vyražení |

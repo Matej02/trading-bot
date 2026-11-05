@@ -1,5 +1,5 @@
 """
-Live test FM strategii (F12-F16) na MT5 DEMO uctu primo z overeneho Python kodu testu (stejne signaly jako simulator,
+Live test FM strategii (F12-F16) a obecne strategie uzivatele (F20) na MT5 DEMO uctu primo z overeneho Python kodu testu (stejne signaly jako simulator,
 shoda TS/Python 19/21, 49/49, 33/34, 7/11 pri stejne historii, 35/35).
 
 Kazdou minutu: stahne z MT5 posledni M1 (75 dni) a H1 (6500), prevede cas serveru (Londyn) na UTC jako testy, spocita
@@ -36,6 +36,7 @@ import research_f13_ves as V13  # noqa: E402
 import research_f14_pat as V14  # noqa: E402
 import research_f15_hve as V15  # noqa: E402
 import research_f16_hak as V16  # noqa: E402
+import research_f20_user as V20  # noqa: E402
 
 LIVE_DIR = os.path.join(ROOT, "scratch", "live_mt5")
 os.makedirs(LIVE_DIR, exist_ok=True)
@@ -44,6 +45,7 @@ STATE = os.path.join(ROOT, "fm_demo_state.json")
 RISK_PCT = 0.25
 SL_MIN_SPREADS = 3
 M1_DAYS = 75
+M1_DAYS_F20 = 180                    # 4H struktura F20 se ustali az od ~180 dni historie (SPX500: 75 d 36/50, 180 d 50/50)
 F12.KS = (1.5,)                      # live jen vybrana varianta (k = 1,5)
 
 STRATS = {
@@ -53,11 +55,22 @@ STRATS = {
     "F15_hve": dict(magic=20261115, tf=3600, markets=["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD",
                                                      "XAUUSD", "XAGUSD", "CRUDE_OIL", "NAS100mini", "SPX500mini"], intraday=False, hold_days=10),
     "F16_hak": dict(magic=20261116, tf=900, markets=["XAUUSD", "XAGUSD"], intraday=True),
+    "F20_user": dict(magic=20261120, tf=900, markets=["EURUSD", "GBPUSD", "USDJPY", "XAUUSD", "NAS100mini", "SPX500mini",
+                                                      "GER_30mini"], intraday=True),   # obecna strategie uzivatele (F20)
 }
 
 
+LOGFILE = os.path.join(ROOT, "fm_demo_log.txt")
+
+
 def log(*a):
-    print(datetime.now().strftime("%H:%M:%S"), *a, flush=True)
+    s = " ".join(str(x) for x in (datetime.now().strftime("%Y-%m-%d %H:%M:%S"),) + a)
+    print(s, flush=True)
+    try:
+        with open(LOGFILE, "a", encoding="utf-8") as f:
+            f.write(s + "\n")
+    except OSError:
+        pass
 
 
 def journal(rec):
@@ -79,8 +92,8 @@ def save_state(s):
 
 
 # ---------------------------------------------------------------- data z MT5 ve formatu testu
-def fetch_m1(mk):
-    r = mt5.copy_rates_from_pos(mk, mt5.TIMEFRAME_M1, 0, M1_DAYS * 1440)
+def fetch_m1(mk, days=M1_DAYS):
+    r = mt5.copy_rates_from_pos(mk, mt5.TIMEFRAME_M1, 0, days * 1440)
     if r is None or len(r) < 5000:
         raise RuntimeError(f"M1 {mk}: malo dat ({0 if r is None else len(r)})")
     df = pd.DataFrame(r).drop_duplicates("time").sort_values("time")
@@ -215,7 +228,12 @@ def cand_f16(mk):
     return [(int(r[0]) + 900, int(r[1]), float(r[2]), float(r[3])) for r in rows]
 
 
-CAND = {"F12_mucka": cand_f12, "F13_ves": cand_f13, "F14_pat": cand_f14, "F15_hve": cand_f15, "F16_hak": cand_f16}
+def cand_f20(mk):
+    return V20.live_signals(mk)
+
+
+CAND = {"F12_mucka": cand_f12, "F13_ves": cand_f13, "F14_pat": cand_f14, "F15_hve": cand_f15, "F16_hak": cand_f16,
+        "F20_user": cand_f20}
 
 
 def prague_hour(ts):
@@ -320,7 +338,8 @@ def cycle(state, live, force=False):
     for mk in mks:
         try:
             mt5.symbol_select(mk, True)
-            last_m1[mk] = fetch_m1(mk)
+            long_ = "F20_user" in todo and mk in STRATS["F20_user"]["markets"]
+            last_m1[mk] = fetch_m1(mk, M1_DAYS_F20 if long_ else M1_DAYS)
             if "F15_hve" in todo and mk in STRATS["F15_hve"]["markets"]:
                 fetch_h1(mk)
         except Exception as e:

@@ -10,7 +10,7 @@ Doplňuje [[FM materiály|FM PDF]] o pravidla, která v PDF nejsou napsaná, jso
 - **Část B** jsou specifika mentorů, aby se jejich strategie nemíchaly.
 - Rozpory jsou na konci.
 
-Otestováno: [[F12 Můčka podle doplňujících pravidel]] (Můčka, B1 + A2–A7).
+Otestováno: [[F12 Můčka podle doplňujících pravidel]] (Můčka, B1 + A2–A7); obecná strategie uživatele (část A: top-down, SFP s FRVP) v [[F20 Obecná strategie uživatele (SFP + FRVP)|F20]] – neověřeno, slabý náznak.
 
 Funded Playbook: lekce 01–05 jsou z poznámek Coach IQ, lekce 03–09 z poznámek uživatele z callů. Lekce 10–12 a modul Ondry Malého nejsou zahrnuté.
 
