@@ -35,3 +35,15 @@ Zadání uživatele (2026-11-04): „jako poslední task to celé nasadíme a bu
   - **Běží jen při zapnutém PC.** 4.→5. 11. uživatel PC vypnul, takže přes noc nic. Znovu spuštěno 2026-11-05 10:35.
 - **F17–F19** (Šrajer, Valchář, Kimmel model 2) zatím v runneru nejsou. Nemají kandidátní režim a v testech byly bez výhody.
 - **Všechno je NEOVĚŘENÉ.** Účel je sbírat živá data, ne vydělávat. Viz [[Co nefunguje]].
+
+## Spouštění a ochrany (2026-11-05)
+- **Spouštěcí soubor** `start_fm_demo.cmd` (dvojklik):
+  - počká 60 s na síť;
+  - spustí runner `--live`;
+  - když spadne, restartuje ho do minuty, nejvýš 30× po sobě.
+- **Jen jedna instance:** Windows mutex `fm_demo_runner`. Druhé spuštění se samo ukončí, takže se příkazy nezdvojí.
+- **Znovupřipojení:** po uspání PC nebo restartu terminálu se MT5 připojí znovu a znovu se ověří, že je účet DEMO.
+- **Automatický start po přihlášení** si nastavuje uživatel sám. Claude Code ho nesmí vytvořit (bezpečnostní pravidlo proti trvalému spouštění):
+  - zástupce `start_fm_demo.cmd` ve složce `shell:startup`, nebo naplánovaná úloha.
+- **Běží jen při zapnutém PC.** 24/7 bez PC by šlo jen na placeném Windows VPS.
+- **Vercel simulátor (live bot) MT5 neumí:** Linux, serverové funkce, MT5 nemá web API. F12–F16 tam ale běží simulovaně 24/7. Demo v MT5 dává skutečné plnění brokera (přirážka ke spreadu, skluz).

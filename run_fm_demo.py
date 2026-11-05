@@ -325,9 +325,35 @@ def due(name, now):
     return sec % 3600 < 75
 
 
+def ensure_connected():
+    """Po uspani PC nebo restartu terminalu se MT5 pripoji znovu (a znovu se overi, ze je ucet DEMO)."""
+    if mt5.terminal_info() is not None and mt5.account_info() is not None:
+        return
+    log("MT5 odpojeno - pripojuji znovu")
+    mc.connect()
+    if not mc.is_demo_account():
+        raise SystemExit("Ucet v MT5 neni DEMO - live test FM strategii bezi jen na demu. Konec.")
+
+
+_MUTEX = None
+
+
+def single_instance():
+    """Jen jedna bezici instance (dve by zdvojily prikazy). Windows mutex zmizi sam s koncem procesu."""
+    global _MUTEX
+    if os.name != "nt":
+        return
+    import ctypes
+    k32 = ctypes.windll.kernel32
+    _MUTEX = k32.CreateMutexW(None, False, "Local\\fm_demo_runner")
+    if k32.GetLastError() == 183:          # ERROR_ALREADY_EXISTS
+        raise SystemExit("Runner uz bezi v jinem okne - druha instance konci.")
+
+
 def cycle(state, live, force=False):
     now = time.time()
     seen = set(state["seen"])
+    ensure_connected()
     time_exits(live)
     todo = {n for n in STRATS if force or due(n, now)}
     if not todo:
@@ -384,6 +410,8 @@ def cycle(state, live, force=False):
 def main():
     live = "--live" in sys.argv
     once = "--once" in sys.argv
+    if live:
+        single_instance()
     mc.connect()
     if not mc.is_demo_account():
         raise SystemExit("Ucet v MT5 neni DEMO - live test FM strategii bezi jen na demu. Konec.")
