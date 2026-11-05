@@ -67,9 +67,68 @@ Zadání uživatele (2026-11-04): „jako poslední task to celé nasadíme a bu
   - CPU v průměru zhruba 15 % jednoho jádra.
   - S Windows tedy **min. 2 GB RAM, lépe 4 GB a 2 vCPU**. Bezplatné virtuály mívají 1 GB, to je málo.
 - **MQL5 VPS od MetaQuotes nejde:** spouští jen roboty v MQL5, ne Python. Runner by se musel přepsat.
-- **Přesun:**
-  - `git clone` repa, Python 3.13 + balíky (pandas, numba, MetaTrader5, matplotlib);
-  - MT5 přihlášený na demo, zapnuté Algoritmické obchodování;
-  - `start_fm_demo.cmd` + zástupce ve složce Po spuštění;
-  - konec dne vrátit na 22:00 jako v testech.
 - **Pozor:** nikdy neběžet zároveň na PC i na VPS se stejným účtem. Mutex chrání jen jeden počítač, dva by mohly zdvojit příkazy. Na PC pak smazat zástupce `FM demo live.lnk`.
+
+## Přesun na server ve stejném stavu (soupis 2026-11-05)
+Ověřeno na PC 2026-11-05: co runner skutečně načítá a co z toho je v repu.
+
+**1. Server**
+- Windows Server nebo Windows 10/11, **4 GB RAM, 2 vCPU**, disk aspoň 40 GB. Lokalita Evropa.
+- Časové pásmo nastavit na Prahu. Runner počítá v `Europe/Prague` sám, ale log a plánování pak sedí s PC.
+
+**2. Kód**
+- `git clone` veřejného repa. Všech 14 souborů, které runner načítá, je v gitu (runner, `start_fm_demo.cmd`, `mt5_connector`, `f7_lib`, `research_f8/f10/f12/f12_ms/f13_ves/f14_pat/f15_hve/f15_cot/f16_hak/f20_user`).
+- **Cesta je natvrdo `D:\Trading bot`**: `ROOT` v runneru, cesty v `start_fm_demo.cmd` a `COT_FILE` v `research_f15_cot`. Na serveru bez disku D buď:
+  - vytvořit stejnou složku na D (nejjednodušší, když server D má);
+  - nebo předem přepsat cesty na „složka skriptu“ (malá úprava, na PC se nic nezmění).
+- `research_data/` (5 GB) **není potřeba**. Live bere data jen z MT5 a F15 jede bez COT (`cot="0"`).
+
+**3. Python, stejné verze jako na PC**
+- Python 3.13.15. Balíky: metatrader5 5.0.6231, numpy 2.5.3, pandas 3.1.0, numba 0.67.0 (llvmlite 0.49.0), scipy 1.18.1, pytz 2026.5, tzdata 2026.5, python-dateutil 3.0.0, six 1.17.0, PyYAML 6.0.3.
+- Stejné verze, aby výpočty vyšly bit po bitu stejně jako v testech a kontrolách shody.
+
+**4. MT5**
+- Instalace od brokera (GlobalDynamicMarkets), aby byly stejné symboly: NAS100mini, SPX500mini, GER_30mini, CRUDE_OIL.
+- Přihlášení na demo 937584 dělá **uživatel sám** a heslo uloží v terminálu.
+- Zapnout **Algoritmické obchodování**.
+- **Nástroje → Možnosti → Grafy → Max. svíček v grafu = Neomezeně.** Na PC je 100 000 000. Výchozí hodnota 100 000 by F20 dala jen asi 69 dní M1 místo 180. Signály by se pak lišily, viz problém se 75 dny na SPX.
+- Po prvním spuštění chvíli počkat, než se stáhne historie M1 (180 dní, 13 trhů). Do té doby runner hlásí „malo dat“.
+- MT5 není potřeba dávat do Po spuštění, `mc.connect()` ho spustí sám.
+
+**5. Spouštění po restartu serveru**
+- Automatické přihlášení Windows (Sysinternals Autologon). Runner i MT5 potřebují přihlášenou plochu.
+- Zástupce `start_fm_demo.cmd` ve složce Po spuštění, stejně jako na PC.
+- Vypnout uspávání. Restarty po aktualizacích Windows mimo obchodní dobu (aktivní hodiny).
+- Vzdálenou plochu jen **odpojit** (křížek), nikdy „Odhlásit“, jinak se runner i MT5 zavřou.
+
+**6. Stav a deník (přepnutí)**
+1. Na PC zavřít okno „FM demo live“ a smazat zástupce `FM demo live.lnk`.
+2. Zkopírovat na server `fm_demo_state.json`, `fm_demo_journal.jsonl` a `fm_demo_log.txt`. Nejsou v gitu, takže deník pokračuje.
+3. Spustit runner na serveru.
+
+Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle magic čísla, včetně zavírání podle času a desetidenního limitu F15.
+
+**7. Po přesunu**
+- Vrátit konec dne na 22:00 jako v testech: `INTRADAY_CLOSE_H = 22.0` a zrušit `INTRADAY_LAST_OPEN_H`.
+
+**8. Upozornění**
+- Vyskakovací okna (vypnuté Algo, 5 chyb za sebou, kalendář zpráv) se ukážou jen na ploše serveru. Pro 24/7 je potřeba upozornění na telefon (Telegram/ntfy), token si zřídí uživatel.
+
+**9. Kontrola dema na dálku**
+- Obchody, pozice a zůstatek jdou číst i z MT5 na PC přihlášeného na stejný demo účet. Demo smí být přihlášené na dvou terminálech, obchodovat smí jen jeden runner.
+- Deník a log jsou na serveru. Číst je přes vzdálenou plochu, nebo je posílat jinam.
+
+**10. Aktualizace kódu**
+- Na PC upravit a pushnout. Na serveru `git pull` a restart runneru.
+
+## Průběh demo testu
+- **2026-11-05 16:01 – první obchod: F13 EURUSD long**
+  - 2,0 lotu @ 1,12134, SL 1,12009, TP 1,12728 (RR 4,75), riziko 250 $ = 0,25 %;
+  - plnění přesně na referenční ceně, spread 2 pipy, bez komise;
+  - v 18:25 na +1,32 R (+330 $). Pokud netrefí TP ani SL, zavře se v 19:45.
+- **2026-11-05 – oprava kalendáře zpráv.**
+  - Ruční seznam FOMC/NFP/CPI v `f7_lib.py` končil v říjnu 2026. Od listopadu by proto F12, F13 a F20 potichu přestaly vynechávat zpravodajské dny.
+  - První takový den by byl 6. 11. (NFP), kdy F13 podle testu neobchoduje.
+  - Doplněno z oficiálních rozpisů bls.gov a federalreserve.gov do 12/2027. Na výsledky testů to nemá vliv, nová data jsou jen v budoucnosti.
+  - Runner teď při startu a každých 15 min hlásí POZOR, když kalendáři zbývá méně než 45 dní.
+  - Restart runneru v 18:29.

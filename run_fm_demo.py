@@ -436,6 +436,19 @@ def cycle(state, live, force=False):
     if live and not algo_on():
         popup("V MT5 je vypnute Algoritmicke obchodovani.\n\nKlikni v MT5 v horni liste na 'Algoritmicke Obchodovani' "
               "(ikona musi byt zelena), jinak broker obchody z runneru odmitne.", "algo")
+    if int(now) % 900 < 60:
+        news_calendar_check()
+
+
+def news_calendar_check():
+    """Kalendar zprav (f7_lib FOMC/NFP/CPI) je rucne psany - bez novych terminu by filtr zprav potichu prestal fungovat."""
+    import f7_lib as L
+    last = min(max(L.FOMC), max(L.NFP), max(L.CPI))
+    left = (pd.Timestamp(last) - pd.Timestamp.now(tz="UTC").tz_localize(None)).days
+    if left < 45:
+        msg = f"kalendar zprav (FOMC/NFP/CPI v f7_lib.py) konci {last} - doplnit dalsi terminy z bls.gov a federalreserve.gov"
+        log("POZOR: " + msg)
+        popup(msg, "news", every_s=86400)
 
 
 def main():
@@ -449,6 +462,7 @@ def main():
     log(f"FM demo runner {'LIVE NA DEMU' if live else 'SUCHY BEH'} | strategie: {', '.join(STRATS)} | riziko {RISK_PCT} %")
     if live and not algo_on():
         log("POZOR: " + ALGO_OFF)
+    news_calendar_check()
     state = load_state()
     errs = 0
     if once:
