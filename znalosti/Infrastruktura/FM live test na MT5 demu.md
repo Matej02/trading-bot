@@ -125,7 +125,10 @@ Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle
 - **2026-11-05 16:01 – první obchod: F13 EURUSD long**
   - 2,0 lotu @ 1,12134, SL 1,12009, TP 1,12728 (RR 4,75), riziko 250 $ = 0,25 %;
   - plnění přesně na referenční ceně, spread 2 pipy, bez komise;
-  - v 18:25 na +1,32 R (+330 $). Pokud netrefí TP ani SL, zavře se v 19:45.
+  - v 18:25 na +1,32 R (+330 $);
+  - **zavřeno 19:45 časovým výstupem @ 1,12244 → +220 $ = +0,88 R.** TP ani SL nedosáhl.
+    - Nejvýš byl 1,12437 v 19:02 (+2,42 R), nejníž 1,12107 v 16:08 (−0,22 R).
+    - Test by držel do 22:00. Rozdíl dopočítat 6. 11. z M1 historie.
 - **2026-11-05 – oprava kalendáře zpráv.**
   - Ruční seznam FOMC/NFP/CPI v `f7_lib.py` končil v říjnu 2026. Od listopadu by proto F12, F13 a F20 potichu přestaly vynechávat zpravodajské dny.
   - První takový den by byl 6. 11. (NFP), kdy F13 podle testu neobchoduje.
