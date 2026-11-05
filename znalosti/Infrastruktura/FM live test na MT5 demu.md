@@ -45,9 +45,10 @@ Zadání uživatele (2026-11-04): „jako poslední task to celé nasadíme a bu
 - **Znovupřipojení:** po uspání PC nebo restartu terminálu se MT5 připojí znovu a znovu se ověří, že je účet DEMO.
 - **Automatický start po přihlášení** si nastavuje uživatel sám. Claude Code ho nesmí vytvořit (bezpečnostní pravidlo proti trvalému spouštění):
   - zástupce `start_fm_demo.cmd` ve složce `shell:startup`, nebo naplánovaná úloha.
+  - Nastaveno uživatelem 2026-11-05: `FM demo live.lnk` ve složce Po spuštění.
 - **Běží jen při zapnutém PC.** 24/7 bez PC by šlo jen na placeném Windows VPS.
 - **Vercel simulátor (live bot) MT5 neumí:** Linux, serverové funkce, MT5 nemá web API. F12–F16 tam ale běží simulovaně 24/7. Demo v MT5 dává skutečné plnění brokera (přirážka ke spreadu, skluz).
 - **V MT5 musí být zapnuté tlačítko „Algoritmické obchodování“** (zelené). Jinak broker každý příkaz z Pythonu odmítne.
-  - 2026-11-05 bylo vypnuté (`terminal_info().trade_allowed = False`).
+  - 2026-11-05 bylo vypnuté (`terminal_info().trade_allowed = False`). Uživatel ho zapnul v 11:55 a kontrola ve 12:00 proběhla bez varování na 13/13 trzích.
   - Runner to od té doby hlásí při startu, v každé 15min kontrole i v deníku u odmítnutého signálu.
 - **Runner v MT5 není vidět jako robot na grafu:** je to externí Python přes API. Obchody se ukážou v záložkách Obchodování a Historie s komentářem názvu strategie a magic číslem.

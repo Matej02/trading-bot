@@ -44,3 +44,5 @@ Nejhorší den byl 2026-11-01 (−17 460 $), vždy jen 1m ukázky.
   - vypnout `ukazka_m1` a `ukazka_ema_m1` (vypíná uživatel v Nastavení);
   - opravit Risk (veto, když je SL blíž než ~3× spread);
   - u FM systémů zvážit, aby jim Momentum nebralo měnovou expozici.
+
+Další export: [[Export simulátoru 2026-11-05]] (po vetu SL ≥ 3× spread už jen 2 ukázkové obchody za noc).
