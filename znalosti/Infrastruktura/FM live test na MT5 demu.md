@@ -128,7 +128,8 @@ Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle
   - v 18:25 na +1,32 R (+330 $);
   - **zavřeno 19:45 časovým výstupem @ 1,12244 → +220 $ = +0,88 R.** TP ani SL nedosáhl.
     - Nejvýš byl 1,12437 v 19:02 (+2,42 R), nejníž 1,12107 v 16:08 (−0,22 R).
-    - Test by držel do 22:00. Rozdíl dopočítat 6. 11. z M1 historie.
+    - **Test by držel do 22:00** (spočteno 6. 11. z M1 MT5): TP ani SL by nezasáhl, zavřel by se na 1,12187 = **+0,42 R (+106 $)**. Dřívější zavření v 19:45 tentokrát pomohlo o +0,46 R. Je to jeden obchod, náhoda.
+- **2026-11-06 (NFP):** runner běží od 7:10, kontroly bez chyb, do 12:45 žádný signál. F13 dnes podle testu neobchoduje (zpravodajský den).
 - **2026-11-05 – oprava kalendáře zpráv.**
   - Ruční seznam FOMC/NFP/CPI v `f7_lib.py` končil v říjnu 2026. Od listopadu by proto F12, F13 a F20 potichu přestaly vynechávat zpravodajské dny.
   - První takový den by byl 6. 11. (NFP), kdy F13 podle testu neobchoduje.
