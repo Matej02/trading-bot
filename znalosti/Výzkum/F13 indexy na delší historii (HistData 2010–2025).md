@@ -93,3 +93,20 @@ Souhrn je v `research_data/histdata/out/f13_hist_souhrn.txt`, skripty v `scratch
   - Je to stejný obraz jako na US30 a DAXu v [[F13 Veselovský podle PDF a doplňujících pravidel|F13]].
 - Pro [[FM live test na MT5 demu#Kdy reálné peníze (2026-11-07)|reálné peníze]] tím nezůstává žádný kandidát.
 - Demo běží dál beze změny. Uživatel chtěl bota nechat, jak je.
+
+## Dá se z toho vytáhnout zlepšení? (dotaz uživatele 2026-11-07)
+Kontrola řezů obchodů na třech sadách: nový vzorek 2010–19 (HistData), překryv 2019–25 (HistData) a broker 2019–26.
+- **Ani jeden řez není kladný ve všech třech sadách:**
+  - long a short;
+  - Londýn a NY;
+  - vzdálenost cíle;
+  - velikost SL;
+  - trh.
+- Typicky se znaménko otočí. Příklad: „cíl ≥ 7 R“ je na brokerovi **+0,53 R (t 2,0)**, na nových letech **−0,36 R (t −1,8)**. „Cíl 4–7 R“ je to přesně naopak. Takhle vypadá šum, ne skrytá výhoda.
+- Kdybychom vybrali nejlepší řez z dat brokera (jak by to šlo udělat dřív), na letech 2010–2019 by prodělal.
+- Výstupy v novém vzorku: 333× SL (−1,02 R), 50× TP (+4,79 R), 34× čas (+1,56 R). Cíl se trefí jen ve 12 %.
+
+**Co si z toho vzít (metoda, ne filtr):**
+- Každá nová strategie musí před demem projít **i novými roky (HistData od 2010)** a **druhým zdrojem cen**. Skripty `scratch/f13_hist_*` jsou připravené k použití znovu.
+- Pravidla na M1 (sweep o tick, MSS na 1m) jsou citlivá na zdroj dat: na stejném období se shoduje jen 50 % obchodů. Odolnější jsou pravidla na M5/M15 a výš, nebo pravidla s tolerancí.
+- Pro nezávislé ověření má HistData i další indexy: DAX (GRX/EUR), FTSE (UKX/GBP), CAC (FRX/EUR), EuroStoxx (ETX/EUR) a Nikkei (JPX/JPY).
