@@ -2,7 +2,17 @@
 tags: [vyzkum, fronta, plan]
 datum: 2026-11-07
 ---
-# Fronta nápadů F22–F33 (zatím jen rozpis, nic netestováno)
+# Fronta nápadů F22–F33
+
+## Stav
+| # | Výsledek |
+|---|---|
+| [[F22 Průraz úvodního rozpětí (ORB)|F22]] ORB | **bez výhody**: vývoj −0,027 R, kontrola +0,034 R; funguje jen 2018–2025 |
+| [[F23 Návrat po otevíracím gapu|F23]] gap | **bez výhody**: vývoj −0,016 R, kontrola +0,013 R |
+| [[F24 Filtr volatility pro živé strategie|F24]] filtr volatility | **neprošel**; RSI(2) je kladná v klidném i nervózním trhu (+0,09 R / +0,12 R) |
+| [[F25 Párové obchody (relativní hodnota)|F25]] páry | **bez výhody**: vývoj +0,018 R (t 1,1), kontrola +0,006 R; 75 % obchodů končí časem |
+| F26–F33 | čeká |
+
 
 Zadání uživatele (2026-11-07): „rozepiš minimálně 10 dalších strategií, které vyzkoušíme a něco si z nich vezmeme. Zatím mi je jen rozepiš, do kterých se pustíš. Na bota stále nesahej.“
 

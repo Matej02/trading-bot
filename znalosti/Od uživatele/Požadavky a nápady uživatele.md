@@ -46,3 +46,4 @@ aktualizovano: 2026-11-03
   - Dotaz, zda z toho jde vytáhnout zlepšení: žádný řez obchodů není stabilní ve všech obdobích. Ponaučení je v metodě ověřování, ne ve filtru.
 - 2026-11-07: „klidně zkus nový nápad, zase zapsat do vaultu mimo, dát vědět, jak to dopadlo, na bota nesahat“ → [[F21 Noční drift indexů (long přes noc)|F21]] noční drift US indexů: bez výhody (náhodné okno stejné délky lepší, US30 záporný).
 - 2026-11-07: „rozepiš minimálně 10 dalších strategií, zatím jen rozpis, na bota stále nesahej“ → [[Fronta nápadů F22–F33]]. 12 nápadů, první vlna F22 ORB, F23 gap, F24 filtr volatility, F25 párové obchody.
+- 2026-11-07: „nešlo by to udělat, že to otestuješ? A ne že to zapneme do bota?“ → jen testy, bot beze změny. První vlna F22–F25: vše bez výhody, viz [[Fronta nápadů F22–F33]].

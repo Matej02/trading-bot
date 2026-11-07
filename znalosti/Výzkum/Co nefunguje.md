@@ -12,6 +12,10 @@ aktualizovano: 2026-10-29
 | SFP v 15m svíčce + FRVP (VAH/VAL/POC v knotu) | [[F20 Obecná strategie uživatele (SFP + FRVP)|F20]] | samo −0,04 R bez nákladů; s biasem/zónou/TP POC na 7 trzích OOS +0,78 R, na 7 nových trzích −0,43 R → bez výhody |
 | F13 Veselovský na US indexech (jediný náznak z FM) | [[F13 indexy na delší historii (HistData 2010–2025)|F13 na delší historii]] | na nových letech 2010–2019 −0,11 R (n 417, pod náhodou), celek 2010–2026 +0,04 R, t 0,42; na jiném zdroji cen stejné období +0,07 místo +0,26 R → bez výhody |
 | Noční drift US indexů (long 16:00 → 9:30 NY) | [[F21 Noční drift indexů (long přes noc)|F21]] | po nákladech +0,012–0,016 R/noc, ale náhodné okno stejné délky vyšlo lépe, US30 −0,006 R, kontrola t 1,50 → jen růst trhu, ne výhoda načasování |
+| Průraz ranního rozpětí 15 min (US indexy, DAX) | [[F22 Průraz úvodního rozpětí (ORB)|F22]] | vývoj 2010–19 −0,027 R, kontrola +0,034 R; funguje jen 2018–25; longy kladné = růst indexů |
+| Návrat po otevíracím gapu ≥ 0,3 ATR | [[F23 Návrat po otevíracím gapu|F23]] | vývoj −0,016 R, kontrola +0,013 R, DAX −0,042 R |
+| Filtr volatility pro RSI(2) a Průraz | [[F24 Filtr volatility pro živé strategie|F24]] | RSI(2) vydělává i v klidném trhu, u Průrazu se vztah mezi obdobími otočil |
+| Párové obchody na H1 (NAS/SPX, XAU/XAG, EUR/GBP, Brent/WTI) | [[F25 Párové obchody (relativní hodnota)|F25]] | vývoj +0,018 R t 1,1, kontrola +0,006 R; spread se do 10 dní nevrací |
 | [[Volume profile]] (VA, POC, HVN) | F5, F7 | žádná výhoda |
 | Průraz mimo zlato/US indexy/BTC | [[F3 Průraz na nových trzích]] | −0,11 R |
 | Vstup na menším TF po denním signálu | [[F4 Vstup na menším timeframu]] | užší SL = vyražení |
