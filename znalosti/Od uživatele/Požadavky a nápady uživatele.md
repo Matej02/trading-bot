@@ -44,3 +44,4 @@ aktualizovano: 2026-11-03
   - Kritéria a čísla viz [[FM live test na MT5 demu#Kdy reálné peníze (2026-11-07)]].
 - 2026-11-07: test F13 na delší historii (HistData 2010–2025, „nesahej na bota, dej si to vedle“) → bez výhody, viz [[F13 indexy na delší historii (HistData 2010–2025)|F13 na delší historii]].
   - Dotaz, zda z toho jde vytáhnout zlepšení: žádný řez obchodů není stabilní ve všech obdobích. Ponaučení je v metodě ověřování, ne ve filtru.
+- 2026-11-07: „klidně zkus nový nápad, zase zapsat do vaultu mimo, dát vědět, jak to dopadlo, na bota nesahat“ → [[F21 Noční drift indexů (long přes noc)|F21]] noční drift US indexů: bez výhody (náhodné okno stejné délky lepší, US30 záporný).
