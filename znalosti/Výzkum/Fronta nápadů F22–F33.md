@@ -11,7 +11,11 @@ datum: 2026-11-07
 | [[F23 Návrat po otevíracím gapu|F23]] gap | **bez výhody**: vývoj −0,016 R, kontrola +0,013 R |
 | [[F24 Filtr volatility pro živé strategie|F24]] filtr volatility | **neprošel**; RSI(2) je kladná v klidném i nervózním trhu (+0,09 R / +0,12 R) |
 | [[F25 Párové obchody (relativní hodnota)|F25]] páry | **bez výhody**: vývoj +0,018 R (t 1,1), kontrola +0,006 R; 75 % obchodů končí časem |
-| F26–F33 | čeká |
+| [[F26 Průraz po úzkém dni (NR7)|F26]] NR7 | **bez výhody**: vývoj +0,032 R, kontrola −0,039 R; výhoda jen 1980–1999 |
+| F27 zprávy | čeká, potřebuje kalendář NFP/CPI/FOMC 2010–2021 |
+| [[F28 Intradenní momentum (první a poslední půlhodina)|F28]] intradenní momentum | **bez výhody**, i bez nákladů ~0 |
+| [[F29 Krypto momentum|F29]] krypto momentum | **bez výhody, těsně**: vývoj t 4,07, kontrola t 1,33 (hranice 1,5); Sharpe lepší než stále long |
+| F30–F33 | čeká (třetí vlna) |
 
 
 Zadání uživatele (2026-11-07): „rozepiš minimálně 10 dalších strategií, které vyzkoušíme a něco si z nich vezmeme. Zatím mi je jen rozepiš, do kterých se pustíš. Na bota stále nesahej.“
