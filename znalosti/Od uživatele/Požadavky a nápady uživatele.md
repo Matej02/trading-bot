@@ -39,3 +39,6 @@ aktualizovano: 2026-11-03
 - 2026-11-04: pokračovat Šrajer, Valchář, Kimmel; jako poslední krok vše nasadit a testovat live „na našem demu“ ([[FM live test na MT5 demu]]).
 - 2026-11-04: po nasazení „hotovo pokračuj“ → poslední položka fronty, obecná strategie uživatele (část A) otestována v [[F20 Obecná strategie uživatele (SFP + FRVP)|F20]] a dána live na demo.
 - 2026-11-05: runner přes noc neběžel, protože uživatel vypnul počítač. „Vše commitni, ať to můžeme live testovat na demu, vše zapiš; nevadí, že je repozitář otevřený, a pak pokračuj.“ → repozitář GitHub zůstává veřejný (rozhodnutí uživatele).
+- 2026-11-07: „Do kdy budeme testovat, než dám reálné peníze na MetaTrader a zkusíme obchodovat live?“
+  - Odpověď: demo neprokáže zisk, jen shodu provedení. Výhoda zatím u žádné strategie ověřená není.
+  - Kritéria a čísla viz [[FM live test na MT5 demu#Kdy reálné peníze (2026-11-07)]].

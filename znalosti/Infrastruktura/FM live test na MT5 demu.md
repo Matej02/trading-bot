@@ -136,3 +136,33 @@ Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle
   - Doplněno z oficiálních rozpisů bls.gov a federalreserve.gov do 12/2027. Na výsledky testů to nemá vliv, nová data jsou jen v budoucnosti.
   - Runner teď při startu a každých 15 min hlásí POZOR, když kalendáři zbývá méně než 45 dní.
   - Restart runneru v 18:29.
+
+## Kdy reálné peníze (2026-11-07)
+Otázka uživatele: do kdy testovat, než půjdou na MT5 reálné peníze.
+
+**Co demo ukáže a co ne**
+- **Ukáže za 6–8 týdnů:**
+  - živé signály se shodují s historií;
+  - plnění a spread odpovídají modelu nákladů;
+  - runner nevynechá signál, když je PC zapnutý.
+- **Neukáže zisk.** Nejlepší kandidát je F13 na indexech (NAS100 + SPX500, varianta `liq/ob50/tp2`, OOS 2022–26):
+  - n 206, +0,25 R, sd 2,7 R → **t = 1,3**, takže ani v testu to není statisticky průkazné;
+  - 90% bootstrap interval −0,06 až +0,56 R;
+  - výhra 23 %, frekvence asi 3,6 obchodu za měsíc;
+  - na potvrzení +0,25 R by bylo potřeba 330–490 obchodů, tedy **8–11 let** dema.
+- **I při skutečné výhodě +0,25 R** (bootstrap z testu):
+  - 3 měsíce (asi 11 obchodů) skončí ztrátou ve 44 % případů;
+  - rok (asi 43 obchodů) skončí ztrátou ve 29 % případů;
+  - max. propad v testu byl 25 R, nejdelší série ztrát 20.
+
+**Minimální účet** (specifikace dema, reálný účet může mít jiné)
+- NAS100mini: min. lot 1, 0,10 $ za bod.
+- SPX500mini: min. lot 1, 1 $ za bod.
+- SL v testu (medián / p90): NAS 27 / 60 bodů, SPX 7 / 13 bodů.
+- Pro riziko 0,25 % je potřeba účet asi 3–5 tis. $.
+- Propad 25 R znamená při 0,25 % na obchod −6 % účtu, při 1 % −25 % účtu.
+
+**Návrh**
+- Demo nechat do konce prosince jako technickou kontrolu a pak ji vyhodnotit.
+- Reálné peníze až u strategie s ověřenou výhodou.
+- Rozhodnutí i spuštění na reálném účtu je na uživateli. Runner je schválně zamčený jen na demo.
