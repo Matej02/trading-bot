@@ -88,4 +88,5 @@ Plán předem je v `F13_PLAN.md`, kód v `research_f13_ves.py` a `research_f13_e
 - Na US indexech (NAS100, SPX500) je OOS kladný a nad náhodou a daily bias funguje v obou obdobích.
 - Výsledek ale stojí na vzácných velkých výhrách (cíl PDH/PDL) a na US30 a DAX se v OOS neopakuje.
 - Forex a zlato jsou bez výhody.
+- **Ověření na delší historii (2026-11-07): NEPROŠLO.** Na nových letech 2010–2019 −0,11 R (n 417), celek t 0,42, viz [[F13 indexy na delší historii (HistData 2010–2025)|F13 na delší historii]].
 - **Kandidát na live test na NAS100 a SPX500** (živě je potřeba 24h data, Yahoo `^NDX` má jen hodiny burzy → futures NQ=F/ES=F).

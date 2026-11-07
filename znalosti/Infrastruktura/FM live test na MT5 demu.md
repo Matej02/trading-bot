@@ -166,3 +166,7 @@ Otázka uživatele: do kdy testovat, než půjdou na MT5 reálné peníze.
 - Demo nechat do konce prosince jako technickou kontrolu a pak ji vyhodnotit.
 - Reálné peníze až u strategie s ověřenou výhodou.
 - Rozhodnutí i spuštění na reálném účtu je na uživateli. Runner je schválně zamčený jen na demo.
+
+**Výsledek ověření (2026-11-07):** F13 na indexech na delší historii **neprošla**. Na nových letech 2010–2019 −0,11 R, celek t 0,42, viz [[F13 indexy na delší historii (HistData 2010–2025)|F13 na delší historii]]. Kandidát na reálné peníze teď není žádný. Demo běží dál beze změny (přání uživatele).
+
+**Zjištěný posun času v létě (neopraveno, bot se nemá měnit):** `fetch_m1` čte čas serveru jako Londýn, ale server je UTC celý rok. Od konce března do konce října 2027 tak budou svíčky na demu o 1 h posunuté, stejně jako v testech. Viz [[MT5 napojení]].
