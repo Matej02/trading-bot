@@ -16,6 +16,9 @@ aktualizovano: 2026-10-29
 | Návrat po otevíracím gapu ≥ 0,3 ATR | [[F23 Návrat po otevíracím gapu|F23]] | vývoj −0,016 R, kontrola +0,013 R, DAX −0,042 R |
 | Filtr volatility pro RSI(2) a Průraz | [[F24 Filtr volatility pro živé strategie|F24]] | RSI(2) vydělává i v klidném trhu, u Průrazu se vztah mezi obdobími otočil |
 | Párové obchody na H1 (NAS/SPX, XAU/XAG, EUR/GBP, Brent/WTI) | [[F25 Párové obchody (relativní hodnota)|F25]] | vývoj +0,018 R t 1,1, kontrola +0,006 R; spread se do 10 dní nevrací |
+| Pokračování po NFP/CPI (směr prvních 15 min) | [[F27 Pokračování po zprávách (NFP, CPI)|F27]] | vývoj −0,029 R, kontrola −0,140 R; první reakce se vrací |
+| Měsíční sezónnost z 10 let zpět | [[F30 Měsíční sezónnost (průběžně)|F30]] | vývoj +0,058 R, kontrola −0,102 R; short signály −0,36 R |
+| Rotace 3 nejsilnějších z 15 trhů | [[F32 Rotace podle relativní síly|F32]] | vývoj t 0,98; v kontrole horší než držet vše; závisí na zdroji dat |
 | [[Volume profile]] (VA, POC, HVN) | F5, F7 | žádná výhoda |
 | Průraz mimo zlato/US indexy/BTC | [[F3 Průraz na nových trzích]] | −0,11 R |
 | Vstup na menším TF po denním signálu | [[F4 Vstup na menším timeframu]] | užší SL = vyražení |

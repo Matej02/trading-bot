@@ -12,10 +12,13 @@ datum: 2026-11-07
 | [[F24 Filtr volatility pro živé strategie|F24]] filtr volatility | **neprošel**; RSI(2) je kladná v klidném i nervózním trhu (+0,09 R / +0,12 R) |
 | [[F25 Párové obchody (relativní hodnota)|F25]] páry | **bez výhody**: vývoj +0,018 R (t 1,1), kontrola +0,006 R; 75 % obchodů končí časem |
 | [[F26 Průraz po úzkém dni (NR7)|F26]] NR7 | **bez výhody**: vývoj +0,032 R, kontrola −0,039 R; výhoda jen 1980–1999 |
-| F27 zprávy | čeká, potřebuje kalendář NFP/CPI/FOMC 2010–2021 |
+| [[F27 Pokračování po zprávách (NFP, CPI)|F27]] zprávy | **bez výhody**: vývoj −0,029 R, kontrola −0,140 R; první reakce se vrací |
 | [[F28 Intradenní momentum (první a poslední půlhodina)|F28]] intradenní momentum | **bez výhody**, i bez nákladů ~0 |
 | [[F29 Krypto momentum|F29]] krypto momentum | **bez výhody, těsně**: vývoj t 4,07, kontrola t 1,33 (hranice 1,5); Sharpe lepší než stále long |
-| F30–F33 | čeká (třetí vlna) |
+| [[F30 Měsíční sezónnost (průběžně)|F30]] sezónnost | **bez výhody**: vývoj +0,058 R (t 2,5), kontrola −0,102 R (t −3,3) |
+| [[F31 Drift před FOMC|F31]] drift před FOMC | **formálně prošel, po prověrce KANDIDÁT**: 2019–26 +0,157 R/událost (t 2,08), 2013–18 ~0 |
+| [[F32 Rotace podle relativní síly|F32]] rotace | **bez výhody**: vývoj t 0,98, v kontrole horší Sharpe než držet vše |
+| F33 rebalancování | čeká na data (dluhopisová ETF z Yahoo) |
 
 
 Zadání uživatele (2026-11-07): „rozepiš minimálně 10 dalších strategií, které vyzkoušíme a něco si z nich vezmeme. Zatím mi je jen rozepiš, do kterých se pustíš. Na bota stále nesahej.“
@@ -32,6 +35,7 @@ Poučení z [[F13 indexy na delší historii (HistData 2010–2025)|F13 na delš
 7. **Čas:** data brokera se v létě posunou na skutečné UTC (viz [[MT5 napojení]]).
 8. **Bot se nemění.** Skripty v `scratch/f2x_*`, data v `research_data/f2x`, výsledek do vaultu.
    - Do simulátoru nebo na demo až po úspěšném testu a po souhlasu uživatele.
+10. **Korelované trhy (SPX a NAS) hodnotit po událostech/dnech, ne jako nezávislé obchody** (poučení z F31, 2026-11-08).
 9. **Pravidla na úrovni M1 (sweep o tick) se nepoužívají.** Nejmenší rámec pro signál je M5, raději H1 nebo D1.
 
 ## Nápady
