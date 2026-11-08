@@ -18,7 +18,9 @@ datum: 2026-11-07
 | [[F30 Měsíční sezónnost (průběžně)|F30]] sezónnost | **bez výhody**: vývoj +0,058 R (t 2,5), kontrola −0,102 R (t −3,3) |
 | [[F31 Drift před FOMC|F31]] drift před FOMC | **formálně prošel, po prověrce KANDIDÁT**: 2019–26 +0,157 R/událost (t 2,08), 2013–18 ~0 |
 | [[F32 Rotace podle relativní síly|F32]] rotace | **bez výhody**: vývoj t 0,98, v kontrole horší Sharpe než držet vše |
-| F33 rebalancování | čeká na data (dluhopisová ETF z Yahoo) |
+| [[F33 Rebalancování na konci měsíce|F33]] rebalancování | **PROŠLO (všech 5 bodů po měsících)**: vývoj +0,305 R (t 3,2), kontrola +0,230 R (t 1,57), US30 +0,345, DAX +0,220 |
+
+**Shrnutí a přínosy:** [[Souhrn testů F21–F33 a přínosy]]
 
 
 Zadání uživatele (2026-11-07): „rozepiš minimálně 10 dalších strategií, které vyzkoušíme a něco si z nich vezmeme. Zatím mi je jen rozepiš, do kterých se pustíš. Na bota stále nesahej.“

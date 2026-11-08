@@ -47,3 +47,4 @@ aktualizovano: 2026-11-03
 - 2026-11-07: „klidně zkus nový nápad, zase zapsat do vaultu mimo, dát vědět, jak to dopadlo, na bota nesahat“ → [[F21 Noční drift indexů (long přes noc)|F21]] noční drift US indexů: bez výhody (náhodné okno stejné délky lepší, US30 záporný).
 - 2026-11-07: „rozepiš minimálně 10 dalších strategií, zatím jen rozpis, na bota stále nesahej“ → [[Fronta nápadů F22–F33]]. 12 nápadů, první vlna F22 ORB, F23 gap, F24 filtr volatility, F25 párové obchody.
 - 2026-11-07: „nešlo by to udělat, že to otestuješ? A ne že to zapneme do bota?“ → jen testy, bot beze změny. První vlna F22–F25: vše bez výhody, viz [[Fronta nápadů F22–F33]].
+- 2026-11-08: „pokračuj dál v testování strategií, zapisuj, ale nedávej je do bota, to si pak na konci zhodnotíme“ a „stáhni je klidně na D, dojeď všechny strategie a vypiš, které jsou navíc oproti botovi, a rozepiš výhody“ → [[Souhrn testů F21–F33 a přínosy]].
