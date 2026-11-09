@@ -557,7 +557,7 @@ export function Settings({ bot, state }: { bot: Bot; state: BotState }) {
       ))}
       <div className="row gap">
         <button className="btn" onClick={() => bot.requestMomentum()}>Rozhodnout momentum teď (všech 40 trhů)</button>
-        <button className="btn danger" onClick={() => { if (confirm("Smazat účet, pozice i deník a začít znovu se 100 000 $?")) bot.reset(); }}>
+        <button className="btn danger" onClick={() => { if (confirm("Smazat účet, pozice i deník a začít znovu se 100 000 $? Nastavení i výběr strategií zůstanou, bota pak znovu aktivuj.")) bot.reset(); }}>
           Reset účtu
         </button>
       </div>

@@ -502,7 +502,11 @@ export class Bot {
 
   reset() {
     if (this.role === "viewer") return;
+    const keep = this.state.settings;
     this.state = freshState();
+    // reset maze ucet, pozice a denik, ne nastaveni: vyber strategii (napr. vypnute 1m ukazky) i limity zustanou.
+    // Bot po resetu stoji, dokud ho uzivatel znovu neaktivuje. Strategie, ktere ve starem nastaveni chybi, jsou zapnute.
+    this.state.settings = { ...keep, botOn: false, systems: { ...this.state.settings.systems, ...keep.systems } };
     this.markAllDirty(true);
     this.journalTotal = 0;
     this.sync({ force: true });
