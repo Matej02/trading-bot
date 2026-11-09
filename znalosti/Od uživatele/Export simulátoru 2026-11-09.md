@@ -49,3 +49,12 @@ Předchozí: [[Export simulátoru 2026-11-05]].
   - Export už je uložený, data se neztratí.
   - Po resetu se velikosti pozic i veta Risku srovnají s plánem a začne čisté srovnání s MT5 demem.
 - Momentum je neověřené. Pokud zůstane, TRY páry jsou kvůli swapu kandidát na vyřazení (zatím jen poznámka, ne změna).
+
+## Reset 2026-11-09 kolem 12:15
+- **Uživatel účet simulátoru resetoval na 100 000 $ a bota znovu aktivoval.**
+  - Smazané jsou pozice, deník i uzavřené obchody. Stará data zůstala jen v exportu výše.
+- **Nová etapa simulátoru začíná 9. 11. 2026.**
+- **Pozor: reset zapne všechny systémy včetně 1m ukázek.**
+  - `freshState()` v `lib/bot.ts` dá do nastavení všechny systémy jako zapnuté a uživatelův výběr nezachová.
+  - `ukazka_ema_m1` a `ukazka_m1` je proto po resetu potřeba v Nastavení znovu vypnout (uživateli řečeno 9. 11.).
+- Od teď jde simulátor férově srovnávat s MT5 demem (také 100 000 $ start).
