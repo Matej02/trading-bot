@@ -47,3 +47,8 @@ Z [[Fronta nápadů F22–F33|fronty nápadů]]. Jen test, bot se nemění. Skri
 **Rozhodnutí:** 1 ANO, **2 NE** (t 1,33 < 1,5), 3 ANO, 4 ANO, 5 ANO → **BEZ VÝHODY** podle pevných pravidel.
 - **Nejblíž úspěchu ze všech testů.** Hranice se dodatečně neposouvá.
 - Kandidát na sledování: jako filtr „být/nebýt v BTC a ETH“ pro simulátor (krypto běží 24/7). Jen po novém plánu předem a s novými daty.
+
+## Live v simulátoru (od 2026-11-09, build db85757)
+- Systém `f29_krypto_mom_d1` v `simulator/lib/f2x.ts`, kontrola shody `scripts/compare-f2x.ts` (358/358 nedělí).
+- **Odchylky od testu:** vstup a výstup se každý týden zavírá a otevírá znovu (v testu se pozice při dalším long týdnu držela bez nákladů), SL 3 ATR jako pojistka.
+- V registru Statistika: **unvalidated (kandidát)**.

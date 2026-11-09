@@ -67,3 +67,11 @@ Vše s pravidly rozhodnutí zapsanými předem. Ověřeno na starších letech (
     - Letní posun času o 1 h (čas serveru je UTC, kód ho čte jako Londýn), opravit před 28. 3. 2027, viz [[MT5 napojení]].
     - Kalendář zpráv končil v 10/2026 (opraveno).
     - MT5 nesnese junction (disk C vyčištěn jinak).
+
+## Co se přidalo do bota (2026-11-09)
+Na pokyn uživatele („teď přidej ty strategie, které nám mohou pomoct, do bota“) do **simulátoru na Vercelu**. Běží 24/7, takže zvládne i vstupy a výstupy večer.
+- **F33** `f33_rebal_d1`: validated, obchoduje i mimo učící režim.
+- **F31** `f31_fomc_h1` a **F29** `f29_krypto_mom_d1`: kandidáti. Statistik je bez učícího režimu nepustí na skutečné obchody, ale sbírají stínová data.
+- **Beze změny:** RSI(2) a filtr zpráv (potvrzené testy).
+- **Do MT5 runneru se nepřidávalo:** F33 vystupuje ve 22:00, F31 vstupuje ve 20:00 a PC je vypnutý od 20:00.
+- **Návrhy, které zatím nejsou kód:** limit rizika pro korelované skupiny (NAS/SPX, XAU/XAG), ověřit shorty indexů v F12–F16, oprava letního času před 28. 3. 2027.

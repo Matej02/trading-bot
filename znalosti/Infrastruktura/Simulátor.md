@@ -38,3 +38,14 @@ Každý je NEOVĚŘENÝ live experiment. Shoda TS/Python je ve `scripts/compare-
 
 ## Experiment F9 (2026-10-29)
 Systémy `fm_mss_h4`, `fm_pruraz_h4`, `fm_zona_h4` (`lib/fm.ts`): kombinace FM konceptů, signál na zavření H4, TP 3R, 21 trhů. NEOVĚŘENO, jen live sběr dat. Viz [[F9 Kombinace FM konceptů]].
+
+## Systémy z výzkumu F22–F33 (2026-11-09)
+| Systém | Co | Trhy | Registr |
+|---|---|---|---|
+| `f33_rebal_d1` | [[F33 Rebalancování na konci měsíce|F33]]: SPY vs TLT od začátku měsíce, obchod proti vítězi poslední 3 dny | SPX500mini, NAS100mini | validated |
+| `f31_fomc_h1` | [[F31 Drift před FOMC|F31]]: long 14:00 NY den před FOMC → 13:00 NY v den FOMC | SPX500fut, NAS100fut | unvalidated |
+| `f29_krypto_mom_d1` | [[F29 Krypto momentum|F29]]: long na týden, když 28denní výnos > 0 | BTCUSD, ETHUSD | unvalidated |
+- Nové části kódu:
+  - `lib/usCalendar.ts`: svátky NYSE a termíny FOMC, každý rok doplnit;
+  - `feeds` v definici systému: pomocné trhy SPY a TLT jsou `feedOnly` v `broker.json`, který by po přegenerování `export_broker_conditions.py` šlo přepsat;
+  - výstupy `exitRule: monthEnd / fomcDay`.

@@ -53,3 +53,8 @@ Souhrn: `research_data/f27/f31_souhrn.txt`.
 - Kladné 2019–2026 všude, ale ve vývoji 2013–2018 nic a výsledek stojí na několika událostech.
 - Jen 8 obchodů ročně, vstup ve 20:00 Praha (den před FOMC), takže potřebuje zapnutý PC nebo server.
 - Před jakýmkoli použitím: sledovat dalších 8–16 FOMC dopředu (bez úprav pravidel) a hodnotit po událostech.
+
+## Live v simulátoru (od 2026-11-09, build db85757)
+- Systém `f31_fomc_h1` v `simulator/lib/f2x.ts`, kontrola shody `scripts/compare-f2x.ts` (vstupy 13:00 NY v den před FOMC, výstupy 12:00 NY v den FOMC).
+- **Odchylky od testu:** výstup ve 13:00 NY (v testu 13:55, kvůli zpoždění dat Yahoo ~10 min), SL 3 denní ATR jako pojistka. Trhy SPX500fut a NAS100fut (futures 23 h). Termíny FOMC do 2027-12-08 v `usCalendar.ts`.
+- V registru Statistika: **unvalidated (kandidát)**.

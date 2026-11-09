@@ -66,3 +66,8 @@ Z [[Fronta nápadů F22–F33|fronty nápadů]]. Jen test, bot se nemění. Skri
 **⇒ NEJSILNĚJŠÍ VÝSLEDEK ZE VŠECH TESTŮ.** V kontrole 2019–2026 je ale slabší a citlivější na nastavení.
 - **Prakticky:** asi 8 obchodů ročně na US indexech. Vstup na otevření L−2 (15:30 Praha), výstup na zavření posledního dne měsíce (22:00 Praha, s PC do 20:00 nejde). Výstup 19:45 by vyžadoval nový test.
 - **Do bota zatím ne** (přání uživatele). Návrh: sledovat dopředu beze změn pravidel a vyhodnotit po 12 měsících.
+
+## Live v simulátoru (od 2026-11-09, build db85757)
+- Systém `f33_rebal_d1` v `simulator/lib/f2x.ts`, kontrola shody `scripts/compare-f2x.ts` (200/200 signálů, den i směr).
+- **Odchylky od testu:** vstup na zavření dne L−3 (v testu otevření L−2), ceny SPY/TLT z Yahoo bez dividend (v testu upravené), SL 3 ATR jako pojistka (v testu bez stopu). Trhy SPX500 a NAS100.
+- V registru Statistika: **validated (PF 1,89, n 200 měsíců)**.
