@@ -130,6 +130,9 @@ Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle
     - Nejvýš byl 1,12437 v 19:02 (+2,42 R), nejníž 1,12107 v 16:08 (−0,22 R).
     - **Test by držel do 22:00** (spočteno 6. 11. z M1 MT5): TP ani SL by nezasáhl, zavřel by se na 1,12187 = **+0,42 R (+106 $)**. Dřívější zavření v 19:45 tentokrát pomohlo o +0,46 R. Je to jeden obchod, náhoda.
 - **2026-11-06 (NFP):** runner běží od 7:10, kontroly bez chyb, do 12:45 žádný signál. F13 dnes podle testu neobchoduje (zpravodajský den).
+- **2026-11-09 (kontrola ve 12:05):** runner od 8:04 bez chyb, kontroly 13/13 trhů, 0 otevřených pozic, zůstatek 100 220 $ (celkem +220 $ = +0,22 %, 1 obchod).
+  - 8:21 signál F13 EURUSD short **neproveden: SL jen 2,6× spreadu** (pojistka runneru chce aspoň 3×).
+  - F29 v 7:52 rozhodla BTC i ETH tento týden mimo trh (28denní výnos −10,6 % a −16,2 %).
 - **2026-11-05 – oprava kalendáře zpráv.**
   - Ruční seznam FOMC/NFP/CPI v `f7_lib.py` končil v říjnu 2026. Od listopadu by proto F12, F13 a F20 potichu přestaly vynechávat zpravodajské dny.
   - První takový den by byl 6. 11. (NFP), kdy F13 podle testu neobchoduje.

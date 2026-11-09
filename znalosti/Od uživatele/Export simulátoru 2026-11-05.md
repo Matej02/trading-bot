@@ -37,3 +37,5 @@ Předchozí: [[Export simulátoru 2026-11-03]].
 - Ukázkové 1m systémy v nastavení simulátoru vypnout. Nemají výhodu a zkreslují účet i porovnání s demem.
 - Momentum a FM systémy nechat běžet.
 - Porovnání s MT5 demem ([[FM live test na MT5 demu]]) až budou obchody na obou stranách.
+
+Další export: [[Export simulátoru 2026-11-09]].
