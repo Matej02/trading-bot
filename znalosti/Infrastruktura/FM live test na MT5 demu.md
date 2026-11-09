@@ -198,3 +198,8 @@ Na pokyn uživatele „chci to na bota na MT5 dát“. Kód: `f2x_live.py` (rozh
 - **F31** proběhne jen v den před FOMC, když bude PC zapnutý ve 20:00 (další 8. 12. 2026).
 - **První rozhodnutí F29 (9. 11.):** BTC −10,6 %, ETH −16,2 % za 28 dní → mimo trh.
 - Simulátor má stejné strategie od 2026-11-09 (build db85757), viz [[Simulátor]].
+- **Sledování (2026-11-09):** runner běží na pozadí (spuštěný z Claude), takže okno chybí.
+  - Živý log: dvojklik na `D:\Trading bot\sleduj_runner.cmd`. Zavřením toho okna se runner nevypne.
+  - Obchody jsou v MT5 v záložkách Obchodování a Historie (komentář = název strategie).
+  - Kontrola každých 15 min ukazuje i „hlídá F33 … / F31 … / F29 …“ s nejbližšími termíny.
+

@@ -184,3 +184,15 @@ def f29_signal(daily_close, now_utc):
 
 def f29_exit_due(open_utc, now_utc):
     return open_utc < f29_week_start(now_utc)
+
+
+def next_events_text(now_utc):
+    """Kratky text do zivotni znamky runneru: kdy dalsi F33 / F31 / F29."""
+    d = now_utc.astimezone(NY).date()
+    x = d
+    while not (is_trading_day(x) and trading_days_left(x) == 2 and (x > d or now_utc < ny_dt(x, 9, 40).astimezone(timezone.utc))):
+        x += timedelta(days=1)
+    fomc = [f for f in sorted(FOMC) if now_utc < ny_dt(prev_trading_day(f), 14, 10).astimezone(timezone.utc)]
+    f31 = f"F31 {prev_trading_day(fomc[0]):%d.%m.} 20:00" if fomc else "F31 dosly terminy FOMC"
+    mon = now_utc.date() + timedelta(days=(7 - now_utc.weekday()) % 7 or 7)
+    return f"hlida F33 {x:%d.%m.} 15:30, {f31}, F29 {mon:%d.%m.}"

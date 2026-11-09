@@ -525,6 +525,7 @@ def cycle(state, live, force=False):
     if int(now) % 900 < 60:                     # zivotni znamka kazdych 15 min, at je videt, ze runner bezi
         n_pos = sum(1 for n in STRATS for p in (mt5.positions_get() or []) if p.magic == STRATS[n]["magic"])
         log(f"kontrola {', '.join(sorted(todo))} na {len(last_m1)}/{len(mks)} trzich | otevrenych pozic {n_pos}"
+            + f" | {FX.next_events_text(datetime.now(timezone.utc))}"
             + ("" if algo_on() else " | POZOR: " + ALGO_OFF))
     if live and not algo_on():
         popup("V MT5 je vypnute Algoritmicke obchodovani.\n\nKlikni v MT5 v horni liste na 'Algoritmicke Obchodovani' "
