@@ -49,3 +49,7 @@ Systémy `fm_mss_h4`, `fm_pruraz_h4`, `fm_zona_h4` (`lib/fm.ts`): kombinace FM k
   - `lib/usCalendar.ts`: svátky NYSE a termíny FOMC, každý rok doplnit;
   - `feeds` v definici systému: pomocné trhy SPY a TLT jsou `feedOnly` v `broker.json`, který by po přegenerování `export_broker_conditions.py` šlo přepsat;
   - výstupy `exitRule: monthEnd / fomcDay`.
+
+## Reset účtu (2026-11-09)
+- 9. 11. uživatel resetoval účet na 100 000 $. Stará data jsou v [[Export simulátoru 2026-11-09]].
+- **Od commitu `3b3426c` reset maže jen účet, pozice a deník.** Nastavení a výběr strategií zůstanou, takže vypnuté 1m ukázky zůstanou vypnuté. Bot po resetu stojí, dokud ho uživatel znovu neaktivuje.

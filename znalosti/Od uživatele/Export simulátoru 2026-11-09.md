@@ -56,5 +56,7 @@ Předchozí: [[Export simulátoru 2026-11-05]].
 - **Nová etapa simulátoru začíná 9. 11. 2026.**
 - **Pozor: reset zapne všechny systémy včetně 1m ukázek.**
   - `freshState()` v `lib/bot.ts` dá do nastavení všechny systémy jako zapnuté a uživatelův výběr nezachová.
-  - `ukazka_ema_m1` a `ukazka_m1` je proto po resetu potřeba v Nastavení znovu vypnout (uživateli řečeno 9. 11.).
+  - `ukazka_ema_m1` a `ukazka_m1` je proto po resetu potřeba v Nastavení znovu vypnout. Uživatel je 9. 11. vypnul.
+  - **Opraveno 9. 11. (commit `3b3426c`, na pokyn uživatele):** `reset()` teď smaže jen účet, pozice a deník. Nastavení i výběr strategií zůstanou. Bot po resetu stojí, dokud ho uživatel znovu neaktivuje. Strategie, které ve starém nastavení chybí, jsou zapnuté.
+  - Ověřeno na lokálním simulátoru: ukázky vypnout → reset → ukázky zůstaly vypnuté i po znovunačtení, účet 100 000 $. Text potvrzení resetu to teď říká.
 - Od teď jde simulátor férově srovnávat s MT5 demem (také 100 000 $ start).
