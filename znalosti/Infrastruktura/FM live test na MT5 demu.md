@@ -176,3 +176,25 @@ Otázka uživatele: do kdy testovat, než půjdou na MT5 reálné peníze.
 - MT5 spuštěný Windows (zástupce Po spuštění) se nepřihlásí (okno „Otevřít účet“).
 - **Dočasný postup:** po startu PC napsat Claudovi „spusť runner“. Claude zavře nepřihlášené MT5 a spustí runner ze svého prostředí.
 - **Trvalá oprava:** jedno ruční přihlášení v MT5 na server **GlobalDynamicMarkets-Demo** (ne Real) s uložením hesla.
+
+## Nové strategie z výzkumu F22–F33 na MT5 demu (od 2026-11-09 7:52)
+Na pokyn uživatele „chci to na bota na MT5 dát“. Kód: `f2x_live.py` (rozhodování, kalendář NYSE, termíny FOMC, Yahoo SPY/TLT) a `cycle_f2x` + `time_exits` v `run_fm_demo.py`.
+
+| Strategie | Magic | Trhy | Vstup | Výstup |
+|---|---|---|---|---|
+| F33_rebal ([[F33 Rebalancování na konci měsíce|F33]]) | 20261133 | SPX500mini, NAS100mini | 9:30–9:40 NY dne L−2 (15:30 Praha), signál SPY vs TLT do zavření L−3 | 15:55 NY posledního obchodního dne (21:55 Praha) |
+| F31_fomc ([[F31 Drift před FOMC|F31]]) | 20261131 | SPX500mini, NAS100mini | 14:00–14:10 NY den před FOMC (**20:00 Praha – jen když běží PC**) | 13:55 NY v den FOMC |
+| F29_krypto ([[F29 Krypto momentum|F29]]) | 20261129 | BTCUSD, ETHUSD | v pondělí při první kontrole (v testu 00:00 UTC), když 28denní výnos > 0 | další pondělí při první kontrole |
+
+- SL všude 3 ATR20 (denní z MT5) jako pojistka, TP 10 R (v testech bez stopu a TP). Riziko 0,25 % jako ostatní.
+- **Ověření:**
+  - kalendář NYSE: poslední obchodní den sedí 287/287 měsíců (L−2 jinak jen 10/2012, uzávěra kvůli hurikánu Sandy);
+  - rozhodnutí F33 shodná s testem 285/285 měsíců;
+  - F31 vstup 14:01 ano / 13:59 ne, výstup 13:55;
+  - F29 výstup v další pondělí.
+- **F33 a vypínání PC ve 20:00:** test s výstupem 19:45 Praha 2010–26: +0,25 R místo +0,34 R. **Od 2019 jen +0,09 R místo +0,23 R**, zisk je v posledních hodinách měsíce.
+  - Proto výstup 21:55 jako v testu. **V poslední obchodní den signálního měsíce nechat PC do 22:00** (asi 8× ročně).
+  - Když PC vypne dřív, pozice drží stop u brokera a runner ji zavře hned po dalším spuštění (mimo test).
+- **F31** proběhne jen v den před FOMC, když bude PC zapnutý ve 20:00 (další 8. 12. 2026).
+- **První rozhodnutí F29 (9. 11.):** BTC −10,6 %, ETH −16,2 % za 28 dní → mimo trh.
+- Simulátor má stejné strategie od 2026-11-09 (build db85757), viz [[Simulátor]].

@@ -37,6 +37,7 @@ import research_f14_pat as V14  # noqa: E402
 import research_f15_hve as V15  # noqa: E402
 import research_f16_hak as V16  # noqa: E402
 import research_f20_user as V20  # noqa: E402
+import f2x_live as FX  # noqa: E402
 
 LIVE_DIR = os.path.join(ROOT, "scratch", "live_mt5")
 os.makedirs(LIVE_DIR, exist_ok=True)
@@ -60,6 +61,10 @@ STRATS = {
     "F16_hak": dict(magic=20261116, tf=900, markets=["XAUUSD", "XAGUSD"], intraday=True),
     "F20_user": dict(magic=20261120, tf=900, markets=["EURUSD", "GBPUSD", "USDJPY", "XAUUSD", "NAS100mini", "SPX500mini",
                                                       "GER_30mini"], intraday=True),   # obecna strategie uzivatele (F20)
+    # vyzkum F22-F33 (2026-11-09): vlastni casovani v cycle_f2x / time_exits, ne pres CAND (custom=True)
+    "F33_rebal": dict(magic=20261133, tf=60, markets=["SPX500mini", "NAS100mini"], intraday=False, hold_days=8, custom=True),
+    "F31_fomc": dict(magic=20261131, tf=60, markets=["SPX500mini", "NAS100mini"], intraday=False, hold_days=3, custom=True),
+    "F29_krypto": dict(magic=20261129, tf=60, markets=["BTCUSD", "ETHUSD"], intraday=False, hold_days=8, custom=True),
 }
 
 
@@ -312,6 +317,14 @@ def time_exits(live):
                     why = f"konec dne {int(INTRADAY_CLOSE_H)}:{int(INTRADAY_CLOSE_H % 1 * 60):02d} (PC se vecer vypina; test 22:00)"
                 if not cfg["intraday"] and now - p.time > cfg["hold_days"] * 86400 + 3 * 3600:
                     why = f"max {cfg['hold_days']} dni"
+                if cfg.get("custom"):                              # vystupy F33 / F31 / F29 (cas serveru = UTC)
+                    ou, nu = datetime.fromtimestamp(p.time, timezone.utc), datetime.fromtimestamp(now, timezone.utc)
+                    if name == "F33_rebal" and FX.f33_exit_due(ou, nu):
+                        why = "konec mesice 15:55 NY (F33)"
+                    elif name == "F31_fomc" and FX.f31_exit_due(ou, nu):
+                        why = "den FOMC 13:55 NY - pred oznamenim (F31)"
+                    elif name == "F29_krypto" and FX.f29_exit_due(ou, nu):
+                        why = "tyden uplynul - pondeli (F29)"
                 if why:
                     if live:
                         mc.close_position(p, comment=f"{name}-cas"[:31], dry_run=False)
@@ -322,6 +335,8 @@ def time_exits(live):
 # ---------------------------------------------------------------- hlavni smycka
 def due(name, now):
     """Kdy ma smysl strategii pocitat (na uzavreni jeji svicky)."""
+    if STRATS[name].get("custom"):
+        return False                                       # F33/F31/F29 resi cycle_f2x
     tf = STRATS[name]["tf"]
     sec = int(now) % 86400
     if tf == 60:
@@ -377,12 +392,90 @@ def single_instance():
         raise SystemExit("Runner uz bezi v jinem okne - druha instance konci.")
 
 
+def d1_closes_atr(mk, n=60):
+    """Denni svicky z MT5 (cas serveru = UTC): {datum: close} uzavrenych dni a ATR20 (bez rozpracovaneho dne)."""
+    r = mt5.copy_rates_from_pos(mk, mt5.TIMEFRAME_D1, 0, n)
+    if r is None or len(r) < 25:
+        return None, None
+    df = pd.DataFrame(r).iloc[:-1]
+    pc = df.close.shift(1)
+    tr = np.maximum(df.high - df.low, np.maximum((df.high - pc).abs(), (df.low - pc).abs()))
+    closes = {datetime.fromtimestamp(int(t), timezone.utc).date(): float(c) for t, c in zip(df.time, df.close)}
+    return closes, float(tr.iloc[-20:].mean())
+
+
+def f2x_open(state, name, mk, d, live, why, key):
+    """Vstup F33/F31/F29: SL 3 ATR20 (pojistka), TP daleko (10 R) - v testech bez stopu a TP."""
+    state["seen"].append(key)
+    _, a = d1_closes_atr(mk)
+    tick = mt5.symbol_info_tick(mk)
+    if not a or tick is None:
+        log(f"  {name} {mk}: chybi data pro ATR/cenu - nevstupuji")
+        return
+    entry = tick.ask if d == 1 else tick.bid
+    sl = entry - d * 3 * a
+    tp = entry + d * 30 * a
+    log(f"SIGNAL {name} {mk} {'long' if d == 1 else 'short'} - {why}")
+    res = open_trade(name, mk, d, sl, tp, int(time.time()), live)
+    if res not in ("provedeno", "suchy beh"):
+        journal(dict(strategy=name, market=mk, dir="long" if d == 1 else "short", signal_t=int(time.time()), action="neprovedeno", why=res))
+        log(f"  --- neprovedeno: {res}")
+
+
+def cycle_f2x(state, live):
+    """F33 rebalancovani, F31 drift pred FOMC, F29 krypto momentum - casovani podle f2x_live (cista rozhodnuti)."""
+    now = datetime.now(timezone.utc)
+    seen = set(state["seen"])
+    nyd = now.astimezone(FX.NY).date()
+    # F33: 9:30-9:40 NY dne L-2
+    key33 = f"F33_rebal|{nyd:%Y-%m}"
+    if key33 not in seen and FX.is_trading_day(nyd) and FX.trading_days_left(nyd) == 2:
+        if FX.ny_dt(nyd, 9, 30) <= now.astimezone(FX.NY) < FX.ny_dt(nyd, 9, 40):
+            r = FX.f33_entry(now, FX.yahoo_adjclose("SPY"), FX.yahoo_adjclose("TLT"))
+            if r and r[0] in (1, -1):
+                for mk in STRATS["F33_rebal"]["markets"]:
+                    f2x_open(state, "F33_rebal", mk, r[0], live, r[1], f"{key33}|{mk}")
+                state["seen"].append(key33)
+            elif r:
+                log(f"  {r[1]}")
+                if r[0] == "nic":
+                    state["seen"].append(key33)
+    # F31: 14:00-14:10 NY v posledni obchodni den pred FOMC
+    if FX.f31_entry(now):
+        for mk in STRATS["F31_fomc"]["markets"]:
+            k = f"F31_fomc|{nyd}|{mk}"
+            if k not in seen:
+                f2x_open(state, "F31_fomc", mk, 1, live, f"zitra ({FX.next_trading_day(nyd)}) rozhoduje FOMC, ven 13:55 NY", k)
+    # F29: v pondeli (UTC), jednou za tyden a trh
+    if now.weekday() == 0:
+        for mk in STRATS["F29_krypto"]["markets"]:
+            k = f"F29_krypto|{now:%Y-%m-%d}|{mk}"
+            if k in seen:
+                continue
+            mt5.symbol_select(mk, True)
+            closes, _ = d1_closes_atr(mk)
+            sig = FX.f29_signal(closes or {}, now)
+            if sig is None:
+                continue
+            if sig[0] > 0:
+                f2x_open(state, "F29_krypto", mk, 1, live, sig[1] + " > 0 -> long na tyden", k)
+            else:
+                state["seen"].append(k)
+                log(f"  {sig[1]} <= 0 -> F29 {mk} tento tyden mimo trh")
+    if now.date() > FX.LAST_FOMC and int(now.timestamp()) % 86400 < 60:     # jednou denne
+        log("POZOR: dosly terminy FOMC v f2x_live.py - doplnit dalsi rok")
+
+
 def cycle(state, live, force=False):
     now = time.time()
     seen = set(state["seen"])
     ensure_connected()
     time_exits(live)
-    todo = {n for n in STRATS if force or due(n, now)}
+    try:
+        cycle_f2x(state, live)
+    except Exception as e:                                 # chyba F33/F31/F29 nesmi zastavit FM strategie
+        log(f"  F2x: chyba {e}")
+    todo = {n for n in STRATS if not STRATS[n].get("custom") and (force or due(n, now))}
     if not todo:
         return
     clear_caches()

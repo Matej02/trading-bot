@@ -75,3 +75,7 @@ Na pokyn uživatele („teď přidej ty strategie, které nám mohou pomoct, do 
 - **Beze změny:** RSI(2) a filtr zpráv (potvrzené testy).
 - **Do MT5 runneru se nepřidávalo:** F33 vystupuje ve 22:00, F31 vstupuje ve 20:00 a PC je vypnutý od 20:00.
 - **Návrhy, které zatím nejsou kód:** limit rizika pro korelované skupiny (NAS/SPX, XAU/XAG), ověřit shorty indexů v F12–F16, oprava letního času před 28. 3. 2027.
+
+## Doplněno 2026-11-09 odpoledne
+- **Limit rizika pro korelované trhy** (bod 6) otestován jako [[F34 Limit rizika pro korelované trhy|F34]]: **nezavádět.** RSI(2) by přišla o 50–75 % zisku. Strop 1,5 R by u portfolia od 2019 snížil propad na polovinu, ale do 2018 zhoršil výsledek.
+- **F33, F31 a F29 přidány i na MT5 demo**, viz [[FM live test na MT5 demu]]. F33 s výstupem 21:55, v poslední den signálního měsíce nechat PC do 22:00.

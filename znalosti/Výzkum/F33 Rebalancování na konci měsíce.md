@@ -71,3 +71,8 @@ Z [[Fronta nápadů F22–F33|fronty nápadů]]. Jen test, bot se nemění. Skri
 - Systém `f33_rebal_d1` v `simulator/lib/f2x.ts`, kontrola shody `scripts/compare-f2x.ts` (200/200 signálů, den i směr).
 - **Odchylky od testu:** vstup na zavření dne L−3 (v testu otevření L−2), ceny SPY/TLT z Yahoo bez dividend (v testu upravené), SL 3 ATR jako pojistka (v testu bez stopu). Trhy SPX500 a NAS100.
 - V registru Statistika: **validated (PF 1,89, n 200 měsíců)**.
+
+## Live na MT5 demu (od 2026-11-09)
+- `F33_rebal`, magic 20261133, SPX500mini a NAS100mini, viz [[FM live test na MT5 demu]].
+- Vstup na otevření L−2 jako v testu, výstup 21:55 Praha. **V poslední obchodní den signálního měsíce nechat PC zapnuté do 22:00.**
+- Výstup 19:45 by od 2019 snížil výsledek z +0,23 na +0,09 R/měsíc (`scratch/f33_mt5_varianta.py`).

@@ -19,6 +19,7 @@ aktualizovano: 2026-10-29
 | Pokračování po NFP/CPI (směr prvních 15 min) | [[F27 Pokračování po zprávách (NFP, CPI)|F27]] | vývoj −0,029 R, kontrola −0,140 R; první reakce se vrací |
 | Měsíční sezónnost z 10 let zpět | [[F30 Měsíční sezónnost (průběžně)|F30]] | vývoj +0,058 R, kontrola −0,102 R; short signály −0,36 R |
 | Rotace 3 nejsilnějších z 15 trhů | [[F32 Rotace podle relativní síly|F32]] | vývoj t 0,98; v kontrole horší než držet vše; závisí na zdroji dat |
+| Limit rizika pro korelované trhy (1 pozice / strop 1,5 R ve skupině) | [[F34 Limit rizika pro korelované trhy|F34]] | RSI(2) přijde o 50–75 % zisku; portfolio od 2019 má poloviční propad, ale do 2018 horší → nezavádět |
 | [[Volume profile]] (VA, POC, HVN) | F5, F7 | žádná výhoda |
 | Průraz mimo zlato/US indexy/BTC | [[F3 Průraz na nových trzích]] | −0,11 R |
 | Vstup na menším TF po denním signálu | [[F4 Vstup na menším timeframu]] | užší SL = vyražení |

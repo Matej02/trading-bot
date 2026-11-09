@@ -52,3 +52,7 @@ Z [[Fronta nápadů F22–F33|fronty nápadů]]. Jen test, bot se nemění. Skri
 - Systém `f29_krypto_mom_d1` v `simulator/lib/f2x.ts`, kontrola shody `scripts/compare-f2x.ts` (358/358 nedělí).
 - **Odchylky od testu:** vstup a výstup se každý týden zavírá a otevírá znovu (v testu se pozice při dalším long týdnu držela bez nákladů), SL 3 ATR jako pojistka.
 - V registru Statistika: **unvalidated (kandidát)**.
+
+## Live na MT5 demu (od 2026-11-09)
+- `F29_krypto`, magic 20261129, BTCUSD a ETHUSD. Vstup v pondělí při první kontrole runneru (v testu 00:00 UTC). Viz [[FM live test na MT5 demu]].
+- 9. 11.: mimo trh (BTC −10,6 %, ETH −16,2 %).

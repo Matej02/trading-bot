@@ -58,3 +58,6 @@ Souhrn: `research_data/f27/f31_souhrn.txt`.
 - Systém `f31_fomc_h1` v `simulator/lib/f2x.ts`, kontrola shody `scripts/compare-f2x.ts` (vstupy 13:00 NY v den před FOMC, výstupy 12:00 NY v den FOMC).
 - **Odchylky od testu:** výstup ve 13:00 NY (v testu 13:55, kvůli zpoždění dat Yahoo ~10 min), SL 3 denní ATR jako pojistka. Trhy SPX500fut a NAS100fut (futures 23 h). Termíny FOMC do 2027-12-08 v `usCalendar.ts`.
 - V registru Statistika: **unvalidated (kandidát)**.
+
+## Live na MT5 demu (od 2026-11-09)
+- `F31_fomc`, magic 20261131, vstup 20:00 Praha jen když běží PC, výstup 13:55 NY. Viz [[FM live test na MT5 demu]].
