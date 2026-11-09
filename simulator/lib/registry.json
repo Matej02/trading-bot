@@ -102,5 +102,25 @@
    "status": "unvalidated",
    "note": "F16 2026-11-04: Hakimi podle PDF + B5, vybraná vývoj +0,04 R / OOS +0,07 R (n 45), náhoda −0,27/−0,07 R – live experiment"
   }
+ },
+ "f33_rebal_d1": {
+  "*": {
+   "status": "validated",
+   "holdout_pf": 1.89,
+   "holdout_n": 200,
+   "note": "F33 (2026-11-08): pravidla zapsaná předem, nic laděno; po měsících 2003–26 PF 1,89 (n 200), 2003–18 +0,31 R t 3,2, 2019–26 +0,23 R t 1,57 (PF 1,68, n 63); kladné i US30 a DAX; kontrola citlivá na nastavení"
+  }
+ },
+ "f31_fomc_h1": {
+  "*": {
+   "status": "unvalidated",
+   "note": "kandidát F31 (2026-11-08): 2019–26 +0,16 R na zasedání (t 2,08), ale 2013–18 bez výhody – sledovat dopředu"
+  }
+ },
+ "f29_krypto_mom_d1": {
+  "*": {
+   "status": "unvalidated",
+   "note": "kandidát F29 (2026-11-08): 2014–21 t 4,07, 2022–26 t 1,33 (hranice 1,5) – těsně neprošlo, Sharpe lepší než stále long"
+  }
  }
 }

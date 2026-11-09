@@ -29,3 +29,6 @@ fm_demo_journal.jsonl
 fm_demo_state.json
 scratch/live_mt5/
 fm_demo_log.txt
+
+# zalohy nastaveni MT5 (sifrovane prihlaseni) - nikdy do repa
+scratch/mt5_config_*/

@@ -6,7 +6,9 @@ import { fm13Signal } from "./fm13";
 import { fm14Signal } from "./fm14";
 import { fm15Signal } from "./fm15";
 import { fm16Signal } from "./fm16";
+import { f29Signal, f31Signal, f33Signal } from "./f2x";
 import { MARKET_IDS, MARKETS, TRADE_IDS } from "./markets";
+import { lastFomcDate, nyParts, tradingDaysLeftInMonth } from "./usCalendar";
 import type { Candle, Dir, TF } from "./types";
 
 export interface SystemDef {
@@ -19,7 +21,10 @@ export interface SystemDef {
   desc: string;
   maxHoldBars?: number; // nejdele tolik svicek, pak se zavre za trzni cenu (jako v testu)
   noTp?: boolean; // bez TP - ven az podle pravidla vystupu (exitRule), stopu nebo casu
-  exitRule?: "sma5"; // ven, kdyz denni svicka zavre nad SMA5 (long) / pod (short)
+  // ven: sma5 = denni svicka zavre nad SMA5 (long) / pod (short); monthEnd = zavreni posledniho obchodniho dne mesice (F33);
+  // fomcDay = zavreni svicky 12:00-13:00 NY v den rozhodnuti FOMC (F31)
+  exitRule?: "sma5" | "monthEnd" | "fomcDay";
+  feeds?: string[]; // pomocne trhy (stejny timeframe), ktere strategie potrebuje - bot je nacte a preda v barSignal
   window?: number; // kolik uzavrenych svicek dostane strategie (vychozi 400 u intradennich)
   rrr?: number; // vlastni TP v R (jinak podle nastaveni)
   htf?: TF[]; // dalsi timeframy, ktere strategie potrebuje (bot je nacte a preda v barSignal)
@@ -63,6 +68,31 @@ export const SYSTEMS: SystemDef[] = [
     holdsWeekends: true, maxHoldBars: 10, noTp: true, exitRule: "sma5",
     desc: "Mean reversion: zavření nad SMA200 a RSI(2) pod 10 → long, ven při zavření nad SMA5, stop 3 ATR(20), " +
       "nejdéle 10 dní. F6: úspěšnost ~70 % ve všech obdobích, US indexy 2019+ PF 1,9; formálně zatím neověřeno.",
+  },
+  {
+    id: "f33_rebal_d1", name: "Rebalancování na konci měsíce – US indexy (prošlo F33)", tf: "1d",
+    markets: ["SPX500mini", "NAS100mini"], kind: "bar", holdsWeekends: true, maxHoldBars: 6, noTp: true,
+    exitRule: "monthEnd", feeds: ["SPY", "TLT"],
+    desc: "Fondy 60/40 na konci měsíce prodávají, co vyrostlo. Na zavření 4. obchodního dne od konce měsíce se porovná výnos SPY a TLT " +
+      "od konce minulého měsíce; rozdíl ≥ 2 p. b. → obchod proti vítězi (akcie vedly → short, dluhopisy vedly → long), ven na zavření " +
+      "posledního obchodního dne měsíce, SL 3 ATR jen jako pojistka. Test F33 (pravidla předem, po měsících): 2003–18 +0,31 R " +
+      "(t 3,2), 2019–26 +0,23 R (t 1,57), PF 1,89 (n 200), kladné i na US30 a DAXu; ~8× ročně. Živě vstup na zavření dne L−3 " +
+      "(v testu otevření L−2) a ceny bez dividend (v testu upravené).",
+  },
+  {
+    id: "f31_fomc_h1", name: "Drift před FOMC – futures S&P a Nasdaq (kandidát F31)", tf: "1h",
+    markets: ["SPX500fut", "NAS100fut"], kind: "bar", holdsWeekends: false, maxHoldBars: 30, noTp: true,
+    exitRule: "fomcDay", window: 600,
+    desc: "Long od 14:00 NY v den před rozhodnutím FOMC, ven ve 13:00 NY v den rozhodnutí (oznámení 14:00), SL 3 denní ATR jako pojistka; " +
+      "8× ročně. KANDIDÁT – test F31: 2019–26 +0,16 R na zasedání (t 2,08, kladné na S&P, Nasdaq, US30, DAX), ale 2013–18 bez " +
+      `výhody. V testu výstup 13:55 NY. Termíny FOMC do ${lastFomcDate}, pak doplnit.`,
+  },
+  {
+    id: "f29_krypto_mom_d1", name: "Krypto momentum 4 týdny – BTC, ETH (kandidát F29)", tf: "1d",
+    markets: ["BTCUSD", "ETHUSD"], kind: "bar", holdsWeekends: true, maxHoldBars: 7, noTp: true,
+    desc: "Každé pondělí: výnos za 28 dní > 0 → long na týden, jinak mimo trh; SL 3 ATR jako pojistka. KANDIDÁT – test F29: 2014–21 " +
+      "t 4,07, 2022–26 +0,43 %/týden (t 1,33, hranice 1,5) a Sharpe 0,60 proti −0,06 u stále long; hlavně se vyhne propadům " +
+      "a drahému swapu ETH. Na ostatních mincích jen jako stále long.",
   },
   {
     id: "ukazka_ema_m1", name: "Ukázka – EMA 9/21 na 1m", tf: "1m", markets: ["BTCUSD", "ETHUSD"], kind: "bar",
@@ -198,7 +228,21 @@ export function weeklyTrend(c: Candle[]): number {
 }
 
 /** Signal na posledni UZAVRENE svicce (c uz neobsahuje tvorici se svicku). */
-export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF, Candle[]>>, marketId?: string): BarSignal | null {
+export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF, Candle[]>>, marketId?: string,
+  feeds?: Record<string, Candle[]>): BarSignal | null {
+  if (system === "f33_rebal_d1") {
+    if (!feeds?.SPY?.length || !feeds?.TLT?.length) return null;
+    const s = f33Signal(c, feeds.SPY, feeds.TLT);
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
+  if (system === "f31_fomc_h1") {
+    const s = f31Signal(c);
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
+  if (system === "f29_krypto_mom_d1") {
+    const s = f29Signal(c);
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
   if (system === "fm16_hak_m15") {
     if (!extra?.["1h"]) return null;
     const s = fm16Signal(c, extra["1h"]);
@@ -323,6 +367,19 @@ export type Tone = "wait" | "near" | "off";
 /** Lidsky popis, na co strategie na posledni uzavrene svicce ceka (panel "Bot zive"). */
 export function barStatus(system: string, c: Candle[], digits: number): { text: string; tone: Tone } {
   if (c.length < 150) return { text: `načítám data (${c.length}/150 svíček)`, tone: "off" };
+  if (system === "f33_rebal_d1") {
+    const left = tradingDaysLeftInMonth(c[c.length - 1].time);
+    return left > 3 ? { text: `F33 – do signálu zbývá ${left - 3} obchodní den/dny (4. den od konce měsíce)`, tone: "wait" }
+      : { text: "F33 – konec měsíce: signál podle SPY vs TLT (případná pozice drží do posledního dne)", tone: "near" };
+  }
+  if (system === "f31_fomc_h1") {
+    const { date } = nyParts(c[c.length - 1].time);
+    return date > lastFomcDate ? { text: "F31 – došly termíny FOMC, doplnit další rok v usCalendar.ts", tone: "off" }
+      : { text: "F31 – čeká na den před rozhodnutím FOMC (vstup 14:00 NY)", tone: "wait" };
+  }
+  if (system === "f29_krypto_mom_d1") {
+    return { text: "F29 – vyhodnocuje se na zavření neděle (výnos za 28 dní > 0 → long na týden)", tone: "wait" };
+  }
   if (system === "fm16_hak_m15") {
     return { text: "experiment F16 – na zavření 15m svíčky hlídá pullback vlny 4 do Fibo 0,618–0,75 s FVG", tone: "wait" };
   }

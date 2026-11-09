@@ -7,6 +7,7 @@ import { aiScore } from "./aiScore";
 import type { AiContext } from "./aiPrompt";
 import { blockedBy, decisionVerdict } from "./verdict";
 import { ema, rsiLast } from "./indicators";
+import { f31Exit, f33Exit } from "./f2x";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKETS, quote, TRADE_IDS } from "./markets";
 import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from "./remote";
@@ -851,7 +852,13 @@ export class Bot {
       extra = {};
       for (const tf of sys.htf) extra[tf] = closedCandles(await store.get(m, tf, POLL[tf]), tf, now);
     }
-    const bs = barSignal(systemId, win, extra, id);
+    // pomocne trhy (napr. SPY a TLT pro F33) ve stejnem timeframu
+    let feeds: Record<string, Candle[]> | undefined;
+    if (sys.feeds?.length) {
+      feeds = {};
+      for (const f of sys.feeds) feeds[f] = closedCandles(await store.get(MARKETS[f], sys.tf, POLL[sys.tf]), sys.tf, now);
+    }
+    const bs = barSignal(systemId, win, extra, id, feeds);
     if (!bs) return;
     // cas signalu = uzavreni svicky (jako v Python botovi) - po otevreni stranky s pauzou
     // validator stary signal zamitne, misto aby se vstupovalo na zastaralou cenu
@@ -871,10 +878,22 @@ export class Bot {
     const s = this.state;
     const sys = SYSTEM[systemId];
     const last = closed[closed.length - 1];
-    if (sys.exitRule !== "sma5" || closed.length < 5) return;
-    const sma5 = closed.slice(-5).reduce((a, c) => a + c.close, 0) / 5;
-    const out = (dir: string) => (dir === "long" ? last.close > sma5 : last.close < sma5);
-    const why = `zavření ${last.close > sma5 ? "nad" : "pod"} SMA5 ${sma5.toFixed(MARKETS[id].digits)}`;
+    let out: (dir: string) => boolean;
+    let why: string;
+    if (sys.exitRule === "sma5") {
+      if (closed.length < 5) return;
+      const sma5 = closed.slice(-5).reduce((a, c) => a + c.close, 0) / 5;
+      out = (dir: string) => (dir === "long" ? last.close > sma5 : last.close < sma5);
+      why = `zavření ${last.close > sma5 ? "nad" : "pod"} SMA5 ${sma5.toFixed(MARKETS[id].digits)}`;
+    } else if (sys.exitRule === "monthEnd") {
+      if (!f33Exit(closed)) return;
+      out = () => true;
+      why = "konec měsíce – zavření posledního obchodního dne (F33)";
+    } else if (sys.exitRule === "fomcDay") {
+      if (!f31Exit(closed)) return;
+      out = () => true;
+      why = "den FOMC 13:00 NY – ven před oznámením (F31)";
+    } else return;
     for (const p of s.broker.positions.filter((x) => x.system === systemId && x.market === id && x.openTime <= last.time + TF_SEC[sys.tf])) {
       if (out(p.dir)) this.closeAtMarket(p.id, why);
     }
