@@ -8,6 +8,17 @@ aktualizovano: 2026-10-29
 Terminál dá max 100 000 svíček (M1 ~3 měsíce, M15 ~4 roky) – pro delší M1 nastavit „Max. sloupců v grafu“ na neomezeně.
 Historie má díry (EURUSD 10/2025–10/2026). Podmínky brokera: `export_broker_conditions.py` → [[Broker GlobalDynamicMarkets]].
 
+**2026-11-10 – Claude a AppData (důležité):**
+- Claude desktop je balíčková aplikace Windows (MSIX). Procesy spuštěné z Claude (skripty, python, i MT5 spuštěný přes `mt5.initialize()` bez běžícího terminálu) zapisují do `%APPDATA%` jen virtuálně. Zápisy skončí v `%LOCALAPPDATA%\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming`.
+- Tím vznikl problém s přihlášením 8.–10. 11.:
+  - přihlášení uložené z MT5 spuštěného Claudem MT5 od Windows nevidělo;
+  - ani „obnova configu“ ze skriptu se do skutečné AppData nedostala.
+- Oprava a postup: [[FM live test na MT5 demu#Přihlášení MT5 po 7.–9. 11. 2026 – vyřešeno 10. 11.|FM live test]].
+- **Pravidlo:**
+  - MT5 a runner spouští jen Windows nebo uživatel (`start_fm_demo.cmd`).
+  - Skripty z Claude se smí jen připojit k už běžícímu přihlášenému MT5.
+  - Změny v AppData musí udělat skript spuštěný mimo Claude.
+
 **2026-11-07 – data MT5 a disk C:**
 - Přesun `AppData\Roaming\MetaQuotes` na D přes odkaz (junction) **nefunguje**:
   - odkaz na celou složku → knihovna MetaTrader5 terminál nenajde;

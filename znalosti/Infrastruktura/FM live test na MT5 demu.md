@@ -174,11 +174,17 @@ Otázka uživatele: do kdy testovat, než půjdou na MT5 reálné peníze.
 
 **Zjištěný posun času v létě (neopraveno, bot se nemá měnit):** `fetch_m1` čte čas serveru jako Londýn, ale server je UTC celý rok. Od konce března do konce října 2027 tak budou svíčky na demu o 1 h posunuté, stejně jako v testech. Viz [[MT5 napojení]].
 
-## Přihlášení MT5 po 7.–9. 11. 2026
-- Po pokusu přesunout data MT5 na D a po spuštěních MT5 z prostředí Claude Code umí uložené přihlášení přečíst jen MT5 spuštěný odtud.
-- MT5 spuštěný Windows (zástupce Po spuštění) se nepřihlásí (okno „Otevřít účet“).
-- **Dočasný postup:** po startu PC napsat Claudovi „spusť runner“. Claude zavře nepřihlášené MT5 a spustí runner ze svého prostředí.
-- **Trvalá oprava:** jedno ruční přihlášení v MT5 na server **GlobalDynamicMarkets-Demo** (ne Real) s uložením hesla.
+## Přihlášení MT5 po 7.–9. 11. 2026 – vyřešeno 10. 11.
+- **Příznak:** MT5 spuštěný Windows (zástupce Po spuštění) ukázal okno „Otevřít účet“. Přihlásil se jen MT5 spuštěný z Claude.
+- **Příčina (zjištěno 10. 11.):** aplikace Claude desktop je balíčková aplikace Windows (MSIX). Všechno, co Claude spustí, zapisuje do `%APPDATA%` jen virtuálně, do `%LOCALAPPDATA%\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\MetaQuotes`.
+  - Tam skončilo i funkční uložené přihlášení z 8.–9. 11.
+  - Skutečná AppData, kterou čte MT5 spuštěný Windows, ho neměla. Tam skončila i „obnova configu z D“, proto nepomohla.
+- **Oprava:**
+  - funkční `accounts.dat`, `servers.dat` a `common.ini` zkopírovány do `scratch/mt5_config_claude`; složka není v gitu, heslo je v souborech MT5 zašifrované;
+  - `start_fm_demo.cmd` je při prvním spuštění Windows přenese do skutečné AppData, původní zazálohuje do `zaloha_puvodni` a vytvoří značku `preneseno.txt`.
+- **Ověřeno 10. 11. 6:50:** dvojklik na `start_fm_demo.cmd` → MT5 přihlášený „937584 - GlobalDynamicMarkets-Demo: Demo účet“, runner „LIVE NA DEMU“.
+- **Od teď po startu PC nic dělat nemusíš,** všechno spustí zástupce Po spuštění.
+- **Pravidlo:** runner ani MT5 nespouštět z Claude. Běžely by zase s virtuální AppData. Když runner neběží, stačí dvojklik na `start_fm_demo.cmd`.
 
 ## Nové strategie z výzkumu F22–F33 na MT5 demu (od 2026-11-09 7:52)
 Na pokyn uživatele „chci to na bota na MT5 dát“. Kód: `f2x_live.py` (rozhodování, kalendář NYSE, termíny FOMC, Yahoo SPY/TLT) a `cycle_f2x` + `time_exits` v `run_fm_demo.py`.
