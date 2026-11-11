@@ -81,3 +81,12 @@ aktualizovano: 2026-11-03
   - riziko 2 %: průměr +272 Kč, nejhorší −686 Kč, nejlepší +1 038 Kč.
   - U současného brokera nejde (nejmenší pozice ~74 % účtu, rok jako 2020 by účet smazal). FM strategie se nepočítají, ověřenou výhodu nemají.
 - 2026-11-11: „Pokud bych to nechal zapnuté celý rok.“ → tabulka výše už je za celý rok běhu. F33 obchoduje jen ~8× ročně, delší běh obchody nepřidá. Když PC v den výstupu vypne ve 20:00, F33 od 2019 dává jen ~+0,09 R místo +0,23 R na obchod (asi třetina). Ostatní strategie přidají obchody, ale bez ověřené výhody: průměr kolem nuly, náhoda ± stovky Kč za rok.
+- 2026-11-11: „A kdybychom to dali na propku, která by obchodovala se 100 tisíci dolary?“ → výpočet z obchodů F33 2003–2026 (`research_data/f33/f33_yahoo.pkl`, ověřeno: roční průměr 2019–25 = 4,08 R je součet obchodů SPX + NAS, tedy % účtu = R × riziko / 3 sedí).
+  - **Financovaný účet 100 000 $, podíl 80 %:**
+    - riziko 1 %: průměr ~1 090 $ (≈ 23 800 Kč) ročně, nejhorší rok −3,4 % bez výplaty, max. propad −4,5 %;
+    - riziko 2 %: ~2 180 $ (≈ 47 600 Kč) ročně, nejhorší rok −6,9 %, max. propad −8,9 % (těsně pod limitem −10 %).
+  - **Zkouška (fáze 1 +10 %, fáze 2 +5 %, max. ztráta −10 %, denní −5 % brané přísně jako ztráta celého měsíce za den), simulace se startem v každém měsíci:**
+    - riziko 2 %: obě fáze za medián 4–5 let, do 12 měsíců 0 %, nepropadne;
+    - riziko 3 %: medián 2–3 roky, do 12 měsíců 1–3 %, propadne 13–15 %;
+    - riziko 5 %: medián ~13 měsíců, do 12 měsíců 9–12 %, propadne 51–64 %.
+  - Závěr: samotná F33 (~8 obchodů ročně, 1–3 % za rok) je na zkoušku moc pomalá. Na financovaném účtu by rozumné riziko dávalo desítky tisíc Kč ročně. Ověřit u firmy: časový limit zkoušky, rušení účtu za neaktivitu, držení přes víkend, EA. Přepnutí účtu i obchodování na propce dělá uživatel, ne Claude.
