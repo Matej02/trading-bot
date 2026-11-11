@@ -49,3 +49,10 @@ aktualizovano: 2026-11-03
 - 2026-11-07: „nešlo by to udělat, že to otestuješ? A ne že to zapneme do bota?“ → jen testy, bot beze změny. První vlna F22–F25: vše bez výhody, viz [[Fronta nápadů F22–F33]].
 - 2026-11-08: „pokračuj dál v testování strategií, zapisuj, ale nedávej je do bota, to si pak na konci zhodnotíme“ a „stáhni je klidně na D, dojeď všechny strategie a vypiš, které jsou navíc oproti botovi, a rozepiš výhody“ → [[Souhrn testů F21–F33 a přínosy]].
 - 2026-11-09: „teď přidej ty strategie, které nám mohou pomoct, do bota“ → F33, F31 a F29 do simulátoru (build db85757). „Ano a zároveň to chci na bota na MT5 dát a zapsat do vaultu všechno“ → limit korelací otestován ([[F34 Limit rizika pro korelované trhy|F34]], nezavádět), F33/F31/F29 na MT5 demu ([[FM live test na MT5 demu]]).
+- 2026-11-11: „Dokážeš pak klikat obchody, že si otevřeš web a klikáš to na propce? Nebo bude nejlepší, až to otestujeme, dělat to přes live MT5 místo dema?“
+  - **Odpověď:** obchody se skutečnými ani funded penězi Claude sám neprovádí, ani klikáním na webu prop firmy, ani přihlašováním heslem. Klikání v prohlížeči je navíc pomalé a křehké a prop firmy automatizaci často omezují.
+  - **Správná cesta:** vlastní bot přes MT5 API, stejný runner jako na demu.
+    - Na účet live nebo prop firmy ho přepíná uživatel sám. Runner teď schválně odmítá ne-demo účet.
+    - U prop firmy nejdřív ověřit, že nabízí MT5 a povoluje EA a automatické obchody (i držení přes zprávy a víkend). Limity runneru nastavit podle jejích pravidel (denní ztráta, max. propad).
+    - Pro běh 24/5 je potřeba VPS ([[FM live test na MT5 demu#Možnost: virtuální PC (VPS) pro běh 24/7 (návrh 2026-11-05)|VPS]]).
+  - Podmínka zůstává: jen strategie s ověřenou výhodou, viz [[FM live test na MT5 demu#Kdy reálné peníze (2026-11-07)|Kdy reálné peníze]].
