@@ -80,3 +80,4 @@ aktualizovano: 2026-11-03
   - riziko 1 %: průměr +136 Kč, nejhorší −343 Kč, nejlepší +519 Kč;
   - riziko 2 %: průměr +272 Kč, nejhorší −686 Kč, nejlepší +1 038 Kč.
   - U současného brokera nejde (nejmenší pozice ~74 % účtu, rok jako 2020 by účet smazal). FM strategie se nepočítají, ověřenou výhodu nemají.
+- 2026-11-11: „Pokud bych to nechal zapnuté celý rok.“ → tabulka výše už je za celý rok běhu. F33 obchoduje jen ~8× ročně, delší běh obchody nepřidá. Když PC v den výstupu vypne ve 20:00, F33 od 2019 dává jen ~+0,09 R místo +0,23 R na obchod (asi třetina). Ostatní strategie přidají obchody, ale bez ověřené výhody: průměr kolem nuly, náhoda ± stovky Kč za rok.
