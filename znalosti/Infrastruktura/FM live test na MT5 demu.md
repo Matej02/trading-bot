@@ -133,6 +133,13 @@ Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle
 - **2026-11-09 (kontrola ve 12:05):** runner od 8:04 bez chyb, kontroly 13/13 trhů, 0 otevřených pozic, zůstatek 100 220 $ (celkem +220 $ = +0,22 %, 1 obchod).
   - 8:21 signál F13 EURUSD short **neproveden: SL jen 2,6× spreadu** (pojistka runneru chce aspoň 3×).
   - F29 v 7:52 rozhodla BTC i ETH tento týden mimo trh (28denní výnos −10,6 % a −16,2 %).
+- **2026-11-11 – proč demo skoro neobchoduje.** `scratch/demo_replay.py` přehrál funkce CAND runneru na datech MT5 (jen čtení).
+  - **Za ~12 týdnů (od 8/2026) je 32 signálů, tj. 2–3 týdně.** Rozdělení: F13 23, F12 4, F16 3, F14 1, F20 1, F15 0. Od 27. 10. jen 5.
+  - **Runner žádný signál nepropásl.** Všechny 3 signály během běhu dema (5., 9. a 10. 11.) viděl. Mimo 7–19 h padl jen 1 z 32 signálů a o víkendu žádný, takže večerní vypínání PC skoro nic nestojí.
+  - **2 ze 3 signálů zastavilo pravidlo SL ≥ 3× spread:**
+    - F13 EURUSD 9. 11.: 2,6× živě, 2,4× podle modelu spreadu v testu. Test F13 má stejné pravidlo, takže by ho vynechal také.
+    - F12 XAGUSD 10. 11.: 2,7× živě, 2,4× v modelu. **Test F12 toto pravidlo nemá** a obchod by započítal; jen spread by vzal ~0,4 R.
+    - Rozdíl mezi testem a live u F12 (kovy) zatím jen evidovat, neměnit.
 - **2026-11-05 – oprava kalendáře zpráv.**
   - Ruční seznam FOMC/NFP/CPI v `f7_lib.py` končil v říjnu 2026. Od listopadu by proto F12, F13 a F20 potichu přestaly vynechávat zpravodajské dny.
   - První takový den by byl 6. 11. (NFP), kdy F13 podle testu neobchoduje.
