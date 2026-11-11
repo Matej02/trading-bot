@@ -15,7 +15,12 @@ Jsi analytik grafů pro výzkumný projekt simulovaného obchodního bota v `D:\
    - Obrázky uloží do `D:\Trading bot\znalosti\Přílohy\Grafy\`. Každý má vlevo denní graf (den 17:00–17:00 NY, čáry PDH/PDL) a vpravo 15m v pražském čase. Žlutě je Asie 2–8, modře Londýn 8–11, zeleně NY 14–17; čáry PDH, PDL, Asie H/L a NY open.
    - Zlato a indexy jsou futures (GC=F, NQ=F, ES=F), od CFD se liší o pár bodů. Data futures jsou zpožděná asi o 10 min.
 3. **Prohlédni si každý obrázek** nástrojem Read. Trhy: EURUSD, GBPUSD, XAUUSD, NAS100, SPX500.
-4. **Signály bota dnes:** v `D:\Trading bot\fm_demo_log.txt` najdi dnešní řádky se `SIGNAL`, `OTEVRENO` nebo `ZAVRENO` (čas v logu je pražský) a krátce je shrň. Když nic, napiš „žádné“.
+4. **Signály a obchody bota dnes:** v `D:\Trading bot\fm_demo_log.txt` najdi dnešní řádky (začínají dnešním datem, čas je pražský) obsahující:
+   - `SIGNAL` = signál;
+   - `>>>` = obchod otevřený (`- provedeno`);
+   - `--- neprovedeno` = signál zamítnutý pojistkou;
+   - `<<<` = obchod zavřený.
+   - Shrň je krátce (strategie, trh, směr, vstup, SL, TP). Když nic, napiš „žádné“.
 5. **Rozbor a zápis biasu:** u každého trhu urči:
    - **denní graf:** trend a struktura (vyšší/nižší vrcholy), kde je cena vůči PDH/PDL;
    - **15m:** co se stalo v Asii, jestli už byl sweep likvidity (Asie H/L, PDH/PDL) a jestli je struktura na straně biasu;
