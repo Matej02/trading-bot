@@ -75,3 +75,8 @@ aktualizovano: 2026-11-03
   - Rozdíl −64 tisíc → −500 je hlavně vypnutím dvou 1m ukázek (dohromady −64 375 $). Ostatní systémy měly i předtím jen −728 $ ([[Export simulátoru 2026-11-09]]). Je to dobré rozhodnutí, ne důkaz, že zbylé systémy vydělávají.
   - Do kdy: technická kontrola do konce prosince, vyhodnocení 4. 1. 2027. Ziskovost demo za tu dobu neprokáže, F13 by potřebovala 8–11 let dema.
   - Pondělní kontroly podle pravidel sepsaných předem: chyby bota opravit hned, ztráty podle pravidel jen zapsat, ne ladit, viz [[Simulátor#Týdenní kontrola exportu (pravidla předem, 2026-11-11)|Týdenní kontrola]].
+- 2026-11-11: „Ještě jsi neodpověděl, kolik můžu vydělat teoreticky za rok z 10 000 korun.“ → F33 (jediná ověřená), roky 2019–2025, % účtu = R × riziko / 3:
+  - riziko 0,25 %: průměr +34 Kč, nejhorší rok (2020) −86 Kč, nejlepší (2022) +130 Kč;
+  - riziko 1 %: průměr +136 Kč, nejhorší −343 Kč, nejlepší +519 Kč;
+  - riziko 2 %: průměr +272 Kč, nejhorší −686 Kč, nejlepší +1 038 Kč.
+  - U současného brokera nejde (nejmenší pozice ~74 % účtu, rok jako 2020 by účet smazal). FM strategie se nepočítají, ověřenou výhodu nemají.
