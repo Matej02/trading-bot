@@ -40,3 +40,5 @@ Otázka uživatele: „Jak je možné se dopracovat k tomu, abychom tohle mohli 
 ## Realistický odhad
 - Kroky 3–6 technicky zaberou několik týdnů.
 - Termín určuje krok 1. Dokud není portfolio ověřených strategií, prop zkouška má podle výpočtu spíš zápornou očekávanou hodnotu (poplatek).
+
+Doporučení konkrétních firem: [[Prop firmy – doporučení]] (2026-11-11).
