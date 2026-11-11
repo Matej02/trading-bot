@@ -70,3 +70,8 @@ aktualizovano: 2026-11-03
 - 2026-11-11: „Když to přepneme na 10 000, co se změní, zvlášť když to nemáme hlavně otestované?“
   - **Závěr:** demo se do režimu 10 000 Kč nepřepíná. Výsledky v % zůstanou stejné, jen by se zmenšily pozice a vypadly obchody, o kterých už víme z výpočtu, že se nevejdou. Demo by mělo méně obchodů, a tedy méně dat o provedení.
   - Rozhoduje ověřená výhoda strategií. Malý účet (broker s mikro pozicemi) řešit až před live.
+- 2026-11-11: „Zkontroluj demo, jak si vede, a kdy budeš chtít výsledky z Vercelu.“ → demo +220 $ (1 obchod), runner se po startu PC spustil sám. Export ze simulátoru každé pondělí, první 16. 11.
+- 2026-11-11: „Máme pokrok, na Vercelu držíme max. −500, předtím to bylo −64 tisíc. Do kdy musíme testovat, abychom si byli jistí? V pondělí se můžeš dál učit, co jsi dělal špatně, a omezit chyby.“
+  - Rozdíl −64 tisíc → −500 je hlavně vypnutím dvou 1m ukázek (dohromady −64 375 $). Ostatní systémy měly i předtím jen −728 $ ([[Export simulátoru 2026-11-09]]). Je to dobré rozhodnutí, ne důkaz, že zbylé systémy vydělávají.
+  - Do kdy: technická kontrola do konce prosince, vyhodnocení 4. 1. 2027. Ziskovost demo za tu dobu neprokáže, F13 by potřebovala 8–11 let dema.
+  - Pondělní kontroly podle pravidel sepsaných předem: chyby bota opravit hned, ztráty podle pravidel jen zapsat, ne ladit, viz [[Simulátor#Týdenní kontrola exportu (pravidla předem, 2026-11-11)|Týdenní kontrola]].

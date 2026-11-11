@@ -53,3 +53,26 @@ Systémy `fm_mss_h4`, `fm_pruraz_h4`, `fm_zona_h4` (`lib/fm.ts`): kombinace FM k
 ## Reset účtu (2026-11-09)
 - 9. 11. uživatel resetoval účet na 100 000 $. Stará data jsou v [[Export simulátoru 2026-11-09]].
 - **Od commitu `3b3426c` reset maže jen účet, pozice a deník.** Nastavení a výběr strategií zůstanou, takže vypnuté 1m ukázky zůstanou vypnuté. Bot po resetu stojí, dokud ho uživatel znovu neaktivuje.
+
+## Týdenní kontrola exportu (pravidla předem, 2026-11-11)
+Každé pondělí od 16. 11. uživatel pošle export (obchody, deník, data). Pravidla jsou sepsaná před prvními daty po resetu, aby se podle výsledků neupravovala.
+- **Opravit hned – chyba bota** (udělal něco, co jeho pravidla neříkají):
+  - velikost pozice nebo riziko jiné, než říká plán;
+  - veto z technického důvodu (min. lot brokera, zastaralá data);
+  - chybějící nebo pozdní výstup, zdvojený obchod;
+  - hromadné otevírání po otevření stránky;
+  - stejný signál dopadl na MT5 demu a v simulátoru jinak a nevysvětlí to rozdíl zdroje dat.
+- **Neměnit podle výsledku, jen zapsat:**
+  - ztrátový obchod podle pravidel;
+  - ztrátový týden nebo měsíc;
+  - série ztrát kratší než nejhorší v testu.
+  - Ladit pravidla podle pár týdnů je přizpůsobení náhodě: na minulých týdnech to pak vypadá dobře a na nových datech to selže.
+- **Pravidlo strategie se mění jen výzkumem:** plán předem, test na historii, kontrola na letech, které test neviděl.
+- **Systém vypnout, když:**
+  - propad je větší než nejhorší propad v testu;
+  - nebo se chová jinak než v testu (počet obchodů, průměrná ztráta).
+  - U neověřených systémů (Momentum, ukázky) rozhoduje uživatel.
+- **Termíny:**
+  - týdně jen chyby a odchylky;
+  - **technické vyhodnocení po konci prosince, v pondělí 4. 1. 2027** (simulátor i MT5 demo, viz [[FM live test na MT5 demu#Kdy reálné peníze (2026-11-07)|Kdy reálné peníze]]).
+  - Ziskovost se z dema za pár týdnů prokázat nedá. Ukazuje ji jen test na historii.
