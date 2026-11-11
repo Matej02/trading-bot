@@ -44,6 +44,9 @@ os.makedirs(LIVE_DIR, exist_ok=True)
 JOURNAL = os.path.join(ROOT, "fm_demo_journal.jsonl")
 STATE = os.path.join(ROOT, "fm_demo_state.json")
 RISK_PCT = 0.25
+# F33/F31/F29 (SL 3 ATR): kdyz se 0,25 % nevejde ani do minimalniho lotu brokera (SPX500mini 1 lot ~0,34 %, ETH ~0,29 %),
+# vezme se minimalni lot, pokud riziko u SL nepresahne tento strop (2026-11-11, souhlas uzivatele). NAS100mini (~2,1 %) dal ne.
+F2X_MINLOT_MAX_RISK_PCT = 0.5
 SL_MIN_SPREADS = 3
 M1_DAYS = 75
 # uzivatel vypina PC kolem 20:00 (2026-11-05) -> intradenni obchody zavrit pred vypnutim, nove jen do 19:00 (test: 22:00)
@@ -250,7 +253,9 @@ def prague_hour(ts):
 
 
 # ---------------------------------------------------------------- prikazy
-def lots_for(mk, d, entry, sl, balance):
+def lots_for(mk, d, entry, sl, balance, minlot_cap_pct=None):
+    """Loty pro riziko RISK_PCT u SL. minlot_cap_pct: kdyz vyjde min nez minimalni lot, vezme se minimalni lot,
+    pokud jeho riziko u SL je nejvys minlot_cap_pct % zustatku (jen F33/F31/F29)."""
     si = mt5.symbol_info(mk)
     otype = mt5.ORDER_TYPE_BUY if d == 1 else mt5.ORDER_TYPE_SELL
     loss1 = mt5.order_calc_profit(otype, mk, 1.0, entry, sl)
@@ -261,6 +266,8 @@ def lots_for(mk, d, entry, sl, balance):
     step = si.volume_step or 0.01
     lots = np.floor(raw / step + 1e-9) * step
     if lots < si.volume_min:
+        if minlot_cap_pct and si.volume_min * -loss1 <= balance * minlot_cap_pct / 100:
+            return si.volume_min, raw
         return None, raw
     return round(min(lots, si.volume_max), 8), raw
 
@@ -287,13 +294,19 @@ def open_trade(name, mk, d, sl, tp, sig_t, live):
     if dist < SL_MIN_SPREADS * spread:
         return f"SL jen {dist / spread:.1f}x spread"
     bal = mt5.account_info().balance
-    lots, raw = lots_for(mk, d, entry, sl, bal)
+    cap = F2X_MINLOT_MAX_RISK_PCT if cfg.get("custom") else None
+    lots, raw = lots_for(mk, d, entry, sl, bal, cap)
+    otype = mt5.ORDER_TYPE_BUY if d == 1 else mt5.ORDER_TYPE_SELL
     if not lots:
-        return f"velikost {raw} pod minimem brokera" if raw else "nelze spocitat velikost"
+        if not raw:
+            return "nelze spocitat velikost"
+        minrisk = -mt5.order_calc_profit(otype, mk, si.volume_min, entry, sl) / bal * 100
+        return f"velikost {raw:.3f} lotu pod minimem brokera {si.volume_min} (min. lot by riskoval {minrisk:.2f} % uctu)"
+    risk_pct = round(-mt5.order_calc_profit(otype, mk, lots, entry, sl) / bal * 100, 3)
     digits = si.digits
     sl_r, tp_r = round(sl, digits), round(tp, digits)
     rec = dict(strategy=name, market=mk, dir="long" if d == 1 else "short", signal_t=sig_t, entry_ref=entry, sl=sl_r, tp=tp_r,
-               lots=lots, spread=spread, rr=round((tp - entry) * d / dist, 2), live=live)
+               lots=lots, spread=spread, rr=round((tp - entry) * d / dist, 2), risk_pct=risk_pct, live=live)
     if live:
         res = mc.place_market_order(mk, "long" if d == 1 else "short", lots, sl_r, tp_r, comment=name[:31], dry_run=False,
                                     magic=cfg["magic"])
@@ -301,7 +314,7 @@ def open_trade(name, mk, d, sl, tp, sig_t, live):
     else:
         rec.update(action="suchy beh")
     journal(rec)
-    log(f"  >>> {name} {mk} {rec['dir']} {lots} lot @ {entry} SL {sl_r} TP {tp_r} (RR {rec['rr']}) - {rec['action']}")
+    log(f"  >>> {name} {mk} {rec['dir']} {lots} lot @ {entry} SL {sl_r} TP {tp_r} (RR {rec['rr']}, riziko {risk_pct} %) - {rec['action']}")
     return rec["action"]
 
 

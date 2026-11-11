@@ -142,7 +142,13 @@ Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle
     - ETHUSD (1 lot) 288 $ = 0,29 %;
     - BTCUSD (0,01) 69 $ = 0,07 %.
   - Runner by vrátil „velikost pod minimem brokera“. Simulátor má stejné SL i riziko, takže skutečné obchody F33 a F31 vetuje Risk a sbírá jen stínová data.
-  - Chyba nasazení z 9. 11. Oprava čeká na rozhodnutí uživatele.
+  - Chyba nasazení z 9. 11.
+  - **Opraveno 11. 11. 13:20 (souhlas uživatele „ano, zatím testujeme normálně dál“).**
+    - `F2X_MINLOT_MAX_RISK_PCT = 0.5`: když se u F33, F31 a F29 0,25 % nevejde do minimálního lotu, vezme se minimální lot, pokud jeho riziko u SL je nejvýš 0,5 %.
+    - Výsledek: SPX500mini 1 lot (0,34 %) a ETH 1 lot (0,29 %) se obchodují, BTC dál 0,25 %. **NAS100mini (2,1 %) dál vynechán**, symbol NAS100 (futures, spread 2,25) se nepoužívá kvůli shodě s testem.
+    - FM strategie beze změny. Log i deník teď ukazují skutečné riziko obchodu a u odmítnutí i riziko minimálního lotu.
+    - Restart: proces runneru ukončen, smyčka `start_fm_demo.cmd` od Windows ho spustila znovu (13:20:31 LIVE NA DEMU).
+  - Malý účet (10 000 Kč) se řeší až před live, demo zůstává na 100 000 $.
   - Kontext: dotaz uživatele, kolik by teoreticky vydělal z 10 000 Kč. F33 je jediná ověřená strategie: 2019–2025 průměrně +4,1 R(ATR) za rok, nejhorší rok 2020 −10,3, nejlepší 2022 +15,6.
     - Při 0,25 % na pozici je to asi +0,34 % ročně (+34 Kč), při 1 % asi +1,4 % (+136 Kč), při 2 % asi +2,7 % (+272 Kč).
     - S 10 000 Kč (~457 $) F33 obchodovat nejde: nejmenší pozice SPX500mini riskuje ~74 % účtu.
