@@ -133,6 +133,19 @@ Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle
 - **2026-11-09 (kontrola ve 12:05):** runner od 8:04 bez chyb, kontroly 13/13 trhů, 0 otevřených pozic, zůstatek 100 220 $ (celkem +220 $ = +0,22 %, 1 obchod).
   - 8:21 signál F13 EURUSD short **neproveden: SL jen 2,6× spreadu** (pojistka runneru chce aspoň 3×).
   - F29 v 7:52 rozhodla BTC i ETH tento týden mimo trh (28denní výnos −10,6 % a −16,2 %).
+- **2026-11-11 – NÁLEZ: F33 a F31 na demu neotevřou ani jeden obchod, F29 jen BTC.**
+  - SL 3 ATR20 a riziko 0,25 % (250 $) nestačí na minimální lot brokera. Ztráta u SL při minimálním lotu:
+    - SPX500mini (1 lot) 338 $ = 0,34 %;
+    - NAS100mini (1 lot) 2 116 $ = 2,1 %;
+    - US30mini 2,3 %;
+    - NAS100 (min 0,01) 423 $ = 0,42 %;
+    - ETHUSD (1 lot) 288 $ = 0,29 %;
+    - BTCUSD (0,01) 69 $ = 0,07 %.
+  - Runner by vrátil „velikost pod minimem brokera“. Simulátor má stejné SL i riziko, takže skutečné obchody F33 a F31 vetuje Risk a sbírá jen stínová data.
+  - Chyba nasazení z 9. 11. Oprava čeká na rozhodnutí uživatele.
+  - Kontext: dotaz uživatele, kolik by teoreticky vydělal z 10 000 Kč. F33 je jediná ověřená strategie: 2019–2025 průměrně +4,1 R(ATR) za rok, nejhorší rok 2020 −10,3, nejlepší 2022 +15,6.
+    - Při 0,25 % na pozici je to asi +0,34 % ročně (+34 Kč), při 1 % asi +1,4 % (+136 Kč), při 2 % asi +2,7 % (+272 Kč).
+    - S 10 000 Kč (~457 $) F33 obchodovat nejde: nejmenší pozice SPX500mini riskuje ~74 % účtu.
 - **2026-11-11 – proč demo skoro neobchoduje.** `scratch/demo_replay.py` přehrál funkce CAND runneru na datech MT5 (jen čtení).
   - **Za ~12 týdnů (od 8/2026) je 32 signálů, tj. 2–3 týdně.** Rozdělení: F13 23, F12 4, F16 3, F14 1, F20 1, F15 0. Od 27. 10. jen 5.
   - **Runner žádný signál nepropásl.** Všechny 3 signály během běhu dema (5., 9. a 10. 11.) viděl. Mimo 7–19 h padl jen 1 z 32 signálů a o víkendu žádný, takže večerní vypínání PC skoro nic nestojí.
