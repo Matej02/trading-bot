@@ -90,3 +90,8 @@ aktualizovano: 2026-11-03
     - riziko 3 %: medián 2–3 roky, do 12 měsíců 1–3 %, propadne 13–15 %;
     - riziko 5 %: medián ~13 měsíců, do 12 měsíců 9–12 %, propadne 51–64 %.
   - Závěr: samotná F33 (~8 obchodů ročně, 1–3 % za rok) je na zkoušku moc pomalá. Na financovaném účtu by rozumné riziko dávalo desítky tisíc Kč ročně. Ověřit u firmy: časový limit zkoušky, rušení účtu za neaktivitu, držení přes víkend, EA. Přepnutí účtu i obchodování na propce dělá uživatel, ne Claude.
+- 2026-11-11: „Ale jedeme všechny strategie, ne jen F33? Používáme všechny, ne?“ → ano, na demu i na Vercelu běží všechny. Do výnosu je započítaná jen F33, protože jen ta prošla testem.
+  - F12–F16 a F20: neověřené, F13 na delší historii neprošla. Očekávaný přínos kolem nuly, přidají jen kolísání.
+  - F31 (kandidát) by při stejném chování jako 2019–26 přidala ~+2,2 R ročně (n 104 za ~7,8 roku × +0,164 R), tj. +0,7 % při riziku 1 %. 2013–18 ale drift neměla.
+  - F29 kontrolou neprošla (t 1,33), Momentum neověřené.
+  - Optimisticky F33 + F31 při 1 %: ~2,1 % ročně, na financovaném 100k s podílem 80 % asi 37 000 Kč.
