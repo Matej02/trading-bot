@@ -56,3 +56,14 @@ aktualizovano: 2026-11-03
     - U prop firmy nejdřív ověřit, že nabízí MT5 a povoluje EA a automatické obchody (i držení přes zprávy a víkend). Limity runneru nastavit podle jejích pravidel (denní ztráta, max. propad).
     - Pro běh 24/5 je potřeba VPS ([[FM live test na MT5 demu#Možnost: virtuální PC (VPS) pro běh 24/7 (návrh 2026-11-05)|VPS]]).
   - Podmínka zůstává: jen strategie s ověřenou výhodou, viz [[FM live test na MT5 demu#Kdy reálné peníze (2026-11-07)|Kdy reálné peníze]].
+- 2026-11-11: **Live účet bude malý, asi 10 000 Kč (~457 $), ne statisíce.** „Chtěl bych, aby to stále fungovalo i s 10 000 korun.“
+  - Rozbor (nejmenší pozice u brokera vůči 457 $, signály 8–11/2026):
+    - forex F12/F13 (EURUSD, GBPUSD) jde, nejmenší pozice riskuje 0,1–0,2 % účtu;
+    - zlato a stříbro 2,2–2,8 % (moc);
+    - SPX500mini intradenní 1,5 %;
+    - NAS100mini 7–12 %;
+    - F33/F31 (stop 3 ATR na indexech) 74 % a víc;
+    - F29 BTC 15 %.
+  - U současného brokera jde s 10 000 Kč obchodovat jen forexová část FM strategií. Ověřená F33 ne.
+  - Na celé portfolio by byl potřeba účet s mikro pozicemi, tj. centový účet nebo indexové CFD od 0,01 lotu kontraktu 1 $/bod, a to v MT5 s povolenými EA. Broker je volba uživatele.
+  - Výnos v % na velikosti účtu nezávisí. F33 dává asi 1–3 % ročně podle rizika, z 10 000 Kč tedy desítky až stovky Kč.
