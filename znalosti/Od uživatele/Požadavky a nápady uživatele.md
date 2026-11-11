@@ -67,3 +67,6 @@ aktualizovano: 2026-11-03
   - U současného brokera jde s 10 000 Kč obchodovat jen forexová část FM strategií. Ověřená F33 ne.
   - Na celé portfolio by byl potřeba účet s mikro pozicemi, tj. centový účet nebo indexové CFD od 0,01 lotu kontraktu 1 $/bod, a to v MT5 s povolenými EA. Broker je volba uživatele.
   - Výnos v % na velikosti účtu nezávisí. F33 dává asi 1–3 % ročně podle rizika, z 10 000 Kč tedy desítky až stovky Kč.
+- 2026-11-11: „Když to přepneme na 10 000, co se změní, zvlášť když to nemáme hlavně otestované?“
+  - **Závěr:** demo se do režimu 10 000 Kč nepřepíná. Výsledky v % zůstanou stejné, jen by se zmenšily pozice a vypadly obchody, o kterých už víme z výpočtu, že se nevejdou. Demo by mělo méně obchodů, a tedy méně dat o provedení.
+  - Rozhoduje ověřená výhoda strategií. Malý účet (broker s mikro pozicemi) řešit až před live.
