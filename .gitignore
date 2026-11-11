@@ -32,3 +32,7 @@ fm_demo_log.txt
 
 # zalohy nastaveni MT5 (sifrovane prihlaseni) - nikdy do repa
 scratch/mt5_config_*/
+
+# pohled na grafy (TradingView) - snimky obrazovky a denik biasu jen na disku
+znalosti/Přílohy/Grafy/
+scratch/grafy/

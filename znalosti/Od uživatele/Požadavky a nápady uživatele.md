@@ -95,3 +95,4 @@ aktualizovano: 2026-11-03
   - F31 (kandidát) by při stejném chování jako 2019–26 přidala ~+2,2 R ročně (n 104 za ~7,8 roku × +0,164 R), tj. +0,7 % při riziku 1 %. 2013–18 ale drift neměla.
   - F29 kontrolou neprošla (t 1,33), Momentum neověřené.
   - Optimisticky F33 + F31 při 1 %: ~2,1 % ročně, na financovaném 100k s podílem 80 % asi 37 000 Kč.
+- 2026-11-11: „Potřebuju ještě vyřešit, abys reálně sledoval TradingView, chápeš.“ → uživatel vybral „ty se díváš na grafy“ (ne alerty, ne kontrolu signálů). Naplánovaná úloha 8:05 a 14:05 v pracovní dny, viz [[Pohled na grafy (TradingView)]].
