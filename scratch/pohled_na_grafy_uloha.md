@@ -19,7 +19,8 @@ Jsi analytik grafů pro výzkumný projekt simulovaného obchodního bota v `D:\
    - `SIGNAL` = signál;
    - `>>>` = obchod otevřený (`- provedeno`);
    - `--- neprovedeno` = signál zamítnutý pojistkou;
-   - `<<<` = obchod zavřený.
+   - `<<<` = obchod zavřený runnerem (časový výstup).
+   - Zavření na TP nebo SL dělá broker a do logu se nezapisuje. U obchodu bez řádku `<<<` proto napiš „otevřen, výsledek (TP/SL/čas) v logu není“.
    - Shrň je krátce (strategie, trh, směr, vstup, SL, TP). Když nic, napiš „žádné“.
 5. **Rozbor a zápis biasu:** u každého trhu urči:
    - **denní graf:** trend a struktura (vyšší/nižší vrcholy), kde je cena vůči PDH/PDL;

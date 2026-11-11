@@ -152,7 +152,10 @@ Otevřené pozice jsou u brokera, ne na PC. Runner na serveru je převezme podle
   - Kontext: dotaz uživatele, kolik by teoreticky vydělal z 10 000 Kč. F33 je jediná ověřená strategie: 2019–2025 průměrně +4,1 R(ATR) za rok, nejhorší rok 2020 −10,3, nejlepší 2022 +15,6.
     - Při 0,25 % na pozici je to asi +0,34 % ročně (+34 Kč), při 1 % asi +1,4 % (+136 Kč), při 2 % asi +2,7 % (+272 Kč).
     - S 10 000 Kč (~457 $) F33 obchodovat nejde: nejmenší pozice SPX500mini riskuje ~74 % účtu.
-- **2026-11-11 14:15 – druhý provedený obchod dema:** F12 Můčka NAS100mini short, 3,0 lotu @ 28 293,8, SL 28 360,38, TP 28 125,24 (RR 2,53, riziko 0,199 %). V 15:40 asi −65 $ (−0,33 R). Intradenní, zavře se nejpozději v 19:45.
+- **2026-11-11 14:15 – druhý provedený obchod dema:** F12 Můčka NAS100mini short, 3,0 lotu @ 28 293,8, SL 28 360,38, TP 28 125,24 (RR 2,53, riziko 0,199 %). V 15:40 asi −65 $ (−0,33 R). **Zavřeno na TP v 15:47:33 (po 1 h 32 min), +505,68 $ = +2,53 R.** Zůstatek 100 725,68 $ (2 obchody: +220 a +506).
+  - Úloha Pohled na grafy měla v 15:32 na NAS100 bias long, tedy proti obchodu. Je to první datový bod, nic z něj neplyne.
+  - F12 jako celek je v testu bez výhody (OOS +0,06 R, n 98). NAS100 samotný vypadal dobře (OOS +0,78 R, n 24), ale na S&P se neopakoval (−0,47 R). Jeden obchod nic nedokazuje.
+  - Pozn.: zavření brokerem na TP/SL se do `fm_demo_log.txt` nezapisuje, log zná jen časové výstupy runneru (`<<<`). Bot se nemění (pokyn uživatele), jen evidovat.
 - **2026-11-11 – proč demo skoro neobchoduje.** `scratch/demo_replay.py` přehrál funkce CAND runneru na datech MT5 (jen čtení).
   - **Za ~12 týdnů (od 8/2026) je 32 signálů, tj. 2–3 týdně.** Rozdělení: F13 23, F12 4, F16 3, F14 1, F20 1, F15 0. Od 27. 10. jen 5.
   - **Runner žádný signál nepropásl.** Všechny 3 signály během běhu dema (5., 9. a 10. 11.) viděl. Mimo 7–19 h padl jen 1 z 32 signálů a o víkendu žádný, takže večerní vypínání PC skoro nic nestojí.

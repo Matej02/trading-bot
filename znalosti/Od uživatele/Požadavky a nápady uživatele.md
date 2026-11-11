@@ -103,3 +103,4 @@ aktualizovano: 2026-11-03
   - **TradingView:** bez placeného plánu žádné napojení. S placeným plánem (Essential+, dvoufázové ověření) jen alerty poslané botovi (webhook), ne data svíček. Automatické prohlížení a stahování zůstává zakázané i v placené verzi.
   - **Výhody úlohy:** přehled dvakrát denně bez uživatele, úrovně a plán na killzone v Obsidianu, nezávislá kontrola proti signálům bota, a hlavně měření, jestli čtení grafu přidává něco proti pravidlům (rozhodnutí po 30 dnech).
   - **Nevýhody:** neobchoduje, zisk sama nedělá, výhoda zatím neprokázaná, čerpá limit Claude.
+- 2026-11-11: „Dobře, nech to běžet do vyhodnocení. A ještě projdi poslední obchod, který byl dnes, jen mi sepiš info o něm.“ → úloha Pohled na grafy běží do vyhodnocení (~23. 12.). Obchod F12 NAS100 short: TP, +505,68 $ (+2,53 R), viz [[FM live test na MT5 demu]].
