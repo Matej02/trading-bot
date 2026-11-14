@@ -18,14 +18,21 @@ Uživatel poslal export už v sobotu, protože o víkendu nic neběží. V páte
 - 29 otevřených pozic: 26 momentum, 2 průraz D1 (ETH, BTC short) a 1 další. Plovoucí zisk/ztráta v exportu není.
 - Účet není zastavený, denní limit nebyl překročen.
 
-## Chyba: zdvojený běh momenta 10. 11. (oprava čeká na souhlas)
+## Chyba: zdvojený běh momenta 10. 11. (opraveno 14. 11., commit 13ca7b8)
 - Denní rozhodnutí momenta (15:00 UTC) proběhlo **dvakrát**, v 16:00:37 a v 16:07:52 Praha.
 - Obě zavřela stejné 4 pozice se stejným id: FRA_40mini, NZDJPY, XAUUSD, GAUUSD.
 - **Zůstatek je správně.** Započítal se jen druhý běh, zůstatek = součet bez prvního běhu.
 - **Historie a log jsou špatně.** V `closed` a v CSV jsou 4 fantomové obchody za −230,71 $.
 - Statistiky ze seznamu uzavřených obchodů jsou tedy zkreslené. Součet `closed` dává +60,13 $ místo +290,84 $.
 - Pravděpodobná příčina: stav z prvního běhu se ztratil (účet a pozice se přepsaly, zatímco log a `closed` se jen připisují) a druhý běh rozhodl znovu. 10. 11. byl den častých nasazení. 11.–13. 11. se to neopakovalo.
-- **Podle pravidla „chyby opravit hned“ by se měla opravit.** Uživatel ale 11. 11. řekl „na bota teď nesahej“, takže oprava (zámek na denní běh, odstranění duplicit podle id) čeká na jeho souhlas.
+- **Mechanismus podle kódu (nejpravděpodobnější, sedí na log i zůstatek):** karta prohlížeče v pozadí ztratila řízení (lease 2 min vypršel), server (cron) odbavil denní momentum a karta po probuzení se starým stavem udělala totéž znovu. Uložení zastaralého stavu server nekontroloval.
+- **Oprava (uživatel schválil 14. 11. „A udělej“):**
+  - Stav má číslo verze (`sim:rev`). Každé uložení posílá `baseRev`. Když se liší od verze na serveru, server uložení odmítne (`stale`) a zařízení načte celý stav znovu jako sledující.
+  - Převzetí a reset verzi nekontrolují.
+  - Načtení i export berou u stejného id pozice jen poslední záznam (ten je v zůstatku).
+  - Test se souborovou databází: 11/11 OK. `tsc` a `next build` čisté.
+  - Nasazeno 14. 11. 11:08 a první běh cronu v 11:10 na nové verzi bez chyby.
+- **Dopad:** stará otevřená karta (starý kód bez verze) už nic neuloží, stačí ji obnovit (F5).
 
 ## Chování podle pravidel (jen zapsat, neměnit)
 - **Vzaté obchody:**

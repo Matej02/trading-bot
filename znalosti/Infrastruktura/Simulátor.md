@@ -76,3 +76,5 @@ Každé pondělí od 16. 11. uživatel pošle export (obchody, deník, data). Pr
   - týdně jen chyby a odchylky;
   - **technické vyhodnocení po konci prosince, v pondělí 4. 1. 2027** (simulátor i MT5 demo, viz [[FM live test na MT5 demu#Kdy reálné peníze (2026-11-07)|Kdy reálné peníze]]).
   - Ziskovost se z dema za pár týdnů prokázat nedá. Ukazuje ji jen test na historii.
+
+- 2026-11-14: ochrana proti zdvojenému běhu (verze stavu `sim:rev`, odmítnutí zastaralého uložení, historie bez duplicit podle id), commit 13ca7b8. Viz [[Export simulátoru 2026-11-14]].
