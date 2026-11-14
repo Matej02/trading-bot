@@ -47,3 +47,21 @@ Zadání uživatele (2026-11-11): „Potřebuju vyřešit, abys reálně sledova
 - Cizí feed se s brokerem rozchází. U F13 byla shoda Yahoo × broker jen ~50 %, protože sweep stojí na jednom ticku.
 - Slabina MT5 je historie s dírami (EURUSD chybí 10/2025–10/2026). Testy proto jedou na HistData a Yahoo.
 - Lepší data = výběr lepšího brokera před live (spolu s malým účtem).
+
+## Povolení pro běh bez dozoru (2026-11-14)
+
+- 12.–14. 11. každý běh spadl, protože čekal na schválení příkazu a u PC nikdo nebyl. Žádná poznámka za 12. a 13. 11. nevznikla.
+
+- Se souhlasem uživatele (14. 11.) jsou v `C:\Users\korda\Desktop\Video\.claude\settings.local.json` trvalá pravidla:
+
+  - spouštět jen `python -I "D:\Trading bot\scratch\grafy_yahoo.py"` (i s argumenty);
+
+  - číst soubory v `D:\Trading bot`;
+
+  - zapisovat jen do `D:\Trading bot\znalosti\Grafy`.
+
+- Všechno ostatní se dál ptá.
+
+- Zadání úlohy smí jen tyhle nástroje: čas bere z prvního řádku výstupu skriptu, log čte přes Grep.
+
+- Ověření: první běh v pondělí 16. 11. v 8:05 (upozornění na dokončení je zapnuté).
