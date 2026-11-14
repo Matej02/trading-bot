@@ -165,6 +165,15 @@ export interface LoadResult {
   lease: Lease | null;
   now: number;
   serverTick: { at: number; msg: string } | null; // posledni beh bota na serveru (24/7)
+  rev: number; // cislo verze ulozeneho stavu (kazde ulozeni +1)
+}
+
+/** Odpoved na ulozeni. stale = mezitim ulozil nekdo jiny, zmeny se nezapsaly (zastaraly stav). */
+export interface SaveResult {
+  ok: boolean;
+  lease: Lease | null;
+  rev?: number;
+  stale?: boolean;
 }
 
 export interface SaveBody {
@@ -172,6 +181,7 @@ export interface SaveBody {
   label: string;
   takeover?: boolean; // prevzit rizeni od jineho zarizeni
   reset?: boolean; // smazat vse a zacit znovu
+  baseRev?: number; // verze stavu, ze ktere zarizeni vychazi (jina nez na serveru = zastaraly stav)
   core?: CoreState;
   journalNew?: Deliberation[];
   journalUpd?: Deliberation[];

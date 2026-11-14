@@ -1,7 +1,7 @@
 // Volani serveru z prohlizece (stav, prihlaseni, uvolneni rizeni).
 import type { AiAnswer, AiContext } from "./aiPrompt";
 import type { Calendar } from "./calendar";
-import type { Lease, LoadResult, SaveBody } from "./types";
+import type { LoadResult, SaveBody, SaveResult } from "./types";
 
 export interface Res<T> {
   status: number; // 0 = bez spojeni
@@ -23,7 +23,7 @@ const json = (body: unknown, keepalive = false): RequestInit => ({
 
 export const apiLoad = (light: boolean) => call<LoadResult>(`/api/state?journal=300${light ? "&light=1" : ""}`);
 export const apiSave = (b: SaveBody, keepalive = false) =>
-  call<{ ok: boolean; lease: Lease | null }>("/api/state", json(b, keepalive && JSON.stringify(b).length < 60_000));
+  call<SaveResult>("/api/state", json(b, keepalive && JSON.stringify(b).length < 60_000));
 export const apiLogin = (password: string) => call<{ ok: boolean }>("/api/login", json({ password }));
 export const apiLogout = () => call<{ ok: boolean }>("/api/logout", { method: "POST" });
 
@@ -39,7 +39,7 @@ export async function apiCalendar(): Promise<Calendar | null> {
 /** Co bot potrebuje od okoli: v prohlizeci pres API, na serveru (bot 24/7) primo databaze a Gemini. */
 export interface Backend {
   load(light: boolean): Promise<Res<LoadResult>>;
-  save(b: SaveBody, keepalive?: boolean): Promise<Res<{ ok: boolean; lease: Lease | null }>>;
+  save(b: SaveBody, keepalive?: boolean): Promise<Res<SaveResult>>;
   ai(ctx: AiContext): Promise<Res<AiAnswer & { model: string; news?: number }>>;
   calendar(): Promise<Calendar | null>;
 }

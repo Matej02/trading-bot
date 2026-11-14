@@ -147,6 +147,7 @@ export class Bot {
   private viewTimer: ReturnType<typeof setInterval> | undefined;
   private dirty = noDirty();
   private resetNext = false; // pristi ulozeni nejdriv smaze vse na serveru (reset uctu)
+  private rev = 0; // verze stavu na serveru, ze ktere tohle zarizeni vychazi (ochrana proti zdvojenemu behu)
   private lastCoreSave = 0;
   private lastFullLoad = 0;
   private hooked = false;
@@ -228,6 +229,7 @@ export class Bot {
     this.journalTotal = r.journalTotal;
     this.lease = r.lease;
     this.serverTick = r.serverTick ?? null;
+    this.rev = r.rev ?? 0;
   }
 
   private startRunner() {
@@ -273,6 +275,7 @@ export class Bot {
     const res = await this.backend.save({ device: this.device.id, label: this.device.label, takeover: true, core: coreOf(this.state) });
     if (res.status === 200) {
       this.lease = res.data.lease ?? null;
+      this.rev = res.data.rev ?? this.rev;
       this.lastCoreSave = Date.now();
       this.startRunner();
     } else {
@@ -416,7 +419,7 @@ export class Bot {
     const d = this.dirty;
     this.dirty = noDirty();
     const body: SaveBody = {
-      device: this.device.id, label: this.device.label, core: coreOf(this.state), reset: this.resetNext || undefined,
+      device: this.device.id, label: this.device.label, core: coreOf(this.state), reset: this.resetNext || undefined, baseRev: this.rev,
       journalNew: [...d.journal.values()].filter((e) => e.isNew).map((e) => e.d),
       journalUpd: [...d.journal.values()].filter((e) => !e.isNew).map((e) => e.d),
       shadowsNew: [...d.shadows.values()].filter((e) => e.isNew).map((e) => e.x),
@@ -454,13 +457,23 @@ export class Bot {
     if (r.status === 200) {
       this.lastCoreSave = Date.now();
       this.lease = r.data.lease ?? null;
+      this.rev = r.data.rev ?? this.rev;
       this.syncNote = "";
       if (body.journalNew?.length) this.journalTotal += body.journalNew.length;
     } else if (r.status === 409) {
-      // bota mezitim prevzalo jine zarizeni - tady uz jen sledovat
+      // bota mezitim prevzalo jine zarizeni, nebo tohle zarizeni melo zastaraly stav (mezitim ulozil
+      // nekdo jiny) - neulozene zmeny zahodit, nacist cely stav znovu a dal jen sledovat
       this.lease = r.data.lease ?? null;
-      this.startViewer();
-      await this.refreshView();
+      if (r.data.stale) this.syncNote = "uložení odmítnuto – mezitím uložilo jiné zařízení, načítám aktuální stav";
+      this.dirty = noDirty();
+      if (this.serverRun) {
+        // beh na serveru konci; pristi beh (cron) nacte cerstvy stav
+        this.role = "viewer";
+      } else {
+        this.lastFullLoad = 0; // refreshView nacte vse, ne jen konec historie
+        this.startViewer();
+        await this.refreshView();
+      }
     } else if (r.status === 401) {
       this.restoreDirty(body);
       this.toLogin();
