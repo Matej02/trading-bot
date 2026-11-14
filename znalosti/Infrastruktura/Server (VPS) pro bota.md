@@ -33,6 +33,17 @@ Uživatel: „Budu to chtít dát na nějaký server. Řekni mi, kam to mám dá
 - Specializované forex VPS (nízká latence k brokerovi) stojí zhruba 20–30 $ měsíčně. Pro naše strategie (držení hodiny až dny) nízká latence nerozhoduje.
 - Bezplatné VPS od brokera bývá jen pro živé účty s vkladem nebo objemem. U demo účtu zřejmě ne.
 
+## Nejlevnější funkční volba (upřesněno 2026-11-14)
+- **Contabo Cloud VPS 4 + Windows Server licence, měsíční platba, datacentrum v EU (Německo):**
+  - 4 vCPU, 8 GB RAM, 100 GB SSD;
+  - asi 6,60 € měsíčně při měsíčním závazku (24měsíční závazek zhruba 5,30–5,50 €), podle trackeru bez zřizovacího poplatku;
+  - Windows licence asi 4,99 € měsíčně;
+  - **celkem zhruba 11–14 € měsíčně (asi 280–350 Kč), DPH podle košíku.**
+- Levnější by byl jen Linux s Wine bez Windows licence. Ušetří ~5 €, ale Python balíček MT5 tam neběží oficiálně, takže to nefunguje spolehlivě.
+- **Úloha grafů zůstane na PC.** Běží v 8:05 a 14:05, kdy je PC zapnuté. Claude desktop na Windows Serveru není jistý (aplikace je pro Windows 10/11).
+- Nevýhody Contaba: sdílený výkon a pomalejší podpora. Pro kontrolu co 15 minut to nevadí.
+- Zdroje cen: [Contabo VPS](https://contabo.com/en/vps/), [Contabo Windows licence](https://contabo.com/en/windows-licenses), [Toolradar](https://toolradar.com/tools/contabo/pricing), [Valebyte](https://valebyte.com/en/providers/contabo/).
+
 ## Doporučení
 - Windows VPS s 8 GB RAM v EU za zhruba 10–16 $ měsíčně, např. Contabo Cloud VPS s Windows licencí. Pokud jen MT5 a runner, stačí 4 GB.
 - **Postup:**

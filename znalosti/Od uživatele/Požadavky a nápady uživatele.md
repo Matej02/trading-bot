@@ -111,3 +111,4 @@ aktualizovano: 2026-11-03
 - 2026-11-14: „A udělej, B mi lépe vysvětli.“ → oprava zdvojeného běhu v simulátoru nasazena (13ca7b8), viz [[Export simulátoru 2026-11-14]]. B (trvalé povolení úlohy grafů) vysvětleno, čeká na rozhodnutí.
 - 2026-11-14: „Ano, nastav B.“ → trvalá povolení pro úlohu grafů (jen skript grafů, čtení `D:\Trading bot`, zápis do `znalosti\Grafy`), zadání úlohy upravené, viz [[Pohled na grafy (automaticky)]].
 - 2026-11-14: „V pondělí mi napiš, jak to dopadlo“ (úloha grafů) a „budu to chtít dát na nějaký server, kam nejlevněji nebo zdarma, aby to bylo funkční jako teď“ → [[Server (VPS) pro bota]]: zdarma nic spolehlivého pro Windows + MT5 + Python, doporučen Windows VPS 4–8 GB v EU za ~10–16 $ měsíčně.
+- 2026-11-14: „A co nejlevnější možnost, ale aby tam vše fungovalo, jak má?“ → Contabo Cloud VPS 4 (8 GB) + Windows licence, měsíčně, zhruba 11–14 € (asi 280–350 Kč). Úloha grafů zůstane na PC. Viz [[Server (VPS) pro bota]].
