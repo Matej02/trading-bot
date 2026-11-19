@@ -34,3 +34,17 @@ Zadání uživatele (2026-11-19): „Dobře, pokračuj dalšími testy.“
 5. Převis kladný aspoň v 60 % let.
 
 Skript `scratch/f48_gotobi.py`, výstup `research_data/f48/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f48/souhrn.txt`.
+
+| Část | n gotobi | Gotobi R | Ostatní R | Převis | t |
+|---|---|---|---|---|---|
+| Vývoj HistData 2010–18 | 683 | +0,008 | −0,020 | **+0,028** | **3,02** |
+| Kontrola broker 2019–26 | 546 | −0,005 | −0,005 | 0,000 | −0,05 |
+| Druhý zdroj HistData 2019–25 | 517 | −0,010 | −0,014 | +0,004 | 0,38 |
+| EURJPY broker 2019–26 | 546 | +0,021 | +0,013 | +0,007 | 0,86 |
+
+- Popis: broker 2010–2018 převis +0,021 (t 2,36), stejný obraz jako HistData. Data jsou tedy v pořádku.
+- **Bod 2 NE ⇒ BEZ VÝHODY.** Gotobi efekt byl zřetelný do 2018 a od 2019 zmizel (převis ~0, 2025 −0,077).
+- I ve vývoji byl samotný obchod po nákladech jen +0,008 R. Výhoda byla hlavně relativní (ostatní dny záporné), spread v tokijském ránu ji skoro sežere.

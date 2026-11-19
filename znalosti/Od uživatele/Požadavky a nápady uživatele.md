@@ -136,3 +136,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19: „1 ano, 2 ano“ → (1) F46 v simulátoru na Vercelu (d1e87a4, shoda 318/318 a 565/565). (2) RSI(2) v MT5 runneru (f969c78, shoda 4449/4449 a 307/307, vstup ráno 7–10, prakticky jen SPX kvůli min. lotu). Platí po restartu runneru a obnovení stránky simulátoru.
 - 2026-11-19: „Hotovo, restartoval jsem bota a obnovil stránku.“ → runner běží od 16:21 s RSI2 v seznamu strategií, kontrola 16:30 bez chyb. Vercel na d1e87a4. RSI2 vstupuje jen ráno 7–10.
 - 2026-11-19: „Dobře, pokračuj dalšími testy.“ → [[F48 Gotobi efekt USDJPY]] (plán předem).
+- 2026-11-19 (výsledek F48): gotobi bez výhody. Do 2018 převis t 3,0, od 2019 nula.
