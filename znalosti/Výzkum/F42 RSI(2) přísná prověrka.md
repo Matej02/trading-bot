@@ -63,3 +63,9 @@ Souhrn `research_data/f42/souhrn.txt`. Hodnoceno po dnech vstupu (SPX, NAS, US30
   - v simulátoru běží od 9. 11. v učícím režimu, sledování dopředu tedy probíhá;
   - na MT5 demu ani live zatím není a bez souhlasu uživatele se nepřidává.
 - **Další krok (návrh):** popisná kontrola odolnosti (práh RSI 5/10/15, max. dní 5/10/15). Pravidla se nemění, jen se ověří, že výsledek nestojí na jednom nastavení.
+
+## Kontrola odolnosti (popisná, 2026-11-19)
+`research_data/f42/odolnost.txt`, skript `scratch/f42_odolnost.py`. Práh RSI 5/10/15 × max. dní 5/10/15:
+- **všech 9 variant kladných ve vývoji i kontrole, převis nad driftem kladný všude** (vývoj t 1,63–2,90, kontrola t 1,62–2,90);
+- přísnější práh (RSI < 5) dává víc na obchod (+0,12 R), ale má poloviční počet obchodů.
+- **⇒ Výsledek nestojí na jednom nastavení. Plánované nastavení (RSI < 10, 10 dní) je uprostřed.**

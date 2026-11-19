@@ -57,7 +57,7 @@ def nights(d0, d1):
     return int(((w < 5) & (w != 3)).sum() + 3 * (w == 3).sum())
 
 
-def run(mk, d):
+def run(mk, d, thr=10, maxd=10):
     """Vrati (signal_trades, baseline_trades) jako DataFrame (entry_day, R)."""
     b = L.BROKER[mk]
     rel = float(np.median(b["spreadByHour"])) / b.get("priceScale", 1.0) / float(d.close.iloc[-1])
@@ -70,7 +70,7 @@ def run(mk, d):
     O, H, Lo, C = d.open.to_numpy(), d.high.to_numpy(), d.low.to_numpy(), c.to_numpy()
     S5, A = sma5.to_numpy(), atr.to_numpy()
     up = (c > sma200).to_numpy()
-    sig = (up & (rsi < 10).to_numpy())
+    sig = (up & (rsi < thr).to_numpy())
     idx = d.index
     n = len(d)
 
@@ -82,11 +82,11 @@ def run(mk, d):
         E = O[e]
         risk = 3 * A[i]
         stop = E - risk
-        for k in range(e, min(e + 10, n)):
+        for k in range(e, min(e + maxd, n)):
             if Lo[k] <= stop:
                 X = min(stop, O[k]) if k > e else stop
                 break
-            if C[k] > S5[k] or k == e + 9:
+            if C[k] > S5[k] or k == e + maxd - 1:
                 X = C[k]
                 break
         else:
@@ -121,11 +121,11 @@ def by_day(T):
     return T.groupby("day").R.mean()
 
 
-def evaluate(mks, src, a, b):
+def evaluate(mks, src, a, b, thr=10, maxd=10):
     Ss, Bs = [], []
     for mk in mks:
         d = yahoo(mk) if src == "yahoo" else broker(mk)
-        s, bb = run(mk, d)
+        s, bb = run(mk, d, thr, maxd)
         Ss.append(s)
         Bs.append(bb)
     s, bb = by_day(pd.concat(Ss)), by_day(pd.concat(Bs))
@@ -136,37 +136,44 @@ def evaluate(mks, src, a, b):
 
 
 US = ["SPX500mini", "NAS100mini", "US30mini"]
-say("F42 RSI(2) – long nad SMA200 při RSI(2) < 10, vstup otevření dalšího dne, ven nad SMA5 / stop 3 ATR / 10 dní")
-say("srovnání = stejné vstupy a výstupy ve všech dnech nad SMA200 (drift); hodnoceno po dnech vstupu; R = výsledek / 3 ATR")
-say("=" * 100)
-R = {"vyvoj": evaluate(US, "yahoo", DEV0, SPLIT), "kontrola": evaluate(US, "yahoo", SPLIT, None),
-     "broker": evaluate(US, "broker", SPLIT, None)}
-for k, v in R.items():
-    say(f"{k:9s} signál:   {LB.fmt(v['sig'])}")
-    say(f"{'':9s} srovnání: {LB.fmt(v['base'])}")
-    say(f"{'':9s} převis {v['diff']:+.3f} R, t {v['t']:+.2f}")
-O = {}
-for mk in ("GER_30mini", "GBR_100mini", "FRA_40mini"):
-    O[mk] = evaluate([mk], "yahoo", DEV0, None)
-    say(f"{mk:11s} (1990–2026): signál {LB.fmt(O[mk]['sig'])} | převis {O[mk]['diff']:+.3f}, t {O[mk]['t']:+.2f}")
-full = evaluate(US, "yahoo", DEV0, None)
-pos, line = [], []
-for y in sorted(set(full["s"].index.year)):
-    dy = full["s"][full["s"].index.year == y].mean() - full["b"][full["b"].index.year == y].mean()
-    pos.append(dy > 0)
-    line.append(f"{y}:{dy:+.2f}")
-share = float(np.mean(pos))
-for i in range(0, len(line), 10):
-    say("   " + "  ".join(line[i:i + 10]))
-say(f"převis kladný v {sum(pos)} z {len(pos)} let ({share:.0%})")
-say("ROZHODNUTÍ podle pravidel zapsaných předem")
-v, k, br = R["vyvoj"], R["kontrola"], R["broker"]
-c = [("1) vývoj: signál > 0, převis > 0, t >= 2,0", v["sig"]["m"] > 0 and v["diff"] > 0 and v["t"] >= 2.0, f"{v['sig']['m']:+.3f}, převis {v['diff']:+.3f}, t {v['t']:+.2f}"),
-     ("2) kontrola: signál > 0, převis > 0, t >= 1,5", k["sig"]["m"] > 0 and k["diff"] > 0 and k["t"] >= 1.5, f"{k['sig']['m']:+.3f}, převis {k['diff']:+.3f}, t {k['t']:+.2f}"),
-     ("3) DAX, FTSE, CAC převis > 0", all(O[m]["diff"] > 0 for m in O), ", ".join(f"{m[:3]} {O[m]['diff']:+.3f}" for m in O)),
-     ("4) broker: signál > 0 a převis > 0", br["sig"]["m"] > 0 and br["diff"] > 0, f"{br['sig']['m']:+.3f}, převis {br['diff']:+.3f}"),
-     ("5) převis kladný v >= 55 % let", share >= 0.55, f"{share:.0%}")]
-for nm, ok, val in c:
-    say(f"   {nm}: {'ANO' if ok else 'NE'} ({val})")
-say(f"   => {'VÝHODA (prošlo vše)' if all(x[1] for x in c) else 'BEZ VÝHODY'}")
-open(os.path.join(OUT, "souhrn.txt"), "w", encoding="utf-8").write(chr(10).join(LINES))
+
+
+def main():
+    say("F42 RSI(2) – long nad SMA200 při RSI(2) < 10, vstup otevření dalšího dne, ven nad SMA5 / stop 3 ATR / 10 dní")
+    say("srovnání = stejné vstupy a výstupy ve všech dnech nad SMA200 (drift); hodnoceno po dnech vstupu; R = výsledek / 3 ATR")
+    say("=" * 100)
+    R = {"vyvoj": evaluate(US, "yahoo", DEV0, SPLIT), "kontrola": evaluate(US, "yahoo", SPLIT, None),
+         "broker": evaluate(US, "broker", SPLIT, None)}
+    for k, v in R.items():
+        say(f"{k:9s} signál:   {LB.fmt(v['sig'])}")
+        say(f"{'':9s} srovnání: {LB.fmt(v['base'])}")
+        say(f"{'':9s} převis {v['diff']:+.3f} R, t {v['t']:+.2f}")
+    O = {}
+    for mk in ("GER_30mini", "GBR_100mini", "FRA_40mini"):
+        O[mk] = evaluate([mk], "yahoo", DEV0, None)
+        say(f"{mk:11s} (1990–2026): signál {LB.fmt(O[mk]['sig'])} | převis {O[mk]['diff']:+.3f}, t {O[mk]['t']:+.2f}")
+    full = evaluate(US, "yahoo", DEV0, None)
+    pos, line = [], []
+    for y in sorted(set(full["s"].index.year)):
+        dy = full["s"][full["s"].index.year == y].mean() - full["b"][full["b"].index.year == y].mean()
+        pos.append(dy > 0)
+        line.append(f"{y}:{dy:+.2f}")
+    share = float(np.mean(pos))
+    for i in range(0, len(line), 10):
+        say("   " + "  ".join(line[i:i + 10]))
+    say(f"převis kladný v {sum(pos)} z {len(pos)} let ({share:.0%})")
+    say("ROZHODNUTÍ podle pravidel zapsaných předem")
+    v, k, br = R["vyvoj"], R["kontrola"], R["broker"]
+    c = [("1) vývoj: signál > 0, převis > 0, t >= 2,0", v["sig"]["m"] > 0 and v["diff"] > 0 and v["t"] >= 2.0, f"{v['sig']['m']:+.3f}, převis {v['diff']:+.3f}, t {v['t']:+.2f}"),
+         ("2) kontrola: signál > 0, převis > 0, t >= 1,5", k["sig"]["m"] > 0 and k["diff"] > 0 and k["t"] >= 1.5, f"{k['sig']['m']:+.3f}, převis {k['diff']:+.3f}, t {k['t']:+.2f}"),
+         ("3) DAX, FTSE, CAC převis > 0", all(O[m]["diff"] > 0 for m in O), ", ".join(f"{m[:3]} {O[m]['diff']:+.3f}" for m in O)),
+         ("4) broker: signál > 0 a převis > 0", br["sig"]["m"] > 0 and br["diff"] > 0, f"{br['sig']['m']:+.3f}, převis {br['diff']:+.3f}"),
+         ("5) převis kladný v >= 55 % let", share >= 0.55, f"{share:.0%}")]
+    for nm, ok, val in c:
+        say(f"   {nm}: {'ANO' if ok else 'NE'} ({val})")
+    say(f"   => {'VÝHODA (prošlo vše)' if all(x[1] for x in c) else 'BEZ VÝHODY'}")
+    open(os.path.join(OUT, "souhrn.txt"), "w", encoding="utf-8").write(chr(10).join(LINES))
+
+
+if __name__ == "__main__":
+    main()
