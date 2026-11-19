@@ -122,3 +122,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19 (výsledek): F40 (F33 na FTSE, CAC, EuroStoxx, IBEX) bez výhody. Vývoj +0,401 R (t 4,55), kontrola 2019+ jen +0,094 R (t 0,64). Do bota nic. Zjištění: F33 je od 2019 všude slabší.
 - 2026-11-19: „Dobře, pokračuj dalším krokem.“ → [[F41 F31 na evropských indexech 2010–2018]] (plán předem): nezávislé ověření kandidáta F31.
 - 2026-11-19 (výsledek F41): F31 na DAX/EuroStoxx 2010–2018 neprošla (+0,046 R, t 0,63). F31 zůstává kandidát, efekt je jen od 2019.
+- 2026-11-19: „Nechám bota běžet ještě čas, ale zajímá mě, jestli můžeme dál testovat, jelikož hledáme něco, co nám bude fungovat.“ → ano. Nejdřív přísná prověrka toho, co už běží v simulátoru (F42 RSI(2), F43 Průraz F2), pak nové typy (F44 struktura VIX, F45 filtr trendu pro prop).
