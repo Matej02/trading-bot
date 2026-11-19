@@ -144,3 +144,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19 (výsledek F52): kombinace F33 + RSI(2) pomáhá (korelace 0,07, Sharpe 1,09 / 0,97, propad −7,9 R). Pro prop 1–1,5 % riziko a firma bez časového limitu.
 - 2026-11-19: „Pokračuj dalšími testy.“ → [[F53 a F54 RSI(2) na kovech a měnách]] (plán předem): hledání výhody mimo US indexy.
 - 2026-11-19 (výsledky F53/F54): RSI(2) na kovech (prodělává) a měnách (nula) bez výhody. RSI(2) funguje jen na US indexech.
+- 2026-11-19: „Pokračuj do té doby, dokud nenajdeš něco, co je pozitivní a co bude profitabilní.“ → pokračuje se v sérii testů, každý s plánem předem a se stejnou laťkou. Upozornění: při hledání „dokud něco neprojde“ roste šance na náhodný úspěch, proto laťka zůstává přísná a i to, co projde, jde nejdřív jen do simulátoru na sledování dopředu. [[F55 až F57 Začátek měsíce, IBS a dny zpráv]] (plán předem).
