@@ -143,3 +143,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19: „Ano, pokračuj kombinací F33 a RSI2.“ → [[F52 Kombinace F33 a RSI(2) pro prop účet]] (plán předem).
 - 2026-11-19 (výsledek F52): kombinace F33 + RSI(2) pomáhá (korelace 0,07, Sharpe 1,09 / 0,97, propad −7,9 R). Pro prop 1–1,5 % riziko a firma bez časového limitu.
 - 2026-11-19: „Pokračuj dalšími testy.“ → [[F53 a F54 RSI(2) na kovech a měnách]] (plán předem): hledání výhody mimo US indexy.
+- 2026-11-19 (výsledky F53/F54): RSI(2) na kovech (prodělává) a měnách (nula) bez výhody. RSI(2) funguje jen na US indexech.

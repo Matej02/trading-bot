@@ -42,3 +42,16 @@ Zadání uživatele (2026-11-19): „Pokračuj dalšími testy.“
 5. Převis kladný aspoň v 55 % let.
 
 Skript `scratch/f53_f54.py`, výstup `research_data/f53/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f53/souhrn.txt`.
+
+| Test | Vývoj | Kontrola 2019–26 | Broker 2019–26 | Jiné trhy | Roky | Verdikt |
+|---|---|---|---|---|---|---|
+| **F53** kovy | −0,079 R, převis −0,062 (t −2,02) | −0,072, převis −0,059 | −0,123, převis −0,109 | XPT +0,007 | 27 % | **BEZ VÝHODY** |
+| **F54** měny | −0,012, převis −0,002 | +0,003, převis +0,014 | +0,023, převis +0,033 | kříže −0,001 | 48 % | **BEZ VÝHODY** |
+
+- **Kovy:** návrat po přestřelu **prodělává**, nejvíc stříbro (−0,139 R). Zlato a stříbro mají spíš sklon v pohybu pokračovat, ne se vracet.
+  - Opačné pravidlo (pokračování) se tady nehodnotí, nebylo v plánu. Případně jako nový test s vlastním plánem.
+- **Měny:** kolem nuly, žádný pár výrazně kladný.
+- **Závěr:** výhoda RSI(2) je specifická pro **US akciové indexy** (F42 ano, Evropa F49 ne, kovy ne, měny ne).
