@@ -79,3 +79,19 @@ Uživatel: „Chtěl bych tam přidat jen to, u čeho jsme si absolutně jistí,
   3. Nejhorší série ztrát ne horší než nejhorší série v testu 1990–2026.
   4. Bez technických odchylek: signály, vstupy i výstupy odpovídají pravidlům testu (kontrola proti logu).
 - **Teprve když platí vše,** navrhnout uživateli přidání na demo nebo live. Ani pak automaticky, rozhoduje uživatel.
+
+## Na MT5 demu od 2026-11-19 (souhlas uživatele „2 ano“)
+- Uživatel upřesnil: MT5 bot jen strategie s velkou šancí, kandidáti do simulátoru. RSI(2) má ze všech testů šanci největší (5/5 + odolnost 9/9).
+- **Runner `RSI2`** (magic 20261142), SPX500mini, NAS100mini, US30mini, commit f969c78:
+  - signál z uzavřené denní svíčky MT5, jen pracovní dny;
+  - **vstup ráno 7–10 Praha** dalšího dne (PC je v noci vypnuté, v testu otevření dne);
+  - stop 3 ATR20, TP daleko (30 ATR);
+  - výstup při prvním běhu po zavření nad SMA5, nebo po 10. dni.
+- **Kontroly:**
+  - shoda rozhodování runneru s testem: signál 4449/4449 dní, den výstupu 307/307 (`scratch/f42_parita_runner.py`);
+  - ranní vstup a výstup na datech brokera 2019–26: +0,058 R místo +0,066 R (`research_data/f42/ranni_vstup.txt`).
+- **Velikost pozice (MT5, 19. 11.):**
+  - SPX500mini min. lot = riziko 0,41 %, obchoduje se (strop 0,5 %);
+  - NAS100mini (2,5 %) a US30mini (2,7 %) se odmítnou kvůli minimálnímu lotu. **V praxi tedy jen SPX.**
+- **Platí až po restartu runneru** (zavřít okno runneru a spustit `start_fm_demo.cmd`, nebo restart PC).
+- Sledování dopředu podle pravidla výše (≥ 30 obchodů).

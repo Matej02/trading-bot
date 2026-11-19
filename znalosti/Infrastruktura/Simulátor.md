@@ -78,3 +78,5 @@ Každé pondělí od 16. 11. uživatel pošle export (obchody, deník, data). Pr
   - Ziskovost se z dema za pár týdnů prokázat nedá. Ukazuje ji jen test na historii.
 
 - 2026-11-14: ochrana proti zdvojenému běhu (verze stavu `sim:rev`, odmítnutí zastaralého uložení, historie bez duplicit podle id), commit 13ca7b8. Viz [[Export simulátoru 2026-11-14]].
+
+- 2026-11-19: přidán F46 zlato v asijské seanci (kandidát, `f46_zlato_asie_h1`), commit d1e87a4. Viz [[F46 a F47 Zlato a dluhopisy]].

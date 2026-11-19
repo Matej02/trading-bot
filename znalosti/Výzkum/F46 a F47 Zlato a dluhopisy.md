@@ -58,3 +58,10 @@ Souhrn `research_data/f46/souhrn.txt`, skript `scratch/f46_f47.py`.
 - Vývoj: rozdíl +0,48 p. b. za měsíc, t 0,65. Kontrola: +0,31 p. b., t 0,33.
 - Sharpe strategie v kontrole 0,63 proti 0,82 u stále long.
 - **⇒ BEZ VÝHODY.** Měsíční směr dluhopisů nepředpovídá zlato.
+
+## F46 v simulátoru od 2026-11-19 (souhlas uživatele „1 ano“)
+- Systém `f46_zlato_asie_h1` (XAUUSD 1h):
+  - long na zavření svíčky 22:00–23:00 Londýn (po–čt), ven na zavření svíčky 06:00–07:00 Londýn;
+  - SL 3 denní ATR jako pojistka. V registru `unvalidated`.
+- Shoda TS s testem: vstupy 318/318, výstupy 565/565 (broker H1 2024–26). Commit d1e87a4, nasazeno 19. 11. 16:13.
+- **Jen sledování dopředu, ne MT5.** Otevřenou stránku simulátoru je potřeba obnovit (F5), jinak běží starý kód.

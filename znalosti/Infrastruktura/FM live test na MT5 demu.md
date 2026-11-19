@@ -242,3 +242,5 @@ Na pokyn uživatele „chci to na bota na MT5 dát“. Kód: `f2x_live.py` (rozh
   - Obchody jsou v MT5 v záložkách Obchodování a Historie (komentář = název strategie).
   - Kontrola každých 15 min ukazuje i „hlídá F33 … / F31 … / F29 …“ s nejbližšími termíny.
 
+
+- **2026-11-19 – RSI(2) přidána do runneru** (magic 20261142, SPX/NAS/US30, vstup ráno 7–10, výstup nad SMA5 / 10 dní, stop 3 ATR), commit f969c78. NAS a US30 odmítne min. lot. Viz [[F42 RSI(2) přísná prověrka]]. Platí po restartu runneru.
