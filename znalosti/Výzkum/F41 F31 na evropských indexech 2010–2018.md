@@ -31,3 +31,22 @@ Chybí nezávislé ověření na jiných trzích v letech 2010–2018. Data DAX 
 - **NE:** F31 zůstává jen kandidát a efekt je spíš jev posledních let.
 
 Skript `scratch/f41_fomc_evropa.py`, výstup `research_data/f41/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f41/souhrn.txt`. Chybné ticky vyřazeny: DAX 4 minuty, EuroStoxx 2.
+
+| Část | n událostí | R | t | výhra |
+|---|---|---|---|---|
+| DAX+ES 2010–2018 | 63 | +0,046 | 0,63 | 60 % |
+| stejné okno v ostatní dny | 1959 | +0,017 | 0,53 | 52 % |
+| DAX 2010–2018 | 63 | +0,086 | 1,00 | 68 % |
+| EuroStoxx 2010–2018 | 62 | +0,003 | 0,05 | 55 % |
+| DAX 2019–2025 (HistData) | 52 | **+0,204** | **2,43** | 62 % |
+
+- Převis nad driftem 2010–2018: +0,029 R (t 0,36). Za 2013–2018 +0,018 R.
+- **Bod 1 NE ⇒ NEPROŠLO. F31 zůstává jen kandidát.**
+- **Co to znamená:**
+  - Drift před FOMC je **jev posledních let (od 2019)**, na US i evropských indexech stejně.
+  - Před 2019 skoro nebyl, ani na nezávislých trzích.
+  - DAX 2019–2025 z druhého zdroje potvrzuje broker (+0,204 vs. +0,228 R), data jsou tedy v pořádku.
+  - Podle pravidla uživatele („jen když 100% jistí“) se F31 do bota nepřidává. Pokračuje jen sledování dopředu na demu, jak běží od 9. 11.
