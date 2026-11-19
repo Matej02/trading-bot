@@ -6,7 +6,12 @@ datum: 2026-11-19
 
 Zadání uživatele (2026-11-19): „Pokračuj dalšími testy.“ Jen test, bot se nemění.
 
-**Data (nic se nestahuje):** Binance BTCUSDT a ETHUSDT 1h od 2017, broker BTC/ETH H1 2019–2026. FOMC kalendář jako v [[F31 Drift před FOMC|F31]]. Rozdělení jako u [[F29 Krypto momentum|F29]]: vývoj 2017–2021, kontrola 2022–2026.
+**Data (nic se nestahuje):** FOMC kalendář jako v [[F31 Drift před FOMC|F31]]. Rozdělení jako u [[F29 Krypto momentum|F29]]: vývoj 2014–2021, kontrola 2022–2026.
+- **Oprava plánu PŘED výpočtem (2026-11-19):** Binance data jsou jen od 2019 (ne od 2017). Proto:
+  - vývoj = broker BTC H1 2014–2021;
+  - kontrola = broker H1 2022–2026;
+  - druhý zdroj = Binance 1h 2019–2026;
+  - ETH = broker H1 od 2017.
 
 **Společné:**
 - **Náklady:** spread brokera (BTC ~24 $, ETH ~2,8 $) a swap long za noc (krypto každou noc).
@@ -24,10 +29,10 @@ Zadání uživatele (2026-11-19): „Pokračuj dalšími testy.“ Jen test, bot
 - **Srovnání:** stejné okno v ostatní dny.
 
 **Pravidla rozhodnutí (u každého testu zvlášť), ANO jen když platí vše:**
-1. Vývoj Binance 2017–2021: událost > 0 a převis > 0 s t ≥ 2,0.
-2. Kontrola Binance 2022–2026: událost > 0 a převis > 0 s t ≥ 1,5.
+1. Vývoj (broker 2014–2021): událost > 0 a převis > 0 s t ≥ 2,0.
+2. Kontrola (broker 2022–2026): událost > 0 a převis > 0 s t ≥ 1,5.
 3. ETH: převis > 0 (celé období).
-4. Broker BTC 2019–2026: převis > 0.
+4. Druhý zdroj Binance BTC 2019–2026: převis > 0.
 5. Převis kladný aspoň v 60 % let.
 
 Skript `scratch/f50_f51.py`, výstup `research_data/f50/souhrn.txt`.
