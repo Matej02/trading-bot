@@ -42,3 +42,5 @@ Otázka uživatele: „Jak je možné se dopracovat k tomu, abychom tohle mohli 
 - Termín určuje krok 1. Dokud není portfolio ověřených strategií, prop zkouška má podle výpočtu spíš zápornou očekávanou hodnotu (poplatek).
 
 Doporučení konkrétních firem: [[Prop firmy – doporučení]] (2026-11-11).
+
+- **2026-11-19 ([[F52 Kombinace F33 a RSI(2) pro prop účet|F52]]):** F33 + RSI(2) dohromady asi +4 R ročně, korelace 0,07, největší propad −7,9 R (2003–2026). Při 1 % riziku asi +4 % ročně a propad do −8 %. Zkouška +10 % za 12 měsíců jen při 2 % (54 %), proto firma bez časového limitu a 1–1,5 % riziko.
