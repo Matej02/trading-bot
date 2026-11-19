@@ -47,3 +47,18 @@ Zadání uživatele (2026-11-19): „Pokračuj do té doby, dokud nenajdeš něc
 5. Převis kladný aspoň v 55 % let (Yahoo, celé období).
 
 Skript `scratch/f55_f57.py`, výstup `research_data/f55/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f55/souhrn.txt`.
+
+| Test | Vývoj | Kontrola 2019–26 | Broker 2019–26 | Jiné trhy (EU) | Roky | Verdikt |
+|---|---|---|---|---|---|---|
+| **F55** přelom měsíce | +0,193 R, převis +0,094 (t 1,16) | +0,183, převis +0,067 (t 0,38) | +0,436, převis +0,342 | převis +0,199 | 49 % | **BEZ VÝHODY** |
+| **F56** IBS | +0,028, převis +0,002 (t 0,17) | +0,057, převis +0,035 (t 1,51) | +0,047, převis +0,040 | +0,007 | 57 % | **BEZ VÝHODY** |
+| **F57** den CPI/NFP | +0,093, převis +0,070 (t 1,23) | +0,068, převis +0,040 (t 0,62) | −0,001, převis −0,030 | +0,049 | 59 % | **BEZ VÝHODY** |
+
+- **F55:** obchody vydělávají, ale skoro jen díky obecnému růstu indexů. Načasování na přelom měsíce u US indexů po nákladech nic nepřidává.
+  - DAX a FTSE měly převis t 2,7. To je ale zjištění **po výpočtu**, takže nový test by potřeboval nová data.
+- **F56:** od 2019 slušné, do 2018 nula. 22 % vstupů se kryje s RSI(2).
+- **F57:** správný směr, ale slabé a u brokera nula.
+- **Další v plánu (nezapsáno, nepočítáno):** F58 „měna slábne ve svém obchodním čase“ (Breedon a Ranaldo 2013) na FX majorech (HistData + broker H1 od 2010), F59 Turnaround Tuesday.
