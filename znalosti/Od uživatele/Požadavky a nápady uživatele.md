@@ -137,3 +137,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19: „Hotovo, restartoval jsem bota a obnovil stránku.“ → runner běží od 16:21 s RSI2 v seznamu strategií, kontrola 16:30 bez chyb. Vercel na d1e87a4. RSI2 vstupuje jen ráno 7–10.
 - 2026-11-19: „Dobře, pokračuj dalšími testy.“ → [[F48 Gotobi efekt USDJPY]] (plán předem).
 - 2026-11-19 (výsledek F48): gotobi bez výhody. Do 2018 převis t 3,0, od 2019 nula.
+- 2026-11-19 (výsledek F49): RSI(2) na evropských indexech bez výhody (kontrola 2019+ −0,014 R). RSI(2) zůstává jen US.

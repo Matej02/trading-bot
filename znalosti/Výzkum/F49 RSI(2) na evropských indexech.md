@@ -34,3 +34,18 @@ Zadání uživatele (2026-11-19): „Dobře, pokračuj dalšími testy.“
 5. Převis kladný aspoň v 55 % let.
 
 Skript `scratch/f49_rsi2_evropa.py`, výstup `research_data/f49/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f49/souhrn.txt`.
+
+| Část | Dní vstupu | Signál R | Převis | t |
+|---|---|---|---|---|
+| Vývoj 1990–2018 | | +0,054 | +0,048 | 2,32 |
+| Kontrola 2019–2026 | 187 | −0,014 | −0,013 | −0,35 |
+| Broker 2019–2026 | 152 | +0,019 | +0,015 | 0,38 |
+
+- **Po trzích 2019+:**
+  - DAX +0,077 R a EuroStoxx +0,074 R jsou kladné;
+  - FTSE −0,091, CAC −0,040 a IBEX −0,048 jsou ztrátové.
+- **Bod 2 NE ⇒ BEZ VÝHODY.** RSI(2) na evropských indexech od 2019 nefunguje, do MT5 se nepřidává.
+- Výhoda RSI(2) je tedy hlavně na **US indexech** (F42: kontrola +0,091 R). Odpovídá to literatuře: mean reversion je nejsilnější na US akciích.
