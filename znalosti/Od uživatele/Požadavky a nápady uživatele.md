@@ -139,3 +139,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19 (výsledek F48): gotobi bez výhody. Do 2018 převis t 3,0, od 2019 nula.
 - 2026-11-19 (výsledek F49): RSI(2) na evropských indexech bez výhody (kontrola 2019+ −0,014 R). RSI(2) zůstává jen US.
 - 2026-11-19: „Pokračuj dalšími testy.“ → [[F50 a F51 Krypto pondělí a FOMC]] (plán předem).
+- 2026-11-19 (výsledek F50/F51): krypto pondělí a FOMC drift na BTC bez výhody (správný směr, ale t 0,8–1,5).

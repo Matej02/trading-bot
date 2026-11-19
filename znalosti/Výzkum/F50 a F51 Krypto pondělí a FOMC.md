@@ -36,3 +36,15 @@ Zadání uživatele (2026-11-19): „Pokračuj dalšími testy.“ Jen test, bot
 5. Převis kladný aspoň v 60 % let.
 
 Skript `scratch/f50_f51.py`, výstup `research_data/f50/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f50/souhrn.txt`. Broker BTC H1 má souvislá data až od 2017, vývoj je tedy fakticky 2017–2021.
+
+| Test | Vývoj 2017–21 | Kontrola 2022–26 | Binance 2019–26 | ETH | Roky | Verdikt |
+|---|---|---|---|---|---|---|
+| **F50** pondělí | převis +0,084 (t 1,31), n 252 | +0,091 (t 1,43), n 214 | +0,070 (t 1,54) | +0,027 | 7 z 10 | **BEZ VÝHODY** (body 1, 2) |
+| **F51** před FOMC | +0,086 (t 0,83), n 39 | +0,094 (t 0,87), n 31 | +0,169 (t 1,91) | +0,109 | 5 z 10 | **BEZ VÝHODY** (body 1, 2, 5) |
+
+- **Oba efekty mají správný směr ve všech zdrojích,** ale nejsou statisticky průkazné. U F51 je málo událostí (8× ročně).
+- **F50 pondělí:** převis +0,07 až +0,09 R konzistentně ve všech obdobích, ale t pod hranicí. Do simulátoru ne, podle pravidel neprošel.
+- Do bota nic.
