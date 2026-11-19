@@ -108,3 +108,19 @@ Souhrn: `research_data/f36_f37/souhrn.txt`. Převis = průměr R v události −
   5. Převis kladný aspoň v 55 % let.
 
 Skript `scratch/f35_f38.py`, výstup `research_data/f38/souhrn.txt`.
+
+## Výsledky F35 a F38 (2026-11-19)
+Souhrn: `research_data/f38/souhrn.txt`, skript `scratch/f35_f38.py`.
+- **Oprava před výsledkem:** čas HistData FX a indexů je **New York včetně letního času**, ne pevný EST. Ověřeno na páteční uzávěrce: 16:59 NY v zimě i v létě. První běh s pevným EST byl v létě o hodinu posunutý. Platí jen druhý běh, pravidla rozhodnutí se neměnila.
+
+| Test | Vývoj 2010–18 | Kontrola 2019–26 | Druhý zdroj | Jiné trhy | Verdikt |
+|---|---|---|---|---|---|
+| **F35** fixing FX (EURUSD) | −0,105 R (t −1,63) | +0,003 R (t 0,04) | +0,020 R | GBPUSD −0,040, USDJPY +0,040 | **BEZ VÝHODY** (body 1, 2, 3, 5 NE) |
+| **F38** drift před ECB (DAX, převis) | **+0,218 R (t 3,21)**, výhra 70 % | +0,045 R (t 0,45) | −0,151 R* | EuroStoxx +0,196 (t 2,27), CAC +0,105 | **BEZ VÝHODY** (body 2 a 4 NE) |
+
+- **F35:** žádný efekt fixingu ve směru podle rozdílu výkonu akcií. Ve vývoji spíš opačně.
+- **F38:**
+  - 2010–2018 velmi silný (70 % výher, i na EuroStoxx), od 2019 slabý (+0,045 R). Roky s převisem 13 z 16.
+  - Je to zrcadlo F31 (tam slabé do 2018, silné od 2019). Podle pravidel neprošel, pravidla se nemění.
+  - *Bod 4 kazí 2 chybné ticky v HistData DAX 2019+ (skok cen ×3,7, 2020-06-15 a 2023-12-03), které nafukují „ostatní dny“. Ani bez nich by ale nevyšel bod 2 (kontrola t 0,45), verdikt se nemění.
+- **Poučení pro metodiku:** u HistData předem filtrovat chybné ticky (skok > 20 % za minutu).
