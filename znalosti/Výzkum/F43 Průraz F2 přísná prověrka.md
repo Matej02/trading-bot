@@ -37,3 +37,21 @@ Zadání uživatele (2026-11-19): „Ano, pokračuj kontrolou odolnosti a F43. P
 5. Převis kladný aspoň v 55 % let.
 
 Skript `scratch/f43_proraz.py`, výstup `research_data/f43/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f43/souhrn.txt`. Po dnech vstupu (9 trhů F2).
+
+| Část | Dní vstupu | Signál R | výhra | Srovnání (vstup kdykoli ve směru týdenního trendu) | Převis | t |
+|---|---|---|---|---|---|---|
+| Vývoj do 2018 | 945 | +0,159 | 43 % | +0,117 | +0,042 | 0,85 |
+| Kontrola 2019–2026 | 386 | +0,034 | 40 % | −0,023 | +0,057 | 0,80 |
+| Broker 2019–2026 | 353 | +0,164 | 44 % | −0,019 | +0,184 | 2,11 |
+| Jiné trhy (US30, FTSE, CAC, XAG, WTI) | 992 | −0,016 | 37 % | | +0,003 | 0,06 |
+
+- **Po trzích (celé období):** BTC +0,363 R a XAU +0,258 R jsou kladné. EURUSD −0,130, GBPUSD −0,068 a ETH −0,063 ztrátové.
+- **Body 1 a 2 NE ⇒ BEZ VÝHODY.**
+- **Co to znamená:**
+  - Do 2018 vydělávalo hlavně „obchodovat ve směru týdenního trendu“ (+0,117 R kdykoli). Samotný průraz k tomu skoro nic nepřidává (+0,04 R).
+  - Od 2019 trend-following na těchto trzích nevydělává.
+  - Holdout 2024–26 (+0,34 R), podle kterého byl Průraz označen `validated`, byl šťastné období (broker 2019+ +0,164 R, Yahoo jen +0,034 R).
+  - **Průraz F2 nesplňuje pravidlo uživatele „jen jisté“.** V simulátoru běží jako `validated`. Změna jen na pokyn uživatele.
