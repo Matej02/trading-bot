@@ -36,3 +36,25 @@ Dluhopisy broker nenabízí (žádné bondové CFD), proto slouží jen jako **s
   5. Sharpe strategie > stále long zlato, ve vývoji i v kontrole.
 
 Skript `scratch/f46_f47.py`, výstup `research_data/f46/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f46/souhrn.txt`, skript `scratch/f46_f47.py`.
+
+**F46 Zlato v asijské seanci:**
+
+| Část | n dní | R/den | Ostatní okna | Převis | t |
+|---|---|---|---|---|---|
+| Vývoj 2009–2018 | 1793 | +0,018 | −0,018 | **+0,036** | **5,10** |
+| Kontrola 2019–2026 | 936 | +0,020 | 0,000 | +0,019 | 2,03 |
+
+- Stříbro: převis +0,004 (samotné −0,088 R).
+- Po letech: kladné 16 z 18 let, převis kladný 17 z 18. Nejhorší třetina let −0,001 R.
+- **Podle hodiny začátku okna:** okna od 18 do 23 h Londýn kladná, okna od 2 do 17 h záporná. Zlato roste večer a v noci, v londýnské a newyorské seanci klesá.
+- **Bod 4 NE (−0,001, o vlásek) ⇒ BEZ VÝHODY** podle pravidel předem.
+- **Nejbližší kandidát ze všech testů:** statisticky silný a stálý, ale na obchod malý (+0,02 ATR denně). Na stříbře se neopakuje.
+- Podle pravidla uživatele: na MT5 ne. Do simulátoru na Vercel jen jako sledování dopředu, pokud uživatel chce.
+
+**F47 Dluhopisy → zlato:**
+- Vývoj: rozdíl +0,48 p. b. za měsíc, t 0,65. Kontrola: +0,31 p. b., t 0,33.
+- Sharpe strategie v kontrole 0,63 proti 0,82 u stále long.
+- **⇒ BEZ VÝHODY.** Měsíční směr dluhopisů nepředpovídá zlato.
