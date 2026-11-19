@@ -100,6 +100,43 @@ export function f31Exit(c: Candle[]): boolean {
   return hour === 12 && isFomcDay(date);
 }
 
+// ------------------------------------------------------------------ F46 zlato v asijske seanci (kandidat, 2026-11-19)
+
+const londonFmt = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hour12: false, weekday: "short",
+});
+
+/** Londynske datum, hodina a den v tydnu (0 = nedele) zacatku svicky. */
+export function londonParts(t: number): { date: string; hour: number; dow: number } {
+  const p = Object.fromEntries(londonFmt.formatToParts(new Date(t * 1000)).map((x) => [x.type, x.value]));
+  const dow = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(p.weekday);
+  return { date: `${p.year}-${p.month}-${p.day}`, hour: +p.hour % 24, dow };
+}
+
+/**
+ * Long na zavreni hodinove svicky 22:00-23:00 Londyn (vstup ve 23:00) v pondeli az ctvrtek, ven na zavreni svicky
+ * 06:00-07:00 Londyn (viz f46Exit). V testu bez stopu; tady SL 3 denni ATR jen jako pojistka.
+ */
+export function f46Signal(c: Candle[]): F2xSignal | null {
+  const last = c[c.length - 1];
+  if (!last) return null;
+  const { hour, dow } = londonParts(last.time);
+  if (hour !== 22 || dow < 1 || dow > 4) return null;
+  const a = dailyAtrFrom1h(c);
+  if (!a) return null;
+  return {
+    dir: "long", sl: last.close - 3 * a,
+    reason: "F46: zlato v asijské seanci – long 23:00 → 07:00 Londýn. Kandidát (2026-11-19): převis nad ostatními hodinami " +
+      "2009–18 t 5,1, 2019–26 t 2,0, 17 z 18 let; těsně neprošel (nejhorší třetina let ~0). SL 3 denní ATR jen jako pojistka.",
+  };
+}
+
+/** Vystup F46: na zavreni svicky 06:00-07:00 Londyn. */
+export function f46Exit(c: Candle[]): boolean {
+  const last = c[c.length - 1];
+  return !!last && londonParts(last.time).hour === 6;
+}
+
 // ------------------------------------------------------------------ F29 krypto momentum
 
 /** Na zavreni nedelni denni svicky: vynos za 28 dni > 0 -> long na tyden (vystup po 7 dnech pres maxHoldBars). */

@@ -6,7 +6,7 @@ import { fm13Signal } from "./fm13";
 import { fm14Signal } from "./fm14";
 import { fm15Signal } from "./fm15";
 import { fm16Signal } from "./fm16";
-import { f29Signal, f31Signal, f33Signal } from "./f2x";
+import { f29Signal, f31Signal, f33Signal, f46Signal } from "./f2x";
 import { MARKET_IDS, MARKETS, TRADE_IDS } from "./markets";
 import { lastFomcDate, nyParts, tradingDaysLeftInMonth } from "./usCalendar";
 import type { Candle, Dir, TF } from "./types";
@@ -23,7 +23,8 @@ export interface SystemDef {
   noTp?: boolean; // bez TP - ven az podle pravidla vystupu (exitRule), stopu nebo casu
   // ven: sma5 = denni svicka zavre nad SMA5 (long) / pod (short); monthEnd = zavreni posledniho obchodniho dne mesice (F33);
   // fomcDay = zavreni svicky 12:00-13:00 NY v den rozhodnuti FOMC (F31)
-  exitRule?: "sma5" | "monthEnd" | "fomcDay";
+  // londonMorning = zavreni svicky 06:00-07:00 Londyn (F46)
+  exitRule?: "sma5" | "monthEnd" | "fomcDay" | "londonMorning";
   feeds?: string[]; // pomocne trhy (stejny timeframe), ktere strategie potrebuje - bot je nacte a preda v barSignal
   window?: number; // kolik uzavrenych svicek dostane strategie (vychozi 400 u intradennich)
   rrr?: number; // vlastni TP v R (jinak podle nastaveni)
@@ -86,6 +87,14 @@ export const SYSTEMS: SystemDef[] = [
     desc: "Long od 14:00 NY v den před rozhodnutím FOMC, ven ve 13:00 NY v den rozhodnutí (oznámení 14:00), SL 3 denní ATR jako pojistka; " +
       "8× ročně. KANDIDÁT – test F31: 2019–26 +0,16 R na zasedání (t 2,08, kladné na S&P, Nasdaq, US30, DAX), ale 2013–18 bez " +
       `výhody. V testu výstup 13:55 NY. Termíny FOMC do ${lastFomcDate}, pak doplnit.`,
+  },
+  {
+    id: "f46_zlato_asie_h1", name: "Zlato v asijské seanci (kandidát F46)", tf: "1h",
+    markets: ["XAUUSD"], kind: "bar", holdsWeekends: false, maxHoldBars: 12, noTp: true, exitRule: "londonMorning", window: 600,
+    desc: "Long zlata ve 23:00 Londýn (pondělí–čtvrtek), ven v 07:00 Londýn; SL 3 denní ATR jen jako pojistka. KANDIDÁT – test F46 " +
+      "(2026-11-19, pravidla předem): převis nad stejně dlouhými okny jiných hodin 2009–18 +0,036 R (t 5,1), 2019–26 +0,019 R (t 2,0), " +
+      "kladný 17 z 18 let; těsně neprošel bod „nejhorší třetina let > 0“ (−0,001). Zlato roste večer a v noci, v Londýně a NY klesá. " +
+      "Malý zisk na obchod, na stříbře se neopakuje. Jen sledování dopředu v simulátoru, ne MT5.",
   },
   {
     id: "f29_krypto_mom_d1", name: "Krypto momentum 4 týdny – BTC, ETH (kandidát F29)", tf: "1d",
@@ -243,6 +252,10 @@ export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF
     const s = f29Signal(c);
     return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
   }
+  if (system === "f46_zlato_asie_h1") {
+    const s = f46Signal(c);
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
   if (system === "fm16_hak_m15") {
     if (!extra?.["1h"]) return null;
     const s = fm16Signal(c, extra["1h"]);
@@ -379,6 +392,9 @@ export function barStatus(system: string, c: Candle[], digits: number): { text: 
   }
   if (system === "f29_krypto_mom_d1") {
     return { text: "F29 – vyhodnocuje se na zavření neděle (výnos za 28 dní > 0 → long na týden)", tone: "wait" };
+  }
+  if (system === "f46_zlato_asie_h1") {
+    return { text: "F46 – long ve 23:00 Londýn (po–čt), ven v 07:00 Londýn", tone: "wait" };
   }
   if (system === "fm16_hak_m15") {
     return { text: "experiment F16 – na zavření 15m svíčky hlídá pullback vlny 4 do Fibo 0,618–0,75 s FVG", tone: "wait" };

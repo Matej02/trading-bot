@@ -122,5 +122,11 @@
    "status": "unvalidated",
    "note": "kandidát F29 (2026-11-08): 2014–21 t 4,07, 2022–26 t 1,33 (hranice 1,5) – těsně neprošlo, Sharpe lepší než stále long"
   }
+ },
+ "f46_zlato_asie_h1": {
+  "*": {
+   "status": "unvalidated",
+   "note": "kandidát F46 (2026-11-19): převis 23→07 Londýn nad ostatními hodinami 2009–18 t 5,1, 2019–26 t 2,0, 17 z 18 let; těsně neprošel (nejhorší třetina let −0,001) – sledovat dopředu"
+  }
  }
 }

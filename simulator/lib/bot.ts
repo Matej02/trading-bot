@@ -7,7 +7,7 @@ import { aiScore } from "./aiScore";
 import type { AiContext } from "./aiPrompt";
 import { blockedBy, decisionVerdict } from "./verdict";
 import { ema, rsiLast } from "./indicators";
-import { f31Exit, f33Exit } from "./f2x";
+import { f31Exit, f33Exit, f46Exit } from "./f2x";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKETS, quote, TRADE_IDS } from "./markets";
 import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from "./remote";
@@ -910,6 +910,10 @@ export class Bot {
       if (!f31Exit(closed)) return;
       out = () => true;
       why = "den FOMC 13:00 NY – ven před oznámením (F31)";
+    } else if (sys.exitRule === "londonMorning") {
+      if (!f46Exit(closed)) return;
+      out = () => true;
+      why = "07:00 Londýn – konec asijské seance (F46)";
     } else return;
     for (const p of s.broker.positions.filter((x) => x.system === systemId && x.market === id && x.openTime <= last.time + TF_SEC[sys.tf])) {
       if (out(p.dir)) this.closeAtMarket(p.id, why);
