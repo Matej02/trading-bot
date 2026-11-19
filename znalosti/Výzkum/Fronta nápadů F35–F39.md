@@ -75,3 +75,36 @@ Souhrn: `research_data/f36_f37/souhrn.txt`. Převis = průměr R v události −
 - **F37:** ve vývoji 1990–2018 žádný převis. Kladný je až zhruba od 2007 a v kontrole 2019–2026. Je to podobný obrázek jako u [[F31 Drift před FOMC|F31]], ale podle pravidel zapsaných předem neprošel. Pravidla se dodatečně nemění. Jen popis: v posledních letech kladný, nic víc.
 - **F36:** efekt z literatury v datech 1990–2018 slabý (t 1,44) a po 2019 obrácený. Zřejmě zmizel, když se o něm vědělo.
 - Další na řadě: F39 (momentum bez měn). F35 a F38 čekají na souhlas se stažením dat.
+
+## F35 a F38: plán (zapsán PŘED výpočtem, 2026-11-19)
+**Data (staženo se souhlasem uživatele 2026-11-19 „ano stáhni data a pokračuj“):**
+- HistData M1 EURUSD, GBPUSD, USDJPY 2010–2025, DAX (GRXEUR) 2010–2025, EuroStoxx (ETXEUR) 2010–2019, v `research_data/histdata/zip_fx`. Čas HistData = EST bez letního času (UTC−5), ověřuje se na páteční uzávěrce.
+- Termíny ECB (tiskové konference po měnověpolitickém zasedání) 2005–2026 z ecb.europa.eu v `research_data/f38/ecb_terminy.txt`. Vyřazeno 26. 10. 2014 (stress test, ne rozhodnutí) a 8. 7. 2021 (revize strategie).
+- Broker H1 2019–2026 s posunem času jako v `f2x_lib` (+1 h v britském letním čase).
+
+**F35 Měsíční fixing v FX:**
+- **Den:** poslední pracovní den měsíce s daty.
+- **Signál:** rozdíl = výnos S&P 500 − výnos EuroStoxx 50 (Yahoo, místní měna) od zavření posledního dne předchozího měsíce do zavření předposledního pracovního dne. Obchod jen při |rozdíl| ≥ 1 p. b.
+- **Směr:** US vedly (rozdíl > 0) → slabší USD → long EURUSD a GBPUSD, short USDJPY. Opačně naopak.
+- **Okno:** 10:00 → 16:00 Londýn (fixing WM/R v 16:00).
+- **Náklady:** spread brokera podle londýnské hodiny. R = výsledek / ATR20 denního rozpětí.
+- **ANO jen když platí vše:**
+  1. Vývoj (HistData 2010–2018) EURUSD > 0 a t ≥ 2,0.
+  2. Kontrola (broker 2019–2026) EURUSD > 0 a t ≥ 1,5.
+  3. GBPUSD i USDJPY (celé období) > 0.
+  4. Druhý zdroj (HistData 2019–2025) EURUSD > 0.
+  5. Lepší než stále long EURUSD ve stejném okně a měsících, ve vývoji i v kontrole.
+
+**F38 Drift před ECB:**
+- **Obchod:** long DAX od 13:30 Praha v předchozí pracovní den do 13:30 Praha v den rozhodnutí. Rozhodnutí se zveřejňuje ve 13:45, od 2022 ve 14:15.
+- Broker H1: 13:00 → 13:00 Praha.
+- **Náklady:** spread a swap (noc ze středy na čtvrtek 3×).
+- **Srovnání:** stejné 24h okno ve všech ostatních pracovních dnech. Rozhoduje převis nad driftem.
+- **ANO jen když platí vše:**
+  1. Vývoj (HistData DAX 2010–2018): událost > 0 a převis > 0, t ≥ 2,0.
+  2. Kontrola (broker DAX 2019–2026): událost > 0 a převis > 0, t ≥ 1,5.
+  3. EuroStoxx (HistData 2010–2018) i CAC (broker 2019+): převis > 0.
+  4. Druhý zdroj (HistData DAX 2019–2025): převis > 0.
+  5. Převis kladný aspoň v 55 % let.
+
+Skript `scratch/f35_f38.py`, výstup `research_data/f38/souhrn.txt`.
