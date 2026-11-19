@@ -49,4 +49,7 @@ Souhrn `research_data/f41/souhrn.txt`. Chybné ticky vyřazeny: DAX 4 minuty, Eu
   - Drift před FOMC je **jev posledních let (od 2019)**, na US i evropských indexech stejně.
   - Před 2019 skoro nebyl, ani na nezávislých trzích.
   - DAX 2019–2025 z druhého zdroje potvrzuje broker (+0,204 vs. +0,228 R), data jsou tedy v pořádku.
-  - Podle pravidla uživatele („jen když 100% jistí“) se F31 do bota nepřidává. Pokračuje jen sledování dopředu na demu, jak běží od 9. 11.
+  - **Pozor: F31 už v botovi je** (demo i simulátor od 9. 11., přidáno před pravidlem uživatele „jen když 100% jistí“). Podle nového pravidla by tam jako kandidát být neměla.
+  - Bez pokynu se ale nic nemění (ani přidání, ani odebrání). **Rozhodne uživatel:**
+    - nechat jako sledování dopředu na demu (riziko 0,25 %, 8× ročně);
+    - nebo vypnout.
