@@ -63,3 +63,15 @@ Technické vzorce (F22–F28) neprošly. Další nápady jsou proto ze stejné r
 5. Po letech: převis kladný aspoň v 55 % let.
 
 Skript `scratch/f36_f37.py`, výstup `research_data/f36_f37/souhrn.txt`.
+
+## Výsledky F36 a F37 (2026-11-19)
+Souhrn: `research_data/f36_f37/souhrn.txt`. Převis = průměr R v události − průměr R ostatních dní nebo týdnů (průměr SPX a NAS, náklady brokera).
+
+| Test | Vývoj 1990–2018 | Kontrola 2019–26 | Broker 2019+ | US30 / DAX | Roky s převisem | Verdikt |
+|---|---|---|---|---|---|---|
+| **F37** den před svátkem | převis −0,003 R (t −0,09) | **+0,133 R (t 2,11)** | +0,086 R | +0,021 / +0,124 | 59 % | **BEZ VÝHODY** (bod 1 NE) |
+| **F36** týden OPEX | převis +0,138 R (t 1,44) | −0,256 R (t −1,30) | −0,400 R | +0,177 / −0,083 | 62 % | **BEZ VÝHODY** (body 1–4 NE) |
+
+- **F37:** ve vývoji 1990–2018 žádný převis. Kladný je až zhruba od 2007 a v kontrole 2019–2026. Je to podobný obrázek jako u [[F31 Drift před FOMC|F31]], ale podle pravidel zapsaných předem neprošel. Pravidla se dodatečně nemění. Jen popis: v posledních letech kladný, nic víc.
+- **F36:** efekt z literatury v datech 1990–2018 slabý (t 1,44) a po 2019 obrácený. Zřejmě zmizel, když se o něm vědělo.
+- Další na řadě: F39 (momentum bez měn). F35 a F38 čekají na souhlas se stažením dat.
