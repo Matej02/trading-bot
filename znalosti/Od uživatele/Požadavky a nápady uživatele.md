@@ -142,3 +142,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19 (výsledek F50/F51): krypto pondělí a FOMC drift na BTC bez výhody (správný směr, ale t 0,8–1,5).
 - 2026-11-19: „Ano, pokračuj kombinací F33 a RSI2.“ → [[F52 Kombinace F33 a RSI(2) pro prop účet]] (plán předem).
 - 2026-11-19 (výsledek F52): kombinace F33 + RSI(2) pomáhá (korelace 0,07, Sharpe 1,09 / 0,97, propad −7,9 R). Pro prop 1–1,5 % riziko a firma bez časového limitu.
+- 2026-11-19: „Pokračuj dalšími testy.“ → [[F53 a F54 RSI(2) na kovech a měnách]] (plán předem): hledání výhody mimo US indexy.
