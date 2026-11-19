@@ -140,3 +140,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19 (výsledek F49): RSI(2) na evropských indexech bez výhody (kontrola 2019+ −0,014 R). RSI(2) zůstává jen US.
 - 2026-11-19: „Pokračuj dalšími testy.“ → [[F50 a F51 Krypto pondělí a FOMC]] (plán předem).
 - 2026-11-19 (výsledek F50/F51): krypto pondělí a FOMC drift na BTC bez výhody (správný směr, ale t 0,8–1,5).
+- 2026-11-19: „Ano, pokračuj kombinací F33 a RSI2.“ → [[F52 Kombinace F33 a RSI(2) pro prop účet]] (plán předem).
