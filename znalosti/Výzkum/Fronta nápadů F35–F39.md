@@ -148,3 +148,28 @@ Souhrn: `research_data/f38/souhrn.txt`, skript `scratch/f35_f38.py`.
   4. Lepší než stále long stejné trhy (se stejnými náklady) ve vývoji i v kontrole.
   5. Indexy i komodity zvlášť > 0 za celé období.
 - Skript `scratch/f39_mom.py`, výstup `research_data/f39/souhrn.txt`.
+
+## Výsledek F39 (2026-11-19)
+Souhrn: `research_data/f39/souhrn.txt`, skript `scratch/f39_mom.py`.
+
+| Část | Momentum | Stále long |
+|---|---|---|
+| Vývoj Yahoo 1990–2018 | +0,0221 R/den, t 3,01, Sharpe 0,55 | +0,0247, Sharpe 0,55 |
+| Kontrola Yahoo 2019–2026 | +0,0033, t 0,27, Sharpe 0,10 | +0,0319, Sharpe 0,74 |
+| Broker 2019–2026 | +0,0128, Sharpe 0,31 | +0,0434, Sharpe 0,72 |
+
+- Indexy i komodity zvlášť jsou kladné (Sharpe 0,35 a 0,40), ale **nikde nejsou lepší než prosté držení.**
+- **BEZ VÝHODY** (body 2 a 4 NE). Bez měn momentum jen kopíruje růst trhu, a to hůř. Potvrzuje to [[Momentum L=250]].
+
+## Shrnutí vlny F35–F39 (2026-11-19)
+- **Neprošlo nic:**
+  - F35 fixing FX;
+  - F36 OPEX;
+  - F37 den před svátkem (silné jen od 2019);
+  - F38 ECB (silné jen do 2018);
+  - F39 momentum bez měn.
+- **Vzorec:** kalendářní efekty z literatury jsou silné v jednom období a v druhém mizí (F31, F37, F38). Proto jsou důležité kontrola na novějších letech a pravidla předem. Jinak bychom si vybírali náhodu.
+- **Návrh dalšího kroku:** místo dalších nových nápadů rozšířit to, co prošlo:
+  - **F33 na další indexy.** US30 a DAX jsou už v testu kladné (+0,345 a +0,220 R), takže víc obchodů ze stejné ověřené výhody;
+  - nová kontrola F31 na DAX/EuroStoxx kolem FOMC.
+  - Rozhoduje uživatel.
