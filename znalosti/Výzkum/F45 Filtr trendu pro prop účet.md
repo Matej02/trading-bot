@@ -37,3 +37,19 @@ Zadání uživatele: „Pokračuj tedy“ (nové typy po [[Souhrn přínosů vý
 5. Broker 2019+: Calmar filtru > držení.
 
 Skript `scratch/f45_trend.py`, výstup `research_data/f45/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f45/souhrn.txt`. Portfolio SPX, NAS, US30, DAX.
+
+| Část | Filtr: CAGR / max DD / Calmar / Sharpe | Držení: CAGR / max DD / Calmar / Sharpe |
+|---|---|---|
+| Vývoj 1990–2018 | +7,5 % / −24,6 % / 0,31 / 0,67 | +8,1 % / −65,3 % / 0,12 / 0,52 |
+| Kontrola 2019–2026 | +8,8 % / −14,9 % / 0,59 / **0,79** | +14,0 % / −33,7 % / 0,42 / **0,82** |
+| Broker 2019–2026 | +9,6 % / −16,9 % / 0,57 / 0,89 | +14,0 % / −33,8 % / 0,41 / 0,77 |
+
+- **Po indexech:** Calmar lepší u SPX, NAS a DAX. U US30 stejný (0,12).
+- **Body 1, 2, 4, 5 ANO. Bod 3 NE** (Sharpe v kontrole 0,79 proti 0,82). **⇒ BEZ VÝHODY** podle pravidel předem, do bota ne.
+- **Popis (fakt, nic se nemění):**
+  - Filtr spolehlivě **zhruba poloviční propady** (2008: −13 % místo −40 %, 2022: −11 % místo −21 %).
+  - Daní za to je nižší výnos v rostoucích letech (2019: +7 % místo +27 %).
+  - Jako zdroj výhody to není. Jako **řízení rizika** pro prop účet je to doložený poznatek: prosté držení indexu má od 2019 propad −34 %, a to by limit −10 % porušilo i při malé páce.

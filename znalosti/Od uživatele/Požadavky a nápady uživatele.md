@@ -127,3 +127,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19: „Ano, pokračuj kontrolou odolnosti a F43. Pokračujme dál a pak dej info, co se nám může hodit celkově od všech, které tam aktuálně nemáme přidané.“ → odolnost RSI(2) 9/9 variant kladných; [[F43 Průraz F2 přísná prověrka]] (plán předem); potom souhrn přínosů.
 - 2026-11-19 (výsledky): F43 Průraz F2 bez výhody (převis t 0,85 / 0,80). Souhrn → [[Souhrn přínosů výzkumu (2026-11-19)]]: ověřené F33 a RSI(2). Chybí RSI(2) na MT5 demu (až po sledování a souhlasu).
 - 2026-11-19: „Pokračuj tedy.“ → [[F45 Filtr trendu pro prop účet]] (plán předem). F44 struktura VIX čeká na souhlas se stažením ^VIX a ^VIX3M z Yahoo.
+- 2026-11-19 (výsledek F45): filtr trendu 10 měsíců bez výhody (Sharpe v kontrole 0,79 vs. 0,82). Propady ale poloviční (−15 % vs. −34 % od 2019), poznatek pro řízení rizika.
