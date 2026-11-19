@@ -68,7 +68,10 @@ STRATS = {
     "F33_rebal": dict(magic=20261133, tf=60, markets=["SPX500mini", "NAS100mini"], intraday=False, hold_days=8, custom=True),
     "F31_fomc": dict(magic=20261131, tf=60, markets=["SPX500mini", "NAS100mini"], intraday=False, hold_days=3, custom=True),
     "F29_krypto": dict(magic=20261129, tf=60, markets=["BTCUSD", "ETHUSD"], intraday=False, hold_days=8, custom=True),
+    # RSI(2) pullback - vyzkum F42 prosel vsemi 5 body + odolnost, souhlas uzivatele 2026-11-19 ("2 ano"). Vstup/vystup rano (PC v noci vypnute).
+    "RSI2": dict(magic=20261142, tf=60, markets=["SPX500mini", "NAS100mini", "US30mini"], intraday=False, hold_days=16, custom=True),
 }
+RSI2_OPEN_H = (7.0, 10.0)            # vstup jen rano dalsiho dne (Praha), co nejbliz otevreni dne v testu; kdyz PC nebezi, signal se vynecha
 
 
 LOGFILE = os.path.join(ROOT, "fm_demo_log.txt")
@@ -338,6 +341,10 @@ def time_exits(live):
                         why = "den FOMC 13:55 NY - pred oznamenim (F31)"
                     elif name == "F29_krypto" and FX.f29_exit_due(ou, nu):
                         why = "tyden uplynul - pondeli (F29)"
+                    elif name == "RSI2":
+                        days, closes, _ = d1_weekdays(mk)
+                        if days:
+                            why = FX.rsi2_exit(days, closes, ou.date()) or why
                 if why:
                     if live:
                         mc.close_position(p, comment=f"{name}-cas"[:31], dry_run=False)
@@ -417,10 +424,23 @@ def d1_closes_atr(mk, n=60):
     return closes, float(tr.iloc[-20:].mean())
 
 
-def f2x_open(state, name, mk, d, live, why, key):
-    """Vstup F33/F31/F29: SL 3 ATR20 (pojistka), TP daleko (10 R) - v testech bez stopu a TP."""
+def d1_weekdays(mk, n=320):
+    """Uzavrene denni svicky z MT5 jen v pracovni dny (jako test F42): (dny, zavreni, ATR20). Pri chybe ([], [], None)."""
+    r = mt5.copy_rates_from_pos(mk, mt5.TIMEFRAME_D1, 0, n)
+    if r is None or len(r) < 230:
+        return [], [], None
+    df = pd.DataFrame(r).iloc[:-1]                                  # posledni den se jeste tvori
+    df["d"] = [datetime.fromtimestamp(int(t), timezone.utc).date() for t in df.time]
+    df = df[[x.weekday() < 5 for x in df.d]].reset_index(drop=True)
+    pc = df.close.shift(1)
+    tr = np.maximum(df.high - df.low, np.maximum((df.high - pc).abs(), (df.low - pc).abs()))
+    return list(df.d), [float(x) for x in df.close], float(tr.iloc[-20:].mean())
+
+
+def f2x_open(state, name, mk, d, live, why, key, atr=None):
+    """Vstup F33/F31/F29/RSI2: SL 3 ATR20 (pojistka, u RSI2 pravidlo), TP daleko (30 ATR) - v testech bez TP."""
     state["seen"].append(key)
-    _, a = d1_closes_atr(mk)
+    a = atr if atr else d1_closes_atr(mk)[1]
     tick = mt5.symbol_info_tick(mk)
     if not a or tick is None:
         log(f"  {name} {mk}: chybi data pro ATR/cenu - nevstupuji")
@@ -436,7 +456,7 @@ def f2x_open(state, name, mk, d, live, why, key):
 
 
 def cycle_f2x(state, live):
-    """F33 rebalancovani, F31 drift pred FOMC, F29 krypto momentum - casovani podle f2x_live (cista rozhodnuti)."""
+    """F33 rebalancovani, F31 drift pred FOMC, F29 krypto momentum, RSI2 pullback - casovani podle f2x_live (cista rozhodnuti)."""
     now = datetime.now(timezone.utc)
     seen = set(state["seen"])
     nyd = now.astimezone(FX.NY).date()
@@ -475,6 +495,22 @@ def cycle_f2x(state, live):
             else:
                 state["seen"].append(k)
                 log(f"  {sig[1]} <= 0 -> F29 {mk} tento tyden mimo trh")
+    # RSI2: rano dalsiho dne po signalnim zavreni (jednou na uzavrenou svicku a trh)
+    ph, _ = prague_hour(now.timestamp())
+    if RSI2_OPEN_H[0] <= ph < RSI2_OPEN_H[1] and now.weekday() < 5:
+        for mk in STRATS["RSI2"]["markets"]:
+            mt5.symbol_select(mk, True)
+            days, closes, a = d1_weekdays(mk)
+            if not days or (now.date() - days[-1]).days > 3:          # signalni den = predchozi pracovni den (po pondeli patek)
+                continue
+            k = f"RSI2|{days[-1]}|{mk}"
+            if k in seen:
+                continue
+            ok, txt = FX.rsi2_signal(days, closes)
+            if ok:
+                f2x_open(state, "RSI2", mk, 1, live, txt + " (stop 3 ATR, ven zavreni > SMA5 / 10 dni)", k, atr=a)
+            else:
+                state["seen"].append(k)
     if now.date() > FX.LAST_FOMC and int(now.timestamp()) % 86400 < 60:     # jednou denne
         log("POZOR: dosly terminy FOMC v f2x_live.py - doplnit dalsi rok")
 

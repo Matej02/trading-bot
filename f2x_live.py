@@ -186,6 +186,53 @@ def f29_exit_due(open_utc, now_utc):
     return open_utc < f29_week_start(now_utc)
 
 
+# ------------------------------------------------------------------ RSI(2) pullback (vyzkum F42, prislo 5/5, souhlas uzivatele 2026-11-19)
+# Denni svicky MT5 (den serveru = UTC), jen pracovni dny, jen UZAVRENE. Signal na zavreni dne: zavreni > SMA200 a RSI(2) < 10.
+# Vstup rano dalsiho dne (PC v noci vypnute; test: otevreni dne), stop 3 ATR20, ven az zavreni > SMA5 nebo po 10 dnech
+# (runner zavira pri prvnim behu po uzavreni dne). Kontrola na datech brokera 2019-26: test +0,066 R, ranni varianta +0,058 R.
+
+def rsi_wilder(closes, n=2):
+    """RSI s Wilderovym vyhlazenim (stejne jako simulator a test F42). closes = list/array, vraci posledni hodnotu."""
+    if len(closes) <= n:
+        return None
+    up = dn = 0.0
+    a = 1.0 / n
+    for i in range(1, len(closes)):
+        d = closes[i] - closes[i - 1]
+        g, l = max(d, 0.0), max(-d, 0.0)
+        if i == 1:
+            up, dn = g, l
+        else:
+            up, dn = up + a * (g - up), dn + a * (l - dn)
+    return 100.0 if dn == 0 else 100 - 100 / (1 + up / dn)
+
+
+def rsi2_signal(days, closes):
+    """days/closes = uzavrene pracovni denni svicky (vzestupne). Vraci (signal, popis) pro posledni svicku."""
+    if len(closes) < 205:
+        return False, "RSI(2): malo dennich dat"
+    sma200 = sum(closes[-200:]) / 200
+    r = rsi_wilder(closes[-250:])
+    ok = closes[-1] > sma200 and r is not None and r < 10
+    return ok, (f"RSI(2): zavreni {days[-1]} {closes[-1]:.2f} {'>' if closes[-1] > sma200 else '<='} SMA200 {sma200:.2f}, "
+                f"RSI(2) {r:.1f}" + (" < 10 -> long" if ok else ""))
+
+
+def rsi2_exit(days, closes, entry_day):
+    """Duvod vystupu (zavreni > SMA5, nebo 10. den vcetne dne vstupu) podle uzavrenych dni od dne vstupu, jinak None."""
+    k = 0
+    for i, d in enumerate(days):
+        if d < entry_day or i < 4:
+            continue
+        k += 1
+        sma5 = sum(closes[i - 4:i + 1]) / 5
+        if closes[i] > sma5:
+            return f"zavreni {d} {closes[i]:.2f} nad SMA5 {sma5:.2f} (RSI2)"
+        if k >= 10:
+            return f"10. den od vstupu ({d}) (RSI2)"
+    return None
+
+
 def next_events_text(now_utc):
     """Kratky text do zivotni znamky runneru: kdy dalsi F33 / F31 / F29."""
     d = now_utc.astimezone(NY).date()
