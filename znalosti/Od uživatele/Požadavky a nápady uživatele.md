@@ -126,3 +126,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19 (výsledek F42): RSI(2) prošla všemi 5 body (vývoj převis +0,061 R t 2,84, kontrola +0,065 t 1,63, broker +0,057, DAX/FTSE/CAC kladné, 76 % let). Malá výhoda. Do bota nic bez souhlasu, další krok kontrola odolnosti.
 - 2026-11-19: „Ano, pokračuj kontrolou odolnosti a F43. Pokračujme dál a pak dej info, co se nám může hodit celkově od všech, které tam aktuálně nemáme přidané.“ → odolnost RSI(2) 9/9 variant kladných; [[F43 Průraz F2 přísná prověrka]] (plán předem); potom souhrn přínosů.
 - 2026-11-19 (výsledky): F43 Průraz F2 bez výhody (převis t 0,85 / 0,80). Souhrn → [[Souhrn přínosů výzkumu (2026-11-19)]]: ověřené F33 a RSI(2). Chybí RSI(2) na MT5 demu (až po sledování a souhlasu).
+- 2026-11-19: „Pokračuj tedy.“ → [[F45 Filtr trendu pro prop účet]] (plán předem). F44 struktura VIX čeká na souhlas se stažením ^VIX a ^VIX3M z Yahoo.
