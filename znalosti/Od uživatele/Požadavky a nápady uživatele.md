@@ -123,3 +123,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19: „Dobře, pokračuj dalším krokem.“ → [[F41 F31 na evropských indexech 2010–2018]] (plán předem): nezávislé ověření kandidáta F31.
 - 2026-11-19 (výsledek F41): F31 na DAX/EuroStoxx 2010–2018 neprošla (+0,046 R, t 0,63). F31 zůstává kandidát, efekt je jen od 2019.
 - 2026-11-19: „Nechám bota běžet ještě čas, ale zajímá mě, jestli můžeme dál testovat, jelikož hledáme něco, co nám bude fungovat.“ → ano. Nejdřív přísná prověrka toho, co už běží v simulátoru (F42 RSI(2), F43 Průraz F2), pak nové typy (F44 struktura VIX, F45 filtr trendu pro prop).
+- 2026-11-19 (výsledek F42): RSI(2) prošla všemi 5 body (vývoj převis +0,061 R t 2,84, kontrola +0,065 t 1,63, broker +0,057, DAX/FTSE/CAC kladné, 76 % let). Malá výhoda. Do bota nic bez souhlasu, další krok kontrola odolnosti.

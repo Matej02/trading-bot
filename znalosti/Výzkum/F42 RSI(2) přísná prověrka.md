@@ -36,3 +36,30 @@ Zadání uživatele (2026-11-19): „Nechám bota běžet ještě čas, ale zaj�
 5. Převis kladný aspoň v 55 % let.
 
 Skript `scratch/f42_rsi2.py`, výstup `research_data/f42/souhrn.txt`.
+
+## Výsledky (2026-11-19)
+Souhrn `research_data/f42/souhrn.txt`. Hodnoceno po dnech vstupu (SPX, NAS, US30).
+
+| Část | Dní vstupu | Signál R | výhra | Srovnání (drift) | Převis | t |
+|---|---|---|---|---|---|---|
+| Vývoj 1990–2018 | 496 | **+0,087** | 72 % | +0,026 | **+0,061** | **2,84** |
+| Kontrola 2019–2026 | 141 | +0,091 | 72 % | +0,026 | +0,065 | 1,63 |
+| Broker 2019–2026 | 119 | +0,066 | 71 % | +0,008 | +0,057 | 1,41 |
+| DAX 1990–2026 | 266 | +0,051 | 69 % | | +0,035 | 1,05 |
+| FTSE 1990–2026 | 267 | +0,056 | 70 % | | +0,060 | 2,05 |
+| CAC 1990–2026 | 258 | +0,023 | 69 % | | +0,021 | 0,65 |
+
+- Převis kladný ve 28 z 37 let (76 %). Nejhorší rok 2008 (−0,92), dál 2022 (−0,26) a 1990 (−0,23).
+
+## Rozhodnutí podle pravidel zapsaných předem
+**Všech 5 bodů ANO ⇒ VÝHODA.** Druhá strategie po [[F33 Rebalancování na konci měsíce|F33]], která prošla plnou prověrkou.
+
+**Poznámky:**
+- **Rozpor s [[F1 Nové třídy signálů|F1]]** („nad driftem t −0,02“): F1 srovnávala s prostým držením indexu. Tady se srovnává se stejnými výstupy v libovolný den nad SMA200, což je férovější test samotného signálu. Obě čísla platí, každé měří něco jiného.
+- **Výhoda je malá:** +0,06 R nad driftem a +0,09 R celkem na obchod, asi 17 dní vstupu ročně na US indexech. Při riziku 1 % na obchod je to řádově +1,5 % ročně. Užitečná hlavně v kombinaci s F33.
+- **Slabina:** prudké pády (2008, 2022). Stop 3 ATR je jediná ochrana.
+- **Podle pravidla uživatele** (100% jistota = všechno předem + sledování dopředu + souhlas):
+  - RSI(2) splnila první část;
+  - v simulátoru běží od 9. 11. v učícím režimu, sledování dopředu tedy probíhá;
+  - na MT5 demu ani live zatím není a bez souhlasu uživatele se nepřidává.
+- **Další krok (návrh):** popisná kontrola odolnosti (práh RSI 5/10/15, max. dní 5/10/15). Pravidla se nemění, jen se ověří, že výsledek nestojí na jednom nastavení.
