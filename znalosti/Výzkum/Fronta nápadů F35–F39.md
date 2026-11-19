@@ -124,3 +124,27 @@ Souhrn: `research_data/f38/souhrn.txt`, skript `scratch/f35_f38.py`.
   - Je to zrcadlo F31 (tam slabé do 2018, silné od 2019). Podle pravidel neprošel, pravidla se nemění.
   - *Bod 4 kazí 2 chybné ticky v HistData DAX 2019+ (skok cen ×3,7, 2020-06-15 a 2023-12-03), které nafukují „ostatní dny“. Ani bez nich by ale nevyšel bod 2 (kontrola t 0,45), verdikt se nemění.
 - **Poučení pro metodiku:** u HistData předem filtrovat chybné ticky (skok > 20 % za minutu).
+
+## F39 Momentum bez měn: plán (zapsán PŘED výpočtem, 2026-11-19)
+- **Trhy (13):**
+  - indexy SPX500, NAS100, US30, DAX, CAC, IBEX, FTSE, EuroStoxx;
+  - kovy XAU, XAG, XPT;
+  - ropa WTI a Brent.
+  - Bez FX a krypta, protože tam výhodu zabíjí swap.
+- **Pravidlo jako [[Momentum L=250]]:** pozice v den t = znaménko výnosu za 250 dní ke zavření t−1. Drží se do otočení, bez TP.
+- **Model:** denní výnos pozice / σ60 (směrodatná odchylka denních výnosů do t−1), každý trh stejné riziko. Portfolio = průměr trhů v daný den.
+- **Náklady:**
+  - spread brokera při každé změně směru;
+  - swap brokera za každou noc (ze středy na čtvrtek 3×), podle směru.
+  - Dnešní swapy se používají i pro minulost, což je konzervativní.
+- **Data:**
+  - vývoj Yahoo denní 1990–2018;
+  - kontrola Yahoo 2019–2026;
+  - druhý zdroj broker H1 → denní 2019–2026.
+- **ANO jen když platí vše:**
+  1. Vývoj: průměr portfolia > 0, t ≥ 2,0.
+  2. Kontrola > 0, t ≥ 1,5.
+  3. Broker 2019+ > 0.
+  4. Lepší než stále long stejné trhy (se stejnými náklady) ve vývoji i v kontrole.
+  5. Indexy i komodity zvlášť > 0 za celé období.
+- Skript `scratch/f39_mom.py`, výstup `research_data/f39/souhrn.txt`.
