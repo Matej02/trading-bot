@@ -130,3 +130,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19 (výsledek F45): filtr trendu 10 měsíců bez výhody (Sharpe v kontrole 0,79 vs. 0,82). Propady ale poloviční (−15 % vs. −34 % od 2019), poznatek pro řízení rizika.
 - 2026-11-19: „Ano, stáhni data a pokračuj. A co se týká RSI(2) a F33, tak co s tímhle?“ → staženo ^VIX, ^VIX3M (Yahoo, 1,5 MB); [[F44 Struktura VIX]] plán předem. RSI(2)/F33: viz odpověď a [[Souhrn přínosů výzkumu (2026-11-19)]].
 - 2026-11-19 (výsledek F44): struktura VIX bez výhody (vývoj převis −0,044 R).
+- 2026-11-19: „Chtěl bych tam přidat jen to, u čeho jsme si absolutně jistí, že je dobré to tam přidat.“ → RSI(2) se na demo nepřidává. Sledování dopředu v simulátoru s pravidlem předem (≥ 30 obchodů, R ≥ 0, výhry ≥ 60 %, série ztrát ne horší než v testu, bez technických odchylek), viz [[F42 RSI(2) přísná prověrka]]. Bot beze změny.

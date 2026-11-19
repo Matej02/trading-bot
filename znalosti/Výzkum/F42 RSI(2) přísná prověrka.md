@@ -69,3 +69,13 @@ Souhrn `research_data/f42/souhrn.txt`. Hodnoceno po dnech vstupu (SPX, NAS, US30
 - **všech 9 variant kladných ve vývoji i kontrole, převis nad driftem kladný všude** (vývoj t 1,63–2,90, kontrola t 1,62–2,90);
 - přísnější práh (RSI < 5) dává víc na obchod (+0,12 R), ale má poloviční počet obchodů.
 - **⇒ Výsledek nestojí na jednom nastavení. Plánované nastavení (RSI < 10, 10 dní) je uprostřed.**
+
+## Rozhodnutí uživatele a sledování dopředu (2026-11-19)
+Uživatel: „Chtěl bych tam přidat jen to, u čeho jsme si absolutně jistí, že je dobré to tam přidat.“
+- RSI(2) splnila testy, ale **sledování dopředu ještě nemá**. **Na MT5 demo se zatím nepřidává.** Běží dál jen v simulátoru (od 9. 11.).
+- **Pravidlo pro sledování dopředu (zapsáno předem, simulátor, SPX/NAS/US30):**
+  1. Hodnotí se po **≥ 30 uzavřených obchodech** (odhad 8–10 měsíců).
+  2. Průměr R ≥ 0 a úspěšnost ≥ 60 % (test: +0,09 R, 72 %).
+  3. Nejhorší série ztrát ne horší než nejhorší série v testu 1990–2026.
+  4. Bez technických odchylek: signály, vstupy i výstupy odpovídají pravidlům testu (kontrola proti logu).
+- **Teprve když platí vše,** navrhnout uživateli přidání na demo nebo live. Ani pak automaticky, rozhoduje uživatel.
