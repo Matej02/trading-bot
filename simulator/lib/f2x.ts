@@ -3,6 +3,7 @@
 // Pravidla 1:1 podle planu zapsanych predem; odchylky od testu jsou popsane v definicich systemu (strategies.ts).
 import { atr } from "./indicators";
 import type { Candle, Dir } from "./types";
+import { EXCHANGE_OF, euTradingDaysLeft, isEuTradingDay, type Exchange } from "./euCalendar";
 import { isDayBeforeFomc, isFomcDay, nyParts, tradingDaysLeftInMonth } from "./usCalendar";
 
 const DAY = 86400;
@@ -154,4 +155,39 @@ export function f29Signal(c: Candle[]): F2xSignal | null {
     reason: `F29: výnos za 28 dní ${pct(mom)} > 0 → long na týden (do dalšího pondělí). Kandidát (těsně neprošel: ` +
       `2022–26 t 1,33, ale Sharpe lepší než stále long). SL 3 ATR jen jako pojistka.`,
   };
+}
+
+// ------------------------------------------------------------------ F61 prelom mesice v Evrope (kandidat, 2026-11-20)
+
+/** Kolikaty obchodni den mesice je den t podle kalendare burzy (1 = prvni). */
+function euDayOfMonth(ex: Exchange, t: number): number {
+  const d = new Date(t * 1000);
+  let n = 0;
+  for (let x = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1) / 1000; x <= t; x += DAY) if (isEuTradingDay(ex, x)) n++;
+  return n;
+}
+
+/**
+ * Na zavreni predposledniho obchodniho dne mesice (podle kalendare burzy) long, ven na zavreni 3. obchodniho dne dalsiho
+ * mesice (viz f61Exit). V testu vstup na otevreni posledniho dne a bez stopu; tady SL 3 ATR20 jen jako pojistka.
+ */
+export function f61Signal(c: Candle[], marketId: string): F2xSignal | null {
+  const ex = EXCHANGE_OF[marketId];
+  const last = c[c.length - 1];
+  if (!ex || !last || !isEuTradingDay(ex, last.time) || euTradingDaysLeft(ex, last.time) !== 1) return null;
+  const a = atrLast(c);
+  if (!a) return null;
+  return {
+    dir: "long", sl: last.close - 3 * a,
+    reason: "F61: přelom měsíce v Evropě – long od zítřka (poslední obchodní den měsíce) do zavření 3. obchodního dne dalšího měsíce. " +
+      "Kandidát (2026-11-20): EuroStoxx+IBEX 1992–2026 převis +0,15 R (t 1,92, laťka 2,0), broker 2019+ na 5 indexech +0,25 R, " +
+      "kladné všech 5. Jen sledování dopředu v simulátoru, ne MT5. SL 3 ATR jen jako pojistka.",
+  };
+}
+
+/** Vystup F61: na zavreni 3. obchodniho dne mesice. */
+export function f61Exit(c: Candle[], marketId: string): boolean {
+  const ex = EXCHANGE_OF[marketId];
+  const last = c[c.length - 1];
+  return !!ex && !!last && isEuTradingDay(ex, last.time) && euDayOfMonth(ex, last.time) === 3;
 }

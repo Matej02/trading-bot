@@ -6,7 +6,8 @@ import { fm13Signal } from "./fm13";
 import { fm14Signal } from "./fm14";
 import { fm15Signal } from "./fm15";
 import { fm16Signal } from "./fm16";
-import { f29Signal, f31Signal, f33Signal, f46Signal } from "./f2x";
+import { f29Signal, f31Signal, f33Signal, f46Signal, f61Signal } from "./f2x";
+import { EXCHANGE_OF, euTradingDaysLeft } from "./euCalendar";
 import { MARKET_IDS, MARKETS, TRADE_IDS } from "./markets";
 import { lastFomcDate, nyParts, tradingDaysLeftInMonth } from "./usCalendar";
 import type { Candle, Dir, TF } from "./types";
@@ -23,8 +24,8 @@ export interface SystemDef {
   noTp?: boolean; // bez TP - ven az podle pravidla vystupu (exitRule), stopu nebo casu
   // ven: sma5 = denni svicka zavre nad SMA5 (long) / pod (short); monthEnd = zavreni posledniho obchodniho dne mesice (F33);
   // fomcDay = zavreni svicky 12:00-13:00 NY v den rozhodnuti FOMC (F31)
-  // londonMorning = zavreni svicky 06:00-07:00 Londyn (F46)
-  exitRule?: "sma5" | "monthEnd" | "fomcDay" | "londonMorning";
+  // londonMorning = zavreni svicky 06:00-07:00 Londyn (F46); euDay3 = zavreni 3. obchodniho dne mesice podle burzy (F61)
+  exitRule?: "sma5" | "monthEnd" | "fomcDay" | "londonMorning" | "euDay3";
   feeds?: string[]; // pomocne trhy (stejny timeframe), ktere strategie potrebuje - bot je nacte a preda v barSignal
   window?: number; // kolik uzavrenych svicek dostane strategie (vychozi 400 u intradennich)
   rrr?: number; // vlastni TP v R (jinak podle nastaveni)
@@ -95,6 +96,16 @@ export const SYSTEMS: SystemDef[] = [
       "(2026-11-19, pravidla předem): převis nad stejně dlouhými okny jiných hodin 2009–18 +0,036 R (t 5,1), 2019–26 +0,019 R (t 2,0), " +
       "kladný 17 z 18 let; těsně neprošel bod „nejhorší třetina let > 0“ (−0,001). Zlato roste večer a v noci, v Londýně a NY klesá. " +
       "Malý zisk na obchod, na stříbře se neopakuje. Jen sledování dopředu v simulátoru, ne MT5.",
+  },
+  {
+    id: "f61_prelom_eu_d1", name: "Přelom měsíce – evropské indexy (kandidát F61)", tf: "1d",
+    markets: ["GER_30mini", "GBR_100mini", "FRA_40mini", "EUR_50mini", "ESP_35mini"], kind: "bar", holdsWeekends: true,
+    maxHoldBars: 7, noTp: true, exitRule: "euDay3",
+    desc: "Long na zavření předposledního obchodního dne měsíce (podle kalendáře burzy), ven na zavření 3. obchodního dne dalšího " +
+      "měsíce; SL 3 ATR jen jako pojistka; ~12× ročně na 5 indexech. KANDIDÁT – test F55/F61 (pravidla předem): DAX+FTSE do 2018 " +
+      "převis t 2,95, od 2019 t 1,10; ověření na EuroStoxx+IBEX 1992–2026 převis +0,15 R (t 1,92, laťka 2,0 → těsně neprošlo), " +
+      "od 2019 +0,13 R; data brokera 2019+ na 5 indexech +0,25 R/obchod, kladné všech 5; převis kladný v 62 % let. " +
+      "Živě vstup na zavření dne L−1 (v testu otevření dne L, takže navíc noční gap). Jen sledování dopředu, ne MT5.",
   },
   {
     id: "f29_krypto_mom_d1", name: "Krypto momentum 4 týdny – BTC, ETH (kandidát F29)", tf: "1d",
@@ -252,6 +263,10 @@ export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF
     const s = f29Signal(c);
     return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
   }
+  if (system === "f61_prelom_eu_d1") {
+    const s = marketId ? f61Signal(c, marketId) : null;
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
   if (system === "f46_zlato_asie_h1") {
     const s = f46Signal(c);
     return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
@@ -378,7 +393,7 @@ export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF
 export type Tone = "wait" | "near" | "off";
 
 /** Lidsky popis, na co strategie na posledni uzavrene svicce ceka (panel "Bot zive"). */
-export function barStatus(system: string, c: Candle[], digits: number): { text: string; tone: Tone } {
+export function barStatus(system: string, c: Candle[], digits: number, marketId?: string): { text: string; tone: Tone } {
   if (c.length < 150) return { text: `načítám data (${c.length}/150 svíček)`, tone: "off" };
   if (system === "f33_rebal_d1") {
     const left = tradingDaysLeftInMonth(c[c.length - 1].time);
@@ -392,6 +407,13 @@ export function barStatus(system: string, c: Candle[], digits: number): { text: 
   }
   if (system === "f29_krypto_mom_d1") {
     return { text: "F29 – vyhodnocuje se na zavření neděle (výnos za 28 dní > 0 → long na týden)", tone: "wait" };
+  }
+  if (system === "f61_prelom_eu_d1") {
+    const ex = marketId ? EXCHANGE_OF[marketId] : undefined;
+    if (!ex) return { text: "F61 – trh bez kalendáře burzy", tone: "off" };
+    const left = euTradingDaysLeft(ex, c[c.length - 1].time);
+    return left > 1 ? { text: `F61 – do signálu zbývá ${left - 1} obchodní den/dny (vstup na zavření předposledního dne měsíce)`, tone: "wait" }
+      : { text: "F61 – přelom měsíce: long do zavření 3. obchodního dne dalšího měsíce", tone: "near" };
   }
   if (system === "f46_zlato_asie_h1") {
     return { text: "F46 – long ve 23:00 Londýn (po–čt), ven v 07:00 Londýn", tone: "wait" };

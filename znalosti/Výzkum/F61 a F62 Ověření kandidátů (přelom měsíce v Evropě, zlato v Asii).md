@@ -80,3 +80,8 @@ Souhrn `research_data/f61/souhrn.txt`.
   - **přesné okno F46 se na nezávislých hodinových datech nepotvrdilo** a výsledek brokera může být částečně artefakt času a výběru dní;
   - F46 v simulátoru se nechává jen jako sledování dopředu, se sníženou důvěrou;
   - na MT5 ne.
+
+## Další krok (2026-11-20)
+- Se souhlasem uživatele přidán F61 do simulátoru jako `f61_prelom_eu_d1` (DAX, FTSE, CAC, Euro Stoxx 50, IBEX), jen sledování dopředu. První signál na zavření pátku 27. 11. (stínový obchod, skutečnou pozici vetuje víkendové pravidlo, viz [[Simulátor]]), výstup 3. 12.
+- Hodnocení dopředu: po ≥ 24 obchodech (zhruba 5 měsíců na 5 trzích) průměr R > 0. Na MT5 jen po splnění a s výslovným souhlasem.
+

@@ -7,7 +7,7 @@ import { aiScore } from "./aiScore";
 import type { AiContext } from "./aiPrompt";
 import { blockedBy, decisionVerdict } from "./verdict";
 import { ema, rsiLast } from "./indicators";
-import { f31Exit, f33Exit, f46Exit } from "./f2x";
+import { f31Exit, f33Exit, f46Exit, f61Exit } from "./f2x";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKETS, quote, TRADE_IDS } from "./markets";
 import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from "./remote";
@@ -855,7 +855,7 @@ export class Bot {
     const key = `${systemId}|${id}`;
     // denni systemy potrebuji celou historii (tydenni EMA50), ostatnim staci 400 svicek
     const win = sys.tf === "1d" ? closed : closed.slice(-(sys.window ?? 400));
-    const st = barStatus(systemId, win, m.digits);
+    const st = barStatus(systemId, win, m.digits, id);
     this.radar.set(key, { system: systemId, market: id, text: st.text, tone: st.tone, t: now });
     if (closed.length < 150) return;
     const last = closed[closed.length - 1];
@@ -914,6 +914,10 @@ export class Bot {
       if (!f46Exit(closed)) return;
       out = () => true;
       why = "07:00 Londýn – konec asijské seance (F46)";
+    } else if (sys.exitRule === "euDay3") {
+      if (!f61Exit(closed, id)) return;
+      out = () => true;
+      why = "zavření 3. obchodního dne měsíce (F61)";
     } else return;
     for (const p of s.broker.positions.filter((x) => x.system === systemId && x.market === id && x.openTime <= last.time + TF_SEC[sys.tf])) {
       if (out(p.dir)) this.closeAtMarket(p.id, why);
