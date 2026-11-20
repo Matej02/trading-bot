@@ -30,3 +30,17 @@ Zadání uživatele (2026-11-20): „Na nic nesahej, ale testuj dál…“ Jen t
 5. Převis kladný aspoň v 55 % let (HistData 2010–2025).
 
 Skript `scratch/f60_evropa_drift.py`, výstup `research_data/f60/souhrn.txt`.
+
+## Výsledky (2026-11-20)
+Souhrn `research_data/f60/souhrn.txt`.
+
+| Část | Signál R/den | Převis | t |
+|---|---|---|---|
+| Vývoj 2010–2018 (HistData SPX+NAS) | +0,004 | +0,009 | **3,96** |
+| Kontrola 2019–2025 | −0,007 | −0,003 | −1,30 |
+| Broker 2019–2026 | −0,005 | −0,001 | – |
+| DAX + EuroStoxx | +0,004 (převis) | | |
+
+- Převis kladný v 11 z 16 let, ale všechny záporné roky jsou od 2019.
+- Po poklesu předchozího dne (jak píše studie): vývoj převis t 3,3, kontrola −0,8.
+- **Rozhodnutí: body 2 a 4 NE ⇒ BEZ VÝHODY.** Jev byl silný do 2018 a od 2019 zmizel, stejně jako u F31 opačně, F38, F41, F48 a F59.

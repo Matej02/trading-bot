@@ -148,3 +148,4 @@ aktualizovano: 2026-11-03
 - 2026-11-19 (výsledky F55–F57): přelom měsíce, IBS i den CPI/NFP bez výhody, viz [[F55 až F57 Začátek měsíce, IBS a dny zpráv]]. Další na řadě F58 (FX místní hodiny) a F59 (Turnaround Tuesday), plán se teprve zapíše.
 - 2026-11-20: „Na nic nesahej, ale testuj dál, dokud nezjistíš něco, co se nám zase bude hodit nebo bude dobré na testování.“ → jen výzkum, bot, runner ani simulátor se nemění. [[F58 a F59 Měny v místních hodinách a Turnaround Tuesday]] (plán předem).
 - 2026-11-20 (výsledky F58/F59): měny v místních hodinách a Turnaround Tuesday bez výhody. Další [[F60 Noční drift při otevření Evropy]] (plán předem).
+- 2026-11-20 (výsledek F60): drift při otevření Evropy do 2018 silný (t 4,0), od 2019 nic → bez výhody. Souhrn [[Souhrn testů F55–F60 (2026-11-20)]]: návrh sledovat dopředu přelom měsíce na DAX/FTSE a doplnit F46 o druhý zdroj (Yahoo GLD/GC=F, potřeba souhlas se stažením).
