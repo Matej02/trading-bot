@@ -45,3 +45,38 @@ Zadání uživatele (2026-11-20): „Koukni na ty 2 kandidáty a klidně stáhni
 **F46 má potvrzený druhý zdroj, jen když platí 1–5.** Pravidla F46 ani její verdikt (bod 4 o vlásek NE) se dodatečně nemění. Výsledek jen zvyšuje nebo snižuje důvěru při sledování dopředu.
 
 Skripty `scratch/f61_f62.py`, `scratch/f62_stahni.py`, výstup `research_data/f61/souhrn.txt`.
+
+## Výsledky (2026-11-20)
+Souhrn `research_data/f61/souhrn.txt`.
+
+### F61 Přelom měsíce v Evropě: NEPROŠLO (o vlásek)
+| Část | Signál R | Převis | t |
+|---|---|---|---|
+| EuroStoxx + IBEX, celé období (nové trhy) | +0,164 | +0,152 | **1,92** (laťka 2,0) |
+| EuroStoxx + IBEX 2019+ | +0,169 | +0,132 | 0,75 |
+| Broker 2019+, 5 trhů | +0,248 | +0,230 | 1,17 |
+| Popis: DAX + FTSE do 2018 / od 2019 | +0,235 / +0,207 | +0,235 / +0,181 | 2,95 / 1,10 |
+
+- Všech 5 trhů u brokera kladných, převis kladný v 62 % let.
+- Rozhoduje bod 1: t 1,92 < 2,0 ⇒ **NEPROŠLO**. Yahoo EuroStoxx má krátkou historii (233 obchodů) a vyšel kolem nuly, IBEX t 1,76.
+- **Hodnocení:** směr všude správný a velikost stálá i od 2019. Je to nejlepší „téměř“ kandidát vedle F46. Podle pravidla uživatele může jít jen do simulátoru na sledování dopředu, a to jen s jeho souhlasem.
+
+### F62 Druhý zdroj pro F46: NEPOTVRDIL
+| Část | Výsledek |
+|---|---|
+| GLD 2004–2018, noc − den | +0,015 ATR, t 1,13 (**NE**) |
+| GLD 2019–2026, noc − den | +0,055, t 2,92 |
+| IAU / SLV celé | +0,043 t 3,88 / +0,034 t 2,97 |
+| Roky GLD | 70 % kladných |
+| **GC=F 1h, přesné pravidlo F46, 11/2024–10/2026** | +0,003 R, převis −0,003 (**NE**) |
+
+- **Důležité zjištění o datech brokera:**
+  - od 2022 chybí v datech brokera v létě svíčka 23:00 Londýn. Test F46 tak v kontrole 2022–2026 obsahoval skoro jen zimní dny (2022: 104 dní, 1 letní);
+  - celé období brokera: zimní dny +0,030 R, letní +0,001 R;
+  - GC=F posledních 2 let: zima +0,009, léto −0,002.
+  - Hodinové ceny brokera se proti futures v některých hodinách systematicky liší o ~1 $, například zavření 06:00 +1,35 $. Vypadá to na posun o hodinu v části roku. To zvýhodňuje výstup F46 asi o 0,02 R, tedy zhruba o celou naměřenou výhodu.
+- **Závěr:**
+  - jev „drahé kovy rostou mimo americkou seanci“ v ETF existuje, hlavně od 2019;
+  - **přesné okno F46 se na nezávislých hodinových datech nepotvrdilo** a výsledek brokera může být částečně artefakt času a výběru dní;
+  - F46 v simulátoru se nechává jen jako sledování dopředu, se sníženou důvěrou;
+  - na MT5 ne.
