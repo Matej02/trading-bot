@@ -52,3 +52,29 @@ Zadání uživatele (2026-11-20): „Ano, dej A do simulátoru a pokračuj dalš
 - **Popis navíc (nerozhoduje):** profil průměrného výnosu podle hodiny UTC ve vývoji i kontrole.
 
 Skript `scratch/f63_f64.py`, výstup `research_data/f63/souhrn.txt`.
+
+## Výsledky (2026-11-20)
+Souhrn: `research_data/f63/souhrn.txt`.
+
+**F63 den před svátkem v Evropě: BEZ VÝHODY**
+
+| Bod | Výsledek |
+|---|---|
+| 1) vývoj 1990–2018 | signál +0,052 R, převis +0,063, t 1,88 → **NE** |
+| 2) kontrola 2019–2026 | signál −0,005 R, převis +0,002, t 0,03 → **NE** |
+| 3) broker 2019+ | signál −0,025 R, převis −0,018 → **NE** |
+| 4) roky | 59 % kladných → ano |
+| 5) bez dnů přelomu měsíce | převis +0,070 → ano |
+
+- Podle trhů (celé období): FTSE převis t 2,65, CAC 1,99, IBEX 1,80, EuroStoxx 0,99.
+- Stejný vzorec jako jinde: do 2008 silné, od 2010 kolem nuly. Jev se vytratil, F37 v USA ani Evropa ho dnes nenesou.
+
+**F64 hodiny bitcoinu: BEZ VÝHODY**
+- Vybráno na vývoji 2019–2021: short 02:00–06:00 UTC, převis t 2,51 (laťka 3,0 → NE).
+- Kontrola Binance 2022–2026: převis −0,003 (t −0,45). Broker 2022+ převis 0,000. ETH −0,002.
+- **I 10 nejlepších 4h oken z vývoje je po nákladech záporných** (−0,02 až −0,05 R). Spread brokera ~24 $ sní celý typický pohyb za 4 hodiny.
+- Profil hodin ve vývoji (např. 21:00 UTC +10 bp) se v kontrole neopakuje: 21:00 +1,2 bp, nejvyšší 22:00 +3,4 bp.
+- **Závěr:** krátké obchody na kryptu u tohoto brokera nedávají smysl. Hodinové vzorce jsou malé a nestálé.
+
+Počet testů od F35: 32, prošly 2 (F42, F52).
+
