@@ -45,3 +45,29 @@ Yahoo denní, co nejdelší historie, stažené se souhlasem uživatele do `rese
 - **Neprojde:** F61 zůstává jen „skoro“ kandidát. Jeho sledování v simulátoru se nemění.
 
 Skript `scratch/f65.py`, stažení `scratch/f65_stahni.py`, výstup `research_data/f65/souhrn.txt`.
+
+## Výsledek (2026-11-20): NEPOTVRZENO
+Souhrn: `research_data/f65/souhrn.txt`. Staženo asi 10 MB.
+
+| Bod | Výsledek |
+|---|---|
+| 1) celé období, 10 trhů | signál +0,256 R, převis +0,257, **t 3,92** → ano |
+| 2) 2019–2026 | signál +0,014 R, převis **−0,010** → **NE** |
+| 3) trhy s převisem > 0 | **10 z 10** → ano |
+| 4) roky | 65 % kladných → ano |
+
+- **Do 2018** byl přelom měsíce silný všude:
+  - převis +0,315 R, t 4,3;
+  - nejsilnější BEL 20 (t 4,2), TSX (3,8), Hang Seng (3,4), SMI (3,0).
+- **Od 2019 nula:**
+  - po letech −0,56, +0,62, −0,07, +0,58, −0,23, −0,21, −0,05, −0,29;
+  - poslední 4 roky záporné.
+- **ASX:** Yahoo nemá u většiny let otevření, vyřazeno 13 let.
+- **Co to znamená pro F61:**
+  - jde o stejný vzorec „fungovalo do 2018“ jako u F55 (USA), F60, F63 a dalších;
+  - kladný výsledek Evropy od 2019 (broker +0,25 R) je proti 10 světovým trhům spíš výjimka než potvrzení;
+  - důvěra v F61 klesá;
+  - v simulátoru zůstává jen jako sledování dopředu, na MT5 ne.
+
+Počet testů od F35: 33, prošly 2.
+
