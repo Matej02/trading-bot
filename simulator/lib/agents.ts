@@ -64,6 +64,12 @@ function marketNow(x: AgentCtx): Opinion {
   const h = d.getUTCHours();
   const q = quote(x.market, x.mid, x.now);
   if (!isCrypto(x.market)) {
+    // denni svicka z patku se uzavre az v sobotu 00:00 UTC; systemy na zavreni dne (pruraz, RSI2, F33, F61) vstupuji
+    // jako v testu za patecni zavreni, jinak by kazdy patecni signal propadl (oprava 2026-11-20)
+    const fridayClose = x.system.kind === "bar" && x.system.tf === "1d" && new Date(x.signal.barTime * 1000).getUTCDay() === 5;
+    if (wd >= 5 && fridayClose) {
+      return { ...base, vote: "ano", reason: "Signál z pátečního zavření denní svíčky – vstup za páteční zavírací cenu (trh přes víkend stojí)." };
+    }
     if (wd >= 5) return { ...base, vote: "ne", reason: "Víkend – trh je zavřený." };
     if (wd === 4 && h >= 19 && !x.system.holdsWeekends) {
       return { ...base, vote: "ne", reason: "Pátek večer – riziko gapu přes víkend, krátkodobý obchod nedává smysl." };
