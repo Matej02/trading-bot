@@ -42,3 +42,15 @@ Zadání uživatele (2026-11-20): „Na nic nesahej, ale testuj dál, dokud nezj
 5. Převis kladný aspoň v 55 % let.
 
 Skript `scratch/f58_f59.py`, výstup `research_data/f58/souhrn.txt`.
+
+## Výsledky (2026-11-20)
+Souhrn `research_data/f58/souhrn.txt`.
+
+| Test | Vývoj | Kontrola | Broker 2019+ | Jiné trhy | Roky | Verdikt |
+|---|---|---|---|---|---|---|
+| **F58** měny v místních hodinách | −0,034 R, převis −0,004 (t −1,09) | −0,046, převis −0,012 (t −2,59) | −0,039, převis −0,007 | −0,022 | 19 % | **BEZ VÝHODY** |
+| **F59** Turnaround Tuesday | +0,060, převis +0,045 (t 1,53) | +0,022, převis −0,009 (t −0,17) | +0,112, převis +0,087 | +0,026 | 54 % | **BEZ VÝHODY** |
+
+- **F58:** po nákladech všechno ztrátové (spread ~0,03 R na obchod, pohyb za 5 h je malý).
+  - Popis po oknech: evropské dopoledne (short EUR a GBP, long USDCHF) má převis t ~3, americké odpoledne je naopak záporné. Zjištěno **po výpočtu** a i tak po nákladech nula, takže se dál nehodnotí.
+- **F59:** do 2018 slabý náznak, od 2019 nic.
