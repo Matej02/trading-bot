@@ -44,6 +44,7 @@ Zadání uživatele: „Udělej všechny 3 kroky.“ (aktualizace Next.js, letn�
 | **F46 zlato v Asii, vývoj (broker 2009–18)** | převis t 5,10, n 1 793 | převis t 4,04, n 755 |
 | **F46 kontrola (broker 2019–26)** | převis t 2,03 | převis t 2,12 |
 | F46 stříbro / nejhorší třetina let | +0,004 / −0,001 | −0,000 / −0,007 → pořád NEPROŠLO |
+| F64 hodiny BTC, broker 2022–26 | převis +0,000 | převis −0,005 |
 | **F62: broker XAU posledních 2 let, přesné okno F46** | +0,051 R (n 118) | **+0,002 R** (n 226), stejně jako GC=F +0,003 |
 
 ## Co z toho plyne pro F46
