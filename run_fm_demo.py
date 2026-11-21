@@ -2,7 +2,7 @@
 Live test FM strategii (F12-F16) a obecne strategie uzivatele (F20) na MT5 DEMO uctu primo z overeneho Python kodu testu (stejne signaly jako simulator,
 shoda TS/Python 19/21, 49/49, 33/34, 7/11 pri stejne historii, 35/35).
 
-Kazdou minutu: stahne z MT5 posledni M1 (75 dni) a H1 (6500), prevede cas serveru (Londyn) na UTC jako testy, spocita
+Kazdou minutu: stahne z MT5 posledni M1 (75 dni) a H1 (6500), cas serveru je UTC (od 2026-11-21 bez chybneho prevodu z Londyna), spocita
 kandidaty signalu kazde strategie a pokud nejaky vznikl na prave uzavrene svicce, posle na DEMO market order se SL/TP.
 Pojistky: obchoduje JEN kdyz MT5 hlasi ucet jako DEMO (jinak konec), SL >= 3x spread, riziko 0,25 % zustatku na obchod,
 jedna pozice na strategii a trh, casove vystupy (intradenni do 19:45 Praha - PC se vecer vypina, test 22:00; F15 nejdyl 10 dni).
@@ -111,9 +111,9 @@ def fetch_m1(mk, days=M1_DAYS):
     if r is None or len(r) < 5000:
         raise RuntimeError(f"M1 {mk}: malo dat ({0 if r is None else len(r)})")
     df = pd.DataFrame(r).drop_duplicates("time").sort_values("time")
-    srv = pd.to_datetime(df.time, unit="s").dt.tz_localize("Europe/London", ambiguous="NaT", nonexistent="shift_forward")
-    df = df[srv.notna()].copy()
-    df["t"] = srv[srv.notna()].dt.tz_convert("UTC").dt.tz_localize(None).astype("datetime64[s]").astype(np.int64)
+    # cas serveru = UTC cely rok (overeno 2026-11-21: XAU proti futures GC=F korelace 0,96 bez posunu, s posunem 1 h ~0;
+    # otevreni NY v datech v cervenci 13:30, v lednu 14:30). Drive se cetl jako Londyn -> v letnim case o 1 h vedle.
+    df["t"] = df.time.astype(np.int64)
     df = df.rename(columns={"open": "o", "high": "h", "low": "l", "close": "c", "tick_volume": "v"})[["t", "o", "h", "l", "c", "v"]]
     df = df.iloc[:-1].astype({"v": float}).reset_index(drop=True)          # posledni svicka se jeste tvori
     df.to_pickle(os.path.join(LIVE_DIR, f"{mk}_M1.pkl"))
@@ -125,7 +125,8 @@ def fetch_h1(mk):
     if r is None or len(r) < 2000:
         raise RuntimeError(f"H1 {mk}: malo dat")
     df = pd.DataFrame(r)
-    df["time"] = pd.to_datetime(df["time"], unit="s")
+    # cas serveru = UTC; research_f8.load cte index jako londynsky cas -> ulozit skutecny londynsky cas, at vyjde skutecne UTC
+    df["time"] = pd.to_datetime(df["time"], unit="s", utc=True).dt.tz_convert("Europe/London").dt.tz_localize(None)
     df = df.set_index("time")[["open", "high", "low", "close", "tick_volume"]].astype(float).iloc[:-1]
     df.to_pickle(os.path.join(LIVE_DIR, f"{mk}_H1.pkl"))
 

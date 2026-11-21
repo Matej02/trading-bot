@@ -60,7 +60,8 @@ def broker_h1(mk):
     h = pd.read_pickle(os.path.join(RD, f"{mk}_H1.pkl"))[["open", "high", "low", "close"]].astype(float)
     u = pd.DatetimeIndex(h.index).tz_localize("UTC")
     # cas serveru = UTC, data ctena jako Londyn -> v britskem letnim case +1 h (stejne jako f2x_lib.load_m1)
-    dst = np.array([x.dst().seconds > 0 for x in (u + pd.Timedelta(hours=1)).tz_convert("Europe/London")])
+    # oprava 2026-11-21: surova H1 brokera = UTC cely rok (overeno proti GC=F), drivejsi posun +1 h v letnim case byl chybny
+    dst = np.zeros(len(u), bool)
     h.index = u + pd.to_timedelta(dst.astype(np.int64) * 3600, unit="s")
     return h
 

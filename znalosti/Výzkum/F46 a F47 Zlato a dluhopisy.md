@@ -65,3 +65,6 @@ Souhrn `research_data/f46/souhrn.txt`, skript `scratch/f46_f47.py`.
   - SL 3 denní ATR jako pojistka. V registru `unvalidated`.
 - Shoda TS s testem: vstupy 318/318, výstupy 565/565 (broker H1 2024–26). Commit d1e87a4, nasazeno 19. 11. 16:13.
 - **Jen sledování dopředu, ne MT5.** Otevřenou stránku simulátoru je potřeba obnovit (F5), jinak běží starý kód.
+
+## Přepočet se správným časem (2026-11-21)
+Posun +1 h v létě byl u surových H1 brokera chybný. Po opravě: vývoj převis t 4,04 (n 755), kontrola t 2,12, stříbro −0,000, nejhorší třetina let −0,007 → **pořád NEPROŠLO**. Poslední 2 roky broker i GC=F ~0. Viz [[Oprava času dat brokera (2026-11-21)]].
