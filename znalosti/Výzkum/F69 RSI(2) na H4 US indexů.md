@@ -32,3 +32,21 @@ Zadání uživatele (2026-11-21): „Pokračuj, dokud nezjistíš zase nějakou 
 5. **Nezávislost na denním RSI(2):** bez signálů H4, které padnou do 5 obchodních dní po denním signálu RSI(2) na stejném trhu, převis > 0 (HistData celé období).
 
 Skript `scratch/f69_rsi2_h4.py`, výstup `research_data/f69/souhrn.txt`.
+
+## Výsledek (2026-11-21): BEZ VÝHODY
+Souhrn: `research_data/f69/souhrn.txt`.
+
+| Bod | Výsledek |
+|---|---|
+| 1) vývoj HistData 2010–18 | signál −0,016 R, převis −0,018, t −0,84 → **NE** |
+| 2) kontrola HistData 2019–25 | signál +0,005 R, převis −0,005 → **NE** |
+| 3) broker 2019+ | +0,003 R, převis +0,002 → ano |
+| 4) roky | 50 % → **NE** |
+| 5) bez dnů po denním RSI(2) | převis +0,026 (t 1,59) → ano |
+
+- Na H4 je úspěšnost 65–68 % jako na denních svíčkách, ale po nákladech a proti driftu nic.
+- **Návrat k průměru u US indexů funguje jen na denním horizontu.**
+- Bod 5 je jen popis a zjištěný po výsledku: H4 signály mimo dny denního RSI(2) vycházejí líp. Neověřené, dál se nesleduje.
+
+Počet testů od F35: 37, prošly 2.
+
