@@ -51,3 +51,43 @@ Signály bota dnes: 07:00 RSI2 SPX500mini long 1,0 lot @ 7138.57, SL 6723.06, TP
 - Claude: n 27, směr 51,9 % (z +0,19), cíl 63,0 %
 - Pravidla: n 39, směr 56,4 % (z +0,80), cíl 69,2 %
 - Claude při neshodě s pravidly: n 6, směr 66,7 %
+
+## New York (16:40)
+Signály bota dnes: 07:00 RSI2 SPX500mini long 1,0 lot @ 7138.57, SL 6723.06, TP 11293.7 – provedeno (otevřen, výsledek (TP/SL/čas) v logu není). 07:00 RSI2 US30mini long – neprovedeno (0,091 lotu pod minimem brokera 1,0). Od Londýna nic nového.
+
+| Trh | Můj bias | Bias pravidel | Cíl | Co hlídat |
+|---|---|---|---|---|
+| EURUSD | neutral | short | 1.09589 (PDL, už trefen) | NY prorazil Asie H 1.0991 nahoru; short jen po sweepu ~1.1003 a MSS dolů pod NY open 1.0983, jinak stranou |
+| GBPUSD | neutral | short | 1.30820 (PDL, už trefen) | spike na 1.3125 nad Asie H a návrat; short po MSS pod NY open 1.3108, long po sweepu 1.3095 – zatím nejasné |
+| XAUUSD | short | short | 3620.60 (PDL, prolomen) → Asie L 3514.9 | NY zahodil londýnský odraz, cena u NY open 3534; pod ním short na Asie L |
+| NAS100 | short | short | 26436 (PDL, prolomen) → nová minima | NY retest PDL 26436 odmítnut, nové minimum ~25950; short na odrazu k ~26200 |
+| SPX500 | short | short | 7167.75 (PDL, prolomen) → nová minima | sweep Asie H 7192 v NY a prudký pád; short na odrazu pod PDL/NY open 7156 |
+
+### EURUSD
+![[2026-11-20_1640_EURUSD.png]]
+- Londýn: sweep Asie H 1.0991 a pád pod Asie L na ~1.0962 (londýnský short z ranního plánu vyšel).
+- NY: silný růst přes NY open i Asie H až na 1.1003, teď 1.0996 – vnitrodenní struktura býčí.
+- Neutral proti pravidlům: denní trend dolů, ale NY ukázal displacement nahoru; směr na zbytek dne nejistý.
+
+### GBPUSD
+![[2026-11-20_1640_GBPUSD.png]]
+- Od sweepu PDL v Asii vyšší minima; Londýn i NY drží 1.309–1.312.
+- NY spike na 1.3125 nad Asie H a návrat pod něj – možný sweep buy-side, ale bez jasného MSS.
+- Neutral (jako ráno): denní trend dolů vs. vnitrodenní růst od PDL.
+
+### XAUUSD
+![[2026-11-20_1640_XAUUSD.png]]
+- Londýn odrazil k ~3585, NY odraz prodal a cena spadla zpět k NY open 3534.
+- Denní: 3. velká medvědí svíčka, hluboko pod PDL. Bias short, další cíl Asie L 3515.
+- Rozpětí ~104 bodů – i odraz o 50 bodů je normální šum.
+
+### NAS100
+![[2026-11-20_1640_NAS100.png]]
+- Londýn i ranní NY dělaly nižší minima pod Asie L 26271.
+- NY spike přesně k PDL 26436–26500 a prudké odmítnutí na nové minimum ~25950 (učebnicový retest zespodu).
+- Bias short, cena nejníž od září.
+
+### SPX500
+![[2026-11-20_1640_SPX500.png]]
+- NY spike nad Asie H 7192 (sweep buy-side) a pád pod Asie L na ~7130.
+- Bias short. Bot drží RSI2 long @ 7138.57 (swingová strategie na návrat k průměru) – cena je teď těsně pod jeho vstupem, s intradenním biasem to nesouvisí.
