@@ -60,3 +60,25 @@ Zadání uživatele (2026-11-21): „A pak pokračuj, dokud nezjistíš zase ně
 - **Popis navíc:** kolik signálů F68 padne na den vstupu RSI(2) na stejném trhu.
 
 Skript `scratch/f66_f68.py`, výstup `research_data/f66/souhrn.txt`.
+
+## Výsledky (2026-11-21): všechny tři BEZ VÝHODY
+Souhrn: `research_data/f66/souhrn.txt`.
+
+| Test | Vývoj do 2018 | Kontrola 2019–26 | Broker 2019+ | Jiné trhy | Roky | Verdikt |
+|---|---|---|---|---|---|---|
+| **F66** relativní návrat mezi indexy | převis +0,062, **t 2,67** | −0,047 (t −1,00) | −0,019 | +0,011 | 62 % | BEZ VÝHODY |
+| **F67** RSI(2) na 10 světových indexech | celé období převis +0,017, t 1,32; signál −0,001 R | +0,015 | – | 6 z 10 trhů | 53 % | NEPOTVRZENO |
+| **F68** noc po poklesu ≥ 1 ATR | převis +0,021, **t 2,01** | −0,025 | −0,030 | −0,013 | 53 % | BEZ VÝHODY |
+
+- **F66 a F68:**
+  - zase vzorec „do 2018 ano, od 2019 ne“;
+  - u F68 je 27 % signálů ve stejný den jako RSI(2).
+- **F67 je důležité zjištění pro RSI(2) na demu:**
+  - mimo USA pravidlo nefunguje: světové indexy jsou kolem nuly a Evropa už v [[F49 RSI(2) na evropských indexech|F49]];
+  - úspěšnost je všude 59–69 %, ale po nákladech a proti driftu nic;
+  - **výhoda RSI(2) je americký jev**, ne obecná vlastnost akciových indexů;
+  - pro demo to nic nemění: RSI(2) prošlo přísnou prověrkou na US indexech včetně kontroly 2019+ a brokera;
+  - je to ale další důvod hodnotit ho podle sledování dopředu, ne podle historie.
+
+Počet testů od F35: 36, prošly 2.
+
