@@ -48,7 +48,7 @@ Soubory: `scratch/exporty/2026-11-24` (obchody, deník, data; poslal uživatel 2
 
 ## Bod 1 podrobněji (2026-11-24)
 - **Díry jsou stejné ve všech 13 trzích runneru** (`scratch/live_mt5`, M1):
-  - chybí 19.–20. 10. 2025 až polovina 2/2026 a polovina 6. až polovina 8. 2026;
+  - chybí skoro celý říjen 2025 až polovina 2/2026 a polovina 6. až polovina 8. 2026;
   - EURUSD má navíc díry skoro celý rok 2026.
   - Je to tedy historie celého terminálu, ne chyba jednoho trhu. Vyšší timeframy (H1, D1) staví MT5 z M1, takže chybí i tam.
 - **Dopad podle strategií:**
