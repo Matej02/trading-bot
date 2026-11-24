@@ -61,3 +61,8 @@ Soubory: `scratch/exporty/2026-11-24` (obchody, deník, data; poslal uživatel 2
   - Ověří se ze souborů v `scratch/live_mt5` po dalším cyklu runneru.
 - **Když broker data nemá:** doplnění chybějících dní z Yahoo v runneru (změna bota, jen se souhlasem).
 
+
+## Druhá kontrola po doplnění historie (24. 11. 9:28)
+- H1 (`scratch/live_mt5/research_data`, 9:01): stejné díry u všech trhů (10/2025–půlka 2/2026, půlka 6.–půlka 8. 2026; EURUSD skoro celý rok 2026). SMA200 u RSI(2) je tak pořád moc nízko.
+- M1 (9:28): okno ~108 000 svíček je teď od půlky srpna 2026 úplné (medián ~1 350 svíček za den). FM strategie díry už nezasahují.
+- Skripty kontroly: `scratch/kontrola_der_mt5.py` (M1), `scratch/kontrola_der_h1.py` (H1).
