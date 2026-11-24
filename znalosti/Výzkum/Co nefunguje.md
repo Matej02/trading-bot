@@ -41,3 +41,7 @@ Doplněno 2026-10-29 ([[F8 Strategie z FM PDF]]):
 - **Hvězda podle PDF + B4 + COT** (D v W, level nad levelem, COT index): nejlepší vývoj +0,22 R → OOS −0,17 R, COT filtr nepomohl ([[F15 Hvězda podle PDF, doplňujících pravidel a COT]]).
 - **Hakimi podle PDF + B5** (Elliott ZigZagem, Fibo 0,618–0,75, FVG/zóna, RR ≥ 2,5): vybraná +0,07 R OOS jen na zlatě, jinde ztráta ([[F16 Hakimi podle PDF a doplňujících pravidel]]).
 - **Šrajer (F17), Valchář (F18), Kimmel model 2 (F19)** podle PDF a všech obrázků: nic nad náhodou; skóre Trading Analyzeru jako filtr OOS zhoršuje ([[F17 Šrajer day a swing podle PDF]], [[F18 Valchář podle PDF a obrázků]], [[F19 Kimmel entry model 2]]).
+
+Doplněno 2026-11-24 ([[F71 a F72 Londýnský průraz a víkendový gap na měnách|F71, F72]]):
+- **Londýnský průraz asijského rozpětí** (12 párů, 2010–2026, H1 i M1): hrubě ~0 R, po spreadu −0,06 až −0,10 R, kladných 0 z 10 jiných párů.
+- **Návrat víkendového gapu na měnách** (≥ 0,25 ATR, cíl páteční zavření): hrubě kladný, ale ve vývoji 2010–18 po nedělním spreadu −0,08 R, na kovech a křížových párech ztráta.

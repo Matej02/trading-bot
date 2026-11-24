@@ -43,5 +43,28 @@ Zadání uživatele (2026-11-24): „Ano, pokračuj výzkumem.“ Plán je zapsa
   4. Jiné trhy (broker 2010–2026): průměr > 0 a kladných aspoň 55 % trhů.
   5. Kladný čistý výsledek aspoň v 55 % let.
 
-## Výsledek
-(doplní se po výpočtu)
+## Výsledek (2026-11-24, `scratch/f71_f72.py`, výstup `research_data/f71/souhrn.txt`)
+
+### F71 Londýnský průraz → **NE (0 z 5 bodů)**
+| Část | n | Hrubě | Čistě | t (čistě) |
+|---|---|---|---|---|
+| Vývoj 2010–18 (EURUSD, GBPUSD) | 4 401 | −0,008 R | −0,081 R | −5,75 |
+| Kontrola 2019–26 | 3 360 | −0,005 R | −0,095 R | −5,83 |
+| HistData M1 2010–25 | 7 792 | | −0,072 R | −6,79 |
+| Jiné trhy (10 párů) | 30 309 | | −0,055 R | kladných 0/10 |
+- Kladné roky 6 %. Průraz asijského rozpětí nemá ani hrubou výhodu (~0 R). Po spreadu je ztrátový na všech 12 párech a v obou zdrojích dat.
+
+### F72 Víkendový gap → **NE (body 2 a 3 ano, 1, 4, 5 ne)**
+| Část | n | Hrubě | Čistě (3× spread) | t (čistě) |
+|---|---|---|---|---|
+| Vývoj 2010–18 (12 párů) | 825 | +0,158 R | −0,078 R | −2,38 |
+| Kontrola 2019–26 | 736 | +0,447 R | +0,166 R | +5,40 |
+| HistData M1 2010–25 (EURUSD, GBPUSD, USDJPY) | 330 | | +0,052 R | +1,06 |
+| Jiné trhy (kovy, křížové páry) | 1 588 | | −0,151 R | kladných 4/10 |
+- Kladné roky 47 %.
+- Gap se hrubě opravdu často zavírá, ale ve vývoji to po nedělním spreadu nestačí a na kovech a křížových párech je to ztráta (XAGUSD −1,4 R).
+- Silná kontrola 2019–26 jen u dat brokera (+0,45 R hrubě), ne u HistData (+0,05 R čistě). Pravděpodobně artefakt první nedělní svíčky brokera (otevírací cena ze staré kotace). Nepoužitelné.
+
+### Co z toho plyne
+- Měny intradenně a přes víkend: žádná výhoda po nákladech. Do [[Co nefunguje]] doplněno.
+- Bot ani simulátor se nemění.
