@@ -115,6 +115,19 @@ export function londonParts(t: number): { date: string; hour: number; dow: numbe
 }
 
 /**
+ * Hodina (Londyn) svicky, na jejimz zavreni F46 vstupuje. GC=F z Yahoo nema svicku behem denni prestavky CME 17:00-18:00 NY.
+ * Ta je obvykle 22:00-23:00 Londyn -> svicka 22:00 chybi a vstupuje se na zavreni svicky 21:00 (22:00 Londyn; trh stoji,
+ * cena ~ otevreni ve 23:00). V tydnech, kdy USA a UK nemaji stejny letni cas, je prestavka 21:00-22:00 Londyn -> vstup na
+ * zavreni svicky 22:00 jako v testu. Oprava 2026-11-24 (export: pondeli 23. 11. bez signalu).
+ */
+export function f46EntryHour(t: number): number {
+  const lon = londonParts(t).hour;
+  const ny = nyParts(t).hour;
+  const breakLon = (17 + ((lon - ny + 24) % 24)) % 24;
+  return breakLon === 22 ? 21 : 22;
+}
+
+/**
  * Long na zavreni hodinove svicky 22:00-23:00 Londyn (vstup ve 23:00) v pondeli az ctvrtek, ven na zavreni svicky
  * 06:00-07:00 Londyn (viz f46Exit). V testu bez stopu; tady SL 3 denni ATR jen jako pojistka.
  */
@@ -122,7 +135,7 @@ export function f46Signal(c: Candle[]): F2xSignal | null {
   const last = c[c.length - 1];
   if (!last) return null;
   const { hour, dow } = londonParts(last.time);
-  if (hour !== 22 || dow < 1 || dow > 4) return null;
+  if (hour !== f46EntryHour(last.time) || dow < 1 || dow > 4) return null;
   const a = dailyAtrFrom1h(c);
   if (!a) return null;
   return {

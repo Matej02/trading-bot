@@ -155,8 +155,22 @@ function risk(x: AgentCtx): { op: Opinion; lots: number | null } {
   if (spread > 0 && slDist < SL_MIN_SPREADS * spread) {
     return no(`SL je jen ${(slDist / spread).toFixed(1)}× spread od vstupu (minimum ${SL_MIN_SPREADS}×) – stop by vyrazil hned spread a ztráta by byla mnohem větší než plánované riziko.`);
   }
-  const { lots, raw } = lotsFor(x.market, entry, x.signal.sl, x.signal.riskPct, a.balance);
-  if (!lots) return no(`Velikost ${raw.toFixed(3)} lotu je pod minimem brokera (${x.market.volMin}) – větší pozice by nesla víc rizika, než je dovoleno.`);
+  const sized = lotsFor(x.market, entry, x.signal.sl, x.signal.riskPct, a.balance);
+  let lots = sized.lots;
+  let minNote = "";
+  if (!lots) {
+    // stejne jako runner na MT5 (F2X_MINLOT_MAX_RISK_PCT): kdyz se riziko nevejde do minimalniho lotu, vezme se minimalni lot,
+    // pokud riziko u SL nepresahne strop systemu (oprava 2026-11-24, export: RSI2 SPX 16. 11. 0,732 lotu, F46 19. 11. 0,009 lotu)
+    const minRisk = Math.abs(entry - x.signal.sl) * x.market.moneyPerPrice * x.market.volMin;
+    const minPct = (minRisk / a.balance) * 100;
+    const cap = x.system.minLotCapPct;
+    if (cap == null || minPct > cap) {
+      return no(`Velikost ${sized.raw.toFixed(3)} lotu je pod minimem brokera (${x.market.volMin})` +
+        (cap == null ? " – větší pozice by nesla víc rizika, než je dovoleno." : ` a nejmenší lot by riskoval ${minPct.toFixed(2)} % (strop ${cap} %).`));
+    }
+    lots = x.market.volMin;
+    minNote = ` Nejmenší lot brokera místo ${sized.raw.toFixed(3)} (strop ${cap} %, jako runner na MT5).`;
+  }
 
   const riskMoney = Math.abs(pnlMoney({ market: x.market.id, dir: x.signal.dir, lots, entry }, x.signal.sl));
   const dailyLoss = Math.max(0, a.dayStart - x.equity);
@@ -177,7 +191,7 @@ function risk(x: AgentCtx): { op: Opinion; lots: number | null } {
     if (worst && Math.abs(worst[1]) > 2) return no(`Moc velká expozice na ${worst[0]} (${worst[1] > 0 ? "+" : ""}${worst[1]} pozic stejným směrem).`);
   }
   return {
-    op: { ...base, vote: "ano", reason: `${lots} lotu, riziko u SL ${riskMoney.toFixed(0)} $ (${((riskMoney / a.balance) * 100).toFixed(2)} % účtu). Denní ztráta zatím ${((dailyLoss / a.start) * 100).toFixed(2)} %.` },
+    op: { ...base, vote: "ano", reason: `${lots} lotu, riziko u SL ${riskMoney.toFixed(0)} $ (${((riskMoney / a.balance) * 100).toFixed(2)} % účtu). Denní ztráta zatím ${((dailyLoss / a.start) * 100).toFixed(2)} %.${minNote}` },
     lots,
   };
 }

@@ -165,3 +165,5 @@ aktualizovano: 2026-11-03
 
 - 2026-11-24: „Bota necháváme, mám ti poslat zase nějaký výpis?“ → strop RSI(2) na demu zůstává 0,5 % (jen SPX), bot beze změny. Demo: RSI2 SPX zavřeno 24. 11. 6:43 (zavření 23. 11. 7236,17 nad SMA5 7221,42; vstup 7138,57, tedy zhruba +98 bodů ≈ +98 $ na 1 lot, přesná cena v MT5). F29 23. 11. mimo trh (BTC −24 %, ETH −26 % za 28 dní). Runner restartován 24. 11. 6:42, běží už s opravou času. Vyžádán pondělní export simulátoru (poslední je z 19. 11.).
 - 2026-11-24: poslal export simulátoru (obchody, deník, data) → [[Export simulátoru 2026-11-24]]. Nalezeno: děravá historie MT5 (SMA200 u RSI(2) moc nízko, obchod SPX 20. 11. by podle úplných dat nebyl), F46 v simulátoru v zimě vynechává signály (chybí svíčka 22:00 u GC=F), simulátor vetuje min. lot u RSI(2)/F46 na rozdíl od runneru. Opravy čekají na souhlas.
+- 2026-11-24: „Ano, oprav 2 a 3 v simulátoru a 1 mi rozepiš víc.“ → F46 vstup před přestávkou CME a nejmenší lot se stropem 0,5 % v simulátoru opraveny, otestovány, nasazeny ([[Simulátor]]). Bod 1 (děravá historie MT5) rozepsán uživateli, bot beze změny.
+
