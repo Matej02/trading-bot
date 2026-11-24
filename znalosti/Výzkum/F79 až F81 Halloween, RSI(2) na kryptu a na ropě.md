@@ -46,5 +46,15 @@ Zadání uživatele (2026-11-24): „…pokračuj i dál a dej mi, až najdeš t
   4. Broker WTI 2019–2026: signál > 0 a převis > 0.
   5. Převis kladný aspoň v 55 % let (WTI Yahoo).
 
-## Výsledek
-(doplní se po výpočtu)
+## Výsledek (2026-11-24, `scratch/f79_f81.py`, výstup `research_data/f79/souhrn.txt`)
+**Neprošel žádný.**
+
+| Test | Vývoj: signál / převis / t | Kontrola: převis / t | Broker / 2. zdroj | Jiné trhy převis | Kladné roky | Body |
+|---|---|---|---|---|---|---|
+| F79 Halloween | +0,305 R, převis +0,118, t 1,60 (n 293 měsíců) | −0,006 / −0,03 | +0,008 | DAX +0,187, FTSE +0,170, CAC +0,199 | 65 % | 3/5 |
+| F80 RSI(2) krypto | −0,050 R, převis −0,062 | −0,030 | Yahoo −0,006 | ETH −0,027, LTC +0,023, XRP −0,037 | 14 % | 0/5 |
+| F81 RSI(2) ropa | −0,025 R, převis −0,025 | +0,018 / 0,20 | broker +0,118 | Brent −0,035, NATGAS −0,102 (n 7) | 52 % | 1/5 |
+
+**Co z toho plyne:**
+- **Halloween** v Evropě drží celé období (převis +0,17 až +0,20 R za měsíc, t ~1,8–2,2). V USA je ale slabší (t 1,60 do 2018) a od 2019 nulový. Podle pravidel NE.
+- **RSI(2) mimo US indexy nefunguje ani na kryptu, ani na ropě.** Návrat k průměru je vlastnost amerických akciových indexů, ne obecný jev.

@@ -45,3 +45,9 @@ Doplněno 2026-10-29 ([[F8 Strategie z FM PDF]]):
 Doplněno 2026-11-24 ([[F71 a F72 Londýnský průraz a víkendový gap na měnách|F71, F72]]):
 - **Londýnský průraz asijského rozpětí** (12 párů, 2010–2026, H1 i M1): hrubě ~0 R, po spreadu −0,06 až −0,10 R, kladných 0 z 10 jiných párů.
 - **Návrat víkendového gapu na měnách** (≥ 0,25 ATR, cíl páteční zavření): hrubě kladný, ale ve vývoji 2010–18 po nedělním spreadu −0,08 R, na kovech a křížových párech ztráta.
+
+Doplněno 2026-11-24 ([[F73 až F78 Dluhopisy, VIX a strach jako signál pro indexy|F73–F78]], [[F79 až F81 Halloween, RSI(2) na kryptu a na ropě|F79–F81]]):
+- **Strach z jiných trhů jako signál pro indexy** (TLT, natažený VIX, odeznívající VIX, útěk do jenu): nic neprošlo, natažený VIX jen do 2018.
+- **Nákup na 52týdenním maximu** (20 dní): horší než nákup kdykoli.
+- **RSI(2) na kryptu a ropě**: bez převisu.
+- Těsně neprošly (3/5): VIX ≥ 30, útěk do dluhopisů, Halloween.

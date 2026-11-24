@@ -40,7 +40,7 @@ Zadání uživatele (2026-11-24): „Ano, pokračuj s dluhopisy a VIX a pokraču
 
 | Test | Vývoj: signál / převis / t | Kontrola: převis / t | Broker: převis | DAX, FTSE, CAC převis | Kladné roky | Body |
 |---|---|---|---|---|---|---|
-| F73 útěk do dluhopisů | n 145, převis +0,073, t 1,57 | +0,074 / 0,90 (n 63) | +0,125 | +0,005 / +0,080 / +0,026 | 61 % | 3/5 |
+| F73 útěk do dluhopisů | n 157, +0,112 R, převis +0,073, t 1,57 | +0,074 / 0,90 (n 63) | +0,125 | +0,005 / +0,080 / +0,026 | 61 % | 3/5 |
 | F74 natažený VIX | +0,116 R, převis +0,076, **t 2,36** | +0,022 / 0,36 | −0,007 | −0,018 / −0,056 / +0,030 | 70 % | 2/5 |
 | F75 strach odeznívá | převis +0,049, t 0,88 | −0,041 | −0,074 | +0,024 / +0,153 / −0,041 | 58 % | 1/5 |
 | F76 VIX ≥ 30 (20 dní) | +0,350 R, převis +0,216, **t 2,14** | +0,212 / 0,96 (n 24) | +0,341 | −0,096 / +0,078 / +0,139 | 86 % | 3/5 |
