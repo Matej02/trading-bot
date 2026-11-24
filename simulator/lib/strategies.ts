@@ -6,7 +6,7 @@ import { fm13Signal } from "./fm13";
 import { fm14Signal } from "./fm14";
 import { fm15Signal } from "./fm15";
 import { fm16Signal } from "./fm16";
-import { f29Signal, f31Signal, f33Signal, f46Signal, f61Signal } from "./f2x";
+import { F73_HOLD, F76_HOLD, F76_VIX, f29Signal, f31Signal, f33Signal, f46Signal, f61Signal, f73Signal, f76Signal, f79Signal } from "./f2x";
 import { EXCHANGE_OF, euTradingDaysLeft } from "./euCalendar";
 import { MARKET_IDS, MARKETS, TRADE_IDS } from "./markets";
 import { lastFomcDate, nyParts, tradingDaysLeftInMonth } from "./usCalendar";
@@ -25,7 +25,8 @@ export interface SystemDef {
   // ven: sma5 = denni svicka zavre nad SMA5 (long) / pod (short); monthEnd = zavreni posledniho obchodniho dne mesice (F33);
   // fomcDay = zavreni svicky 12:00-13:00 NY v den rozhodnuti FOMC (F31)
   // londonMorning = zavreni svicky 06:00-07:00 Londyn (F46); euDay3 = zavreni 3. obchodniho dne mesice podle burzy (F61)
-  exitRule?: "sma5" | "monthEnd" | "fomcDay" | "londonMorning" | "euDay3";
+  // euMonthEnd = zavreni posledniho obchodniho dne mesice podle burzy (F79)
+  exitRule?: "sma5" | "monthEnd" | "fomcDay" | "londonMorning" | "euDay3" | "euMonthEnd";
   feeds?: string[]; // pomocne trhy (stejny timeframe), ktere strategie potrebuje - bot je nacte a preda v barSignal
   window?: number; // kolik uzavrenych svicek dostane strategie (vychozi 400 u intradennich)
   rrr?: number; // vlastni TP v R (jinak podle nastaveni)
@@ -109,6 +110,30 @@ export const SYSTEMS: SystemDef[] = [
       "převis t 2,95, od 2019 t 1,10; ověření na EuroStoxx+IBEX 1992–2026 převis +0,15 R (t 1,92, laťka 2,0 → těsně neprošlo), " +
       "od 2019 +0,13 R; data brokera 2019+ na 5 indexech +0,25 R/obchod, kladné všech 5; převis kladný v 62 % let. " +
       "Živě vstup na zavření dne L−1 (v testu otevření dne L, takže navíc noční gap). Jen sledování dopředu, ne MT5.",
+  },
+  {
+    id: "f76_vix30_d1", minLotCapPct: 0.5, name: "VIX ≥ 30 – US indexy (kandidát F76)", tf: "1d",
+    markets: US_INDEXES, kind: "bar", holdsWeekends: true, maxHoldBars: F76_HOLD, noTp: true, feeds: ["VIX"],
+    desc: `Kupovat strach: zavření VIX ≥ ${F76_VIX} → long indexu na ${F76_HOLD} obchodních dní (nový vstup až po výstupu), SL 3 ATR jen jako pojistka. ` +
+      "KANDIDÁT – test F76 (2026-11-24, pravidla předem, 3/5 bodů): převis nad stejným obchodem ve všech dnech 1990–2018 +0,22 R " +
+      "(t 2,14), 2019–26 +0,21 R (t 0,96, jen 24 obchodů), broker 2019–26 +0,34 R, kladný v 86 % let; na DAXu záporný → neprošlo. " +
+      "Vzácné (~3× ročně), podobné RSI(2). Živě vstup na zavření dne signálu (v testu otevření dalšího dne). Jen sledování dopředu, ne MT5.",
+  },
+  {
+    id: "f73_dluhopisy_d1", minLotCapPct: 0.5, name: "Útěk do dluhopisů – US indexy (kandidát F73)", tf: "1d",
+    markets: US_INDEXES, kind: "bar", holdsWeekends: true, maxHoldBars: F73_HOLD, noTp: true, feeds: ["TLT"],
+    desc: `5denní výnos TLT ≥ 90. percentil za předchozí rok a index za 5 dní ve ztrátě → long indexu na ${F73_HOLD} obchodních dní, SL 3 ATR pojistka. ` +
+      "KANDIDÁT – test F73 (2026-11-24, 3/5 bodů): převis 2004–18 +0,07 R (t 1,57), 2019–26 +0,07 R (t 0,90), broker +0,13 R, " +
+      "DAX/FTSE/CAC kladné, 61 % let → neprošly hranice t. Ceny TLT bez dividend (v testu upravené). Jen sledování dopředu, ne MT5.",
+  },
+  {
+    id: "f79_halloween_eu_d1", minLotCapPct: 0.5, name: "Halloween – evropské indexy (kandidát F79)", tf: "1d",
+    markets: ["GER_30mini", "GBR_100mini", "FRA_40mini"], kind: "bar", holdsWeekends: true, maxHoldBars: 25, noTp: true,
+    exitRule: "euMonthEnd",
+    desc: "Long v měsících listopad až duben: vstup na zavření posledního obchodního dne předchozího měsíce, ven na zavření posledního " +
+      "obchodního dne měsíce (každý měsíc zvlášť, jako v testu). KANDIDÁT – test F79 (2026-11-24, 3/5 bodů): DAX, FTSE, CAC převis " +
+      "+0,17 až +0,20 R za měsíc 1984–2026 (t 1,8–2,2); hlavní US indexy do 2018 t 1,60, od 2019 bez výhody → neprošlo. " +
+      "V testu bez stopu a vstup na otevření prvního dne; tady SL 8 ATR proti katastrofě. Jen sledování dopředu, ne MT5.",
   },
   {
     id: "f29_krypto_mom_d1", minLotCapPct: 0.5, name: "Krypto momentum 4 týdny – BTC, ETH (kandidát F29)", tf: "1d",
@@ -270,6 +295,20 @@ export function barSignal(system: string, c: Candle[], extra?: Partial<Record<TF
     const s = marketId ? f61Signal(c, marketId) : null;
     return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
   }
+  if (system === "f76_vix30_d1") {
+    if (!feeds?.VIX?.length) return null;
+    const s = f76Signal(c, feeds.VIX);
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
+  if (system === "f73_dluhopisy_d1") {
+    if (!feeds?.TLT?.length) return null;
+    const s = f73Signal(c, feeds.TLT);
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
+  if (system === "f79_halloween_eu_d1") {
+    const s = marketId ? f79Signal(c, marketId) : null;
+    return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
+  }
   if (system === "f46_zlato_asie_h1") {
     const s = f46Signal(c);
     return s ? { dir: s.dir, sl: s.sl, tp: null, reason: s.reason } : null;
@@ -417,6 +456,21 @@ export function barStatus(system: string, c: Candle[], digits: number, marketId?
     const left = euTradingDaysLeft(ex, c[c.length - 1].time);
     return left > 1 ? { text: `F61 – do signálu zbývá ${left - 1} obchodní den/dny (vstup na zavření předposledního dne měsíce)`, tone: "wait" }
       : { text: "F61 – přelom měsíce: long do zavření 3. obchodního dne dalšího měsíce", tone: "near" };
+  }
+  if (system === "f76_vix30_d1") {
+    return { text: `F76 – čeká na zavření VIX ≥ ${F76_VIX} (pak long na ${F76_HOLD} dní)`, tone: "wait" };
+  }
+  if (system === "f73_dluhopisy_d1") {
+    return { text: "F73 – čeká na prudký růst TLT (≥ 90. percentil za rok) při poklesu indexu za 5 dní", tone: "wait" };
+  }
+  if (system === "f79_halloween_eu_d1") {
+    const ex = marketId ? EXCHANGE_OF[marketId] : undefined;
+    if (!ex) return { text: "F79 – trh bez kalendáře burzy", tone: "off" };
+    const m = new Date(c[c.length - 1].time * 1000).getUTCMonth() + 1;
+    const left = euTradingDaysLeft(ex, c[c.length - 1].time);
+    return [10, 11, 12, 1, 2, 3].includes(m)
+      ? { text: `F79 – Halloween: další vstup na zavření posledního obchodního dne měsíce (zbývá ${left} dní)`, tone: left <= 1 ? "near" : "wait" }
+      : { text: "F79 – mimo sezónu (drží se jen listopad–duben)", tone: "wait" };
   }
   if (system === "f46_zlato_asie_h1") {
     return { text: "F46 – long před denní přestávkou zlata (22:00/23:00 Londýn, po–čt), ven v 07:00 Londýn", tone: "wait" };

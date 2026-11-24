@@ -204,3 +204,104 @@ export function f61Exit(c: Candle[], marketId: string): boolean {
   const last = c[c.length - 1];
   return !!ex && !!last && isEuTradingDay(ex, last.time) && euDayOfMonth(ex, last.time) === 3;
 }
+
+// ------------------------------------------------------------------ kandidati F73, F76, F79 (vyzkum 2026-11-24)
+// Vault: Vyzkum/F73 az F78 ... a F79 az F81 ... - neprosly prisnou proverkou (3/5 bodu), jen sledovani dopredu v simulatoru.
+
+/** Jako v testu: novy vstup az po vystupu predchoziho (drzeni h svicek); stav se dopocita z historie. Vraci, zda signal na posledni svicce vstupuje. */
+function firesNonOverlap(flags: boolean[], h: number): boolean {
+  let busy = -1;
+  let fired = false;
+  for (let i = 0; i < flags.length; i++) {
+    fired = false;
+    if (flags[i] && i > busy) {
+      busy = i + h;
+      fired = true;
+    }
+  }
+  return fired;
+}
+
+/** Kvantil s linearni interpolaci (jako pandas quantile). */
+function quantile(xs: number[], q: number): number {
+  const s = [...xs].sort((a, b) => a - b);
+  const pos = (s.length - 1) * q;
+  const lo = Math.floor(pos);
+  return lo + 1 < s.length ? s[lo] + (s[lo + 1] - s[lo]) * (pos - lo) : s[lo];
+}
+
+export const F76_VIX = 30;
+export const F76_HOLD = 20;
+
+/** F76: zavreni VIX >= 30 ve stejny den -> long indexu na 20 obchodnich dni, SL 3 ATR20 (pojistka). */
+export function f76Signal(c: Candle[], vix: Candle[]): F2xSignal | null {
+  const last = c[c.length - 1];
+  const v = new Map(vix.map((x) => [x.time, x.close]));
+  const vNow = last ? v.get(last.time) : undefined;
+  if (vNow == null) return null;
+  if (!firesNonOverlap(c.map((x) => (v.get(x.time) ?? 0) >= F76_VIX), F76_HOLD)) return null;
+  const a = atrLast(c);
+  if (!a) return null;
+  return {
+    dir: "long", sl: last.close - 3 * a,
+    reason: `F76: VIX ${vNow.toFixed(1)} ≥ ${F76_VIX} – long na ${F76_HOLD} obchodních dní (kupovat strach). Kandidát (3/5 bodů): ` +
+      "převis vývoj 1990–2018 +0,22 R (t 2,14), 2019–26 +0,21 R (t 0,96, jen 24 obchodů), broker +0,34 R; na DAXu záporný. " +
+      "Jen sledování dopředu v simulátoru, ne MT5. SL 3 ATR jen jako pojistka.",
+  };
+}
+
+export const F73_HOLD = 5;
+
+/** F73: 5denni vynos TLT >= 90. percentil za predchozich 252 dni a 5denni vynos indexu < 0 -> long na 5 dni. */
+export function f73Signal(c: Candle[], tlt: Candle[]): F2xSignal | null {
+  const last = c[c.length - 1];
+  if (!last || tlt.length < 260 || !tlt.some((x) => x.time === last.time)) return null;
+  const r5 = tlt.map((x, j) => (j >= 5 ? x.close / tlt[j - 5].close - 1 : NaN));
+  const flagT = new Map<number, boolean>();
+  for (let j = 257; j < tlt.length; j++) {
+    const hist = r5.slice(j - 252, j).filter((x) => Number.isFinite(x));
+    if (hist.length >= 200) flagT.set(tlt[j].time, r5[j] >= quantile(hist, 0.9));
+  }
+  const from = Math.max(5, c.length - 300);
+  const flags = c.slice(from).map((x, k) => {
+    const i = k + from;
+    return (flagT.get(x.time) ?? false) && x.close / c[i - 5].close - 1 < 0;
+  });
+  if (!firesNonOverlap(flags, F73_HOLD)) return null;
+  const a = atrLast(c);
+  if (!a) return null;
+  const jt = tlt.findIndex((x) => x.time === last.time);
+  return {
+    dir: "long", sl: last.close - 3 * a,
+    reason: `F73: útěk do dluhopisů – TLT za 5 dní ${pct(r5[jt])} (≥ 90. percentil za rok) a index za 5 dní ${pct(last.close / c[c.length - 6].close - 1)} ` +
+      `→ long na ${F73_HOLD} obchodních dní. Kandidát (3/5 bodů): převis vývoj 2004–18 +0,07 R (t 1,57), 2019–26 +0,07 R, broker +0,13 R. ` +
+      "Jen sledování dopředu v simulátoru, ne MT5. SL 3 ATR jen jako pojistka.",
+  };
+}
+
+/** F79 Halloween: signal na zavreni posledniho obchodniho dne rijna az brezna -> long na cely dalsi mesic (listopad-duben). */
+const F79_SIGNAL_MONTHS = new Set([10, 11, 12, 1, 2, 3]);
+export const F79_SL_ATR = 8;
+
+export function f79Signal(c: Candle[], marketId: string): F2xSignal | null {
+  const ex = EXCHANGE_OF[marketId];
+  const last = c[c.length - 1];
+  if (!ex || !last || !isEuTradingDay(ex, last.time) || euTradingDaysLeft(ex, last.time) !== 0) return null;
+  const m = new Date(last.time * 1000).getUTCMonth() + 1;
+  if (!F79_SIGNAL_MONTHS.has(m)) return null;
+  const a = atrLast(c);
+  if (!a) return null;
+  return {
+    dir: "long", sl: last.close - F79_SL_ATR * a,
+    reason: "F79 Halloween: long na celý další měsíc (držení listopad–duben, vždy na měsíc), ven na zavření posledního obchodního dne měsíce. " +
+      "Kandidát (3/5 bodů): DAX, FTSE, CAC převis +0,17 až +0,20 R za měsíc (t 1,8–2,2), US indexy od 2019 bez výhody. " +
+      `V testu bez stopu, tady SL ${F79_SL_ATR} ATR jen proti katastrofě. Jen sledování dopředu v simulátoru, ne MT5.`,
+  };
+}
+
+/** Vystup F79: na zavreni posledniho obchodniho dne mesice podle burzy. */
+export function f79Exit(c: Candle[], marketId: string): boolean {
+  const ex = EXCHANGE_OF[marketId];
+  const last = c[c.length - 1];
+  return !!ex && !!last && isEuTradingDay(ex, last.time) && euTradingDaysLeft(ex, last.time) === 0;
+}

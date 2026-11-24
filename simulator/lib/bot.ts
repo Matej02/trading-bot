@@ -7,7 +7,7 @@ import { aiScore } from "./aiScore";
 import type { AiContext } from "./aiPrompt";
 import { blockedBy, decisionVerdict } from "./verdict";
 import { ema, rsiLast } from "./indicators";
-import { f31Exit, f33Exit, f46Exit, f61Exit } from "./f2x";
+import { f31Exit, f33Exit, f46Exit, f61Exit, f79Exit } from "./f2x";
 import { closedCandles, nowSec, store } from "./data";
 import { isCrypto, MARKETS, quote, TRADE_IDS } from "./markets";
 import { apiLogout, apiRelease, browserBackend, deviceInfo, type Backend } from "./remote";
@@ -918,6 +918,10 @@ export class Bot {
       if (!f61Exit(closed, id)) return;
       out = () => true;
       why = "zavření 3. obchodního dne měsíce (F61)";
+    } else if (sys.exitRule === "euMonthEnd") {
+      if (!f79Exit(closed, id)) return;
+      out = () => true;
+      why = "zavření posledního obchodního dne měsíce (F79)";
     } else return;
     for (const p of s.broker.positions.filter((x) => x.system === systemId && x.market === id && x.openTime <= last.time + TF_SEC[sys.tf])) {
       if (out(p.dir)) this.closeAtMarket(p.id, why);
