@@ -108,17 +108,33 @@ def ny_dt(d, hh, mm):
 _YCACHE = {}
 
 
-def yahoo_adjclose(tk, max_age=6 * 3600):
-    hit = _YCACHE.get(tk)
+def yahoo_adjclose(tk, max_age=6 * 3600, rng="6mo"):
+    hit = _YCACHE.get((tk, rng))
     if hit and time.time() - hit[0] < max_age:
         return hit[1]
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{tk}?range=6mo&interval=1d&events=div"
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{tk}?range={rng}&interval=1d&events=div"
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (FM demo runner)"})
     j = json.loads(urllib.request.urlopen(req, timeout=30).read())["chart"]["result"][0]
     tz = ZoneInfo(j["meta"].get("exchangeTimezoneName", "America/New_York"))
     s = {datetime.fromtimestamp(t, tz).date(): v for t, v in zip(j["timestamp"], j["indicators"]["adjclose"][0]["adjclose"]) if v}
-    _YCACHE[tk] = (time.time(), s)
+    _YCACHE[(tk, rng)] = (time.time(), s)
     return s
+
+
+# RSI(2): trendovy filtr SMA200 z dennich dat indexu na Yahoo (2026-11-24). Historie MT5 dema ma diry
+# (10/2025-2/2026, 6-8/2026; broker data nema), SMA200 z MT5 tak vychazela moc nizko. Test F42 i simulator = Yahoo.
+RSI2_YAHOO = {"SPX500mini": "^GSPC", "NAS100mini": "^NDX", "US30mini": "^DJI"}
+
+
+def sma200_yahoo(series, day):
+    """series = {date: zavreni} z Yahoo. Vraci ("ok", zavreni dne day, SMA200 do day vcetne),
+    ("svatek", None, None) kdyz Yahoo ma pozdejsi dny, ale day ne (burza zavrena), nebo ("chybi", None, None)."""
+    xs = sorted(d for d in series if d <= day)
+    if xs and xs[-1] == day and len(xs) >= 200:
+        return "ok", series[day], sum(series[d] for d in xs[-200:]) / 200
+    if day not in series and any(d > day for d in series):
+        return "svatek", None, None
+    return "chybi", None, None
 
 
 def month_to_date(series, d):
@@ -207,14 +223,16 @@ def rsi_wilder(closes, n=2):
     return 100.0 if dn == 0 else 100 - 100 / (1 + up / dn)
 
 
-def rsi2_signal(days, closes):
-    """days/closes = uzavrene pracovni denni svicky (vzestupne). Vraci (signal, popis) pro posledni svicku."""
+def rsi2_signal(days, closes, trend=None):
+    """days/closes = uzavrene pracovni denni svicky (vzestupne). Vraci (signal, popis) pro posledni svicku.
+    trend = (zavreni, SMA200) z jineho zdroje (Yahoo, runner od 2026-11-24); None = SMA200 z closes (paritni test F42)."""
     if len(closes) < 205:
         return False, "RSI(2): malo dennich dat"
-    sma200 = sum(closes[-200:]) / 200
+    c, sma200 = trend if trend else (closes[-1], sum(closes[-200:]) / 200)
+    src = " (Yahoo)" if trend else ""
     r = rsi_wilder(closes[-250:])
-    ok = closes[-1] > sma200 and r is not None and r < 10
-    return ok, (f"RSI(2): zavreni {days[-1]} {closes[-1]:.2f} {'>' if closes[-1] > sma200 else '<='} SMA200 {sma200:.2f}, "
+    ok = c > sma200 and r is not None and r < 10
+    return ok, (f"RSI(2): zavreni {days[-1]} {c:.2f}{src} {'>' if c > sma200 else '<='} SMA200{src} {sma200:.2f}, "
                 f"RSI(2) {r:.1f}" + (" < 10 -> long" if ok else ""))
 
 

@@ -456,6 +456,9 @@ def f2x_open(state, name, mk, d, live, why, key, atr=None):
         log(f"  --- neprovedeno: {res}")
 
 
+_RSI2_YFAIL = {}   # trh -> cas posledniho neuspechu Yahoo (RSI2)
+
+
 def cycle_f2x(state, live):
     """F33 rebalancovani, F31 drift pred FOMC, F29 krypto momentum, RSI2 pullback - casovani podle f2x_live (cista rozhodnuti)."""
     now = datetime.now(timezone.utc)
@@ -507,7 +510,25 @@ def cycle_f2x(state, live):
             k = f"RSI2|{days[-1]}|{mk}"
             if k in seen:
                 continue
-            ok, txt = FX.rsi2_signal(days, closes)
+            # SMA200 z Yahoo (historie MT5 ma diry); bez dat Yahoo se nevstupuje, zkusi se znovu za 10 min v ranim okne
+            if time.time() - _RSI2_YFAIL.get(mk, 0) < 600:
+                continue
+            try:
+                st, yc, ys = FX.sma200_yahoo(FX.yahoo_adjclose(FX.RSI2_YAHOO[mk], max_age=3600, rng="2y"), days[-1])
+            except Exception as e:  # noqa: BLE001
+                st, yc, ys = "chyba", None, None
+                log(f"  RSI2 {mk}: Yahoo nedostupne ({str(e)[:80]}) - nevstupuji, zkusim za 10 min")
+            if st == "svatek":
+                state["seen"].append(k)
+                log(f"  RSI2 {mk}: {days[-1]} burza v USA zavrena (Yahoo bez svicky) - bez signalu")
+                continue
+            if st != "ok":
+                _RSI2_YFAIL[mk] = time.time()
+                if st == "chybi":
+                    log(f"  RSI2 {mk}: Yahoo jeste nema zavreni {days[-1]} - nevstupuji, zkusim za 10 min")
+                continue
+            ok, txt = FX.rsi2_signal(days, closes, trend=(yc, ys))
+            log(f"  {mk} {txt}")
             if ok:
                 f2x_open(state, "RSI2", mk, 1, live, txt + " (stop 3 ATR, ven zavreni > SMA5 / 10 dni)", k, atr=a)
             else:

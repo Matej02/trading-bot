@@ -67,3 +67,4 @@ Soubory: `scratch/exporty/2026-11-24` (obchody, deník, data; poslal uživatel 2
 - M1 (9:28): okno ~108 000 svíček je teď od půlky srpna 2026 úplné (medián ~1 350 svíček za den). FM strategie díry už nezasahují.
 - Skripty kontroly: `scratch/kontrola_der_mt5.py` (M1), `scratch/kontrola_der_h1.py` (H1).
 - **Ruční kontrola uživatele (24. 11.):** okno Symboly, SPX500mini M1, 11/2025 i 7/2026 → Žádost vrátila 0 sloupců. Broker data nemá, doplnit se v MT5 nedají. Zbývá jen oprava v runneru (Yahoo), čeká na souhlas.
+- **Opraveno 24. 11.:** SMA200 u RSI(2) v runneru z Yahoo (souhlas uživatele). Viz [[FM live test na MT5 demu]].
