@@ -37,5 +37,19 @@ Zadání uživatele (2026-11-24): „Ano, přidej je do simulátoru a pokračuj 
 - **Trhy:** hlavní S&P 500, Nasdaq 100, Dow; jiné DAX, FTSE, CAC.
 - **ANO podle standardních 5 bodů:** vývoj Yahoo 2010–2018 t ≥ 2,0; kontrola 2019–2026 t ≥ 1,5; DAX, FTSE, CAC převis > 0 u všech; broker 2019–2026 signál > 0 a převis > 0; převis kladný aspoň v 55 % let.
 
-## Výsledek
-(doplní se po výpočtu)
+## Výsledek (2026-11-24, `scratch/f82_f84.py`, výstup `research_data/f82/souhrn.txt`)
+**Neprošel žádný.**
+
+### F82 Víkendový pohyb bitcoinu → NE (0/5)
+- Broker BTC 2012–18: n 35, hrubě −0,04 R, čistě −0,17 R. 2019–26: n 109, čistě −0,06 R. Binance 2019–26 −0,07 R.
+- ETH −0,24 R, LTC +0,02 R, XRP −0,12 R; kladné roky 40 %.
+- Pohyb bitcoinu přes víkend se nevrací ani hrubě. „Zavírání CME gapu“ se nepotvrdilo.
+
+### F83 Slabý měsíc → long další měsíc → NE (2/5)
+- Vývoj (do 2018): signál +0,28 R za měsíc, převis +0,09 R (t 0,87). Kontrola 2019–26: převis +0,24 R (t 0,98, n 28). Broker: převis +0,71 R (jen 6 měsíců).
+- DAX −0,04, FTSE +0,12, CAC +0,14; převis kladný v 64 % let.
+- Po slabém měsíci index v dalším měsíci v průměru roste víc než jindy, ale rozptyl je velký a t daleko od hranice.
+
+### F84 Sudé týdny cyklu FOMC → NE (1/5)
+- Vývoj 2010–18: převis +0,05 R (t 1,48). Kontrola 2019–26: −0,03 R. Broker −0,02 R. Kladné roky 47 %.
+- Efekt z literatury (data do 2016) od 2019 zmizel.

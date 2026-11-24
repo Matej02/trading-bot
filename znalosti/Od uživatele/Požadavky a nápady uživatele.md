@@ -176,3 +176,4 @@ aktualizovano: 2026-11-03
 - 2026-11-24: „Ano, pokračuj výzkumem.“ → F71 londýnský průraz a F72 víkendový gap na měnách (plán předem d72a628): oba NE. [[F71 a F72 Londýnský průraz a víkendový gap na měnách]]
 - 2026-11-24: „Ano, pokračuj s dluhopisy a VIX a pokračuj i dál a dej mi, až najdeš třeba 5 věcí, které by mohly fungovat.“ → F73–F81 (9 testů, plány předem dc680ce a 448cc3f): žádný neprošel, 3 těsně (VIX ≥ 30, útěk do dluhopisů, Halloween). [[Souhrn testů F71–F81 (2026-11-24)]]
 - 2026-11-24: „Ano, přidej je do simulátoru a pokračuj zase dál.“ → F76, F73, F79 přidány do simulátoru (jen sledování dopředu), parita s testem 100 %, nasazeno feb7b5f. [[Simulátor]]
+- 2026-11-24 (pokračování „pokračuj zase dál“): F82 víkend bitcoinu, F83 slabý měsíc, F84 cyklus FOMC (plán předem 6c95890) → nic neprošlo. [[F82 až F84 Víkend bitcoinu, slabý měsíc a cyklus FOMC]]

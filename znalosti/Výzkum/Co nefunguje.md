@@ -51,3 +51,5 @@ Doplněno 2026-11-24 ([[F73 až F78 Dluhopisy, VIX a strach jako signál pro ind
 - **Nákup na 52týdenním maximu** (20 dní): horší než nákup kdykoli.
 - **RSI(2) na kryptu a ropě**: bez převisu.
 - Těsně neprošly (3/5): VIX ≥ 30, útěk do dluhopisů, Halloween.
+- **Víkendový pohyb bitcoinu** (návrat k páteční ceně, „CME gap“): ztráta i hrubě (F82).
+- **Sudé týdny cyklu FOMC** (Cieslak a kol.): do 2018 t 1,48, od 2019 záporné (F84).
