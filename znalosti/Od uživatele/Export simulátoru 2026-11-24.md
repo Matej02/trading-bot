@@ -66,3 +66,4 @@ Soubory: `scratch/exporty/2026-11-24` (obchody, deník, data; poslal uživatel 2
 - H1 (`scratch/live_mt5/research_data`, 9:01): stejné díry u všech trhů (10/2025–půlka 2/2026, půlka 6.–půlka 8. 2026; EURUSD skoro celý rok 2026). SMA200 u RSI(2) je tak pořád moc nízko.
 - M1 (9:28): okno ~108 000 svíček je teď od půlky srpna 2026 úplné (medián ~1 350 svíček za den). FM strategie díry už nezasahují.
 - Skripty kontroly: `scratch/kontrola_der_mt5.py` (M1), `scratch/kontrola_der_h1.py` (H1).
+- **Ruční kontrola uživatele (24. 11.):** okno Symboly, SPX500mini M1, 11/2025 i 7/2026 → Žádost vrátila 0 sloupců. Broker data nemá, doplnit se v MT5 nedají. Zbývá jen oprava v runneru (Yahoo), čeká na souhlas.
