@@ -45,3 +45,19 @@ Soubory: `scratch/exporty/2026-11-24` (obchody, deník, data; poslal uživatel 2
 
 ## Rozhodnutí
 - Uživatel (24. 11.): „Bota necháváme.“ Opravy 1–3 se nabízejí, provedou se jen se souhlasem.
+
+## Bod 1 podrobněji (2026-11-24)
+- **Díry jsou stejné ve všech 13 trzích runneru** (`scratch/live_mt5`, M1):
+  - chybí 19.–20. 10. 2025 až polovina 2/2026 a polovina 6. až polovina 8. 2026;
+  - EURUSD má navíc díry skoro celý rok 2026.
+  - Je to tedy historie celého terminálu, ne chyba jednoho trhu. Vyšší timeframy (H1, D1) staví MT5 z M1, takže chybí i tam.
+- **Dopad podle strategií:**
+  - **RSI(2):** SMA200 z 200 denních svíček sahá přes díry dál do minulosti a vychází moc nízko (SPX o ~175 bodů, US30 o ~1 240). Runner tak bere i obchody, kdy je index pod skutečnou SMA200. SMA5 a ATR (poslední dny) jsou v pořádku.
+  - **F12–F16, F20:** „75 dní“ M1 kvůli dírám sahá až do 8/2025, struktura D1/H4 se počítá přes chybějící měsíce. Jsou to experimenty bez ověřené výhody.
+  - **F33, F31, F29:** používají jen ATR z posledních 20 dní, takže bez dopadu.
+- **Oprava bez změny bota:** v MT5 doplnit historii.
+  - Zobrazit → Symboly (Ctrl+U) → záložka Sloupce/Bars → symbol, M1, rozsah od 1. 1. 2025 → Vyžádat.
+  - Postupně SPX500mini, NAS100mini, US30mini, pak ostatní trhy runneru.
+  - Ověří se ze souborů v `scratch/live_mt5` po dalším cyklu runneru.
+- **Když broker data nemá:** doplnění chybějících dní z Yahoo v runneru (změna bota, jen se souhlasem).
+
