@@ -87,3 +87,9 @@ Každé pondělí od 16. 11. uživatel pošle export (obchody, deník, data). Pr
   - **F46 hodina vstupu:** GC=F nemá svíčku během denní přestávky CME (17–18 NY). Vstup je na zavření poslední svíčky před přestávkou (`f46EntryHour`): obvykle 21:00 Londýn (zavření 22:00, trh do 23:00 stojí), v týdnech posunu letního času USA/UK 22:00. Ověřeno testem `scratch/f61_sim/oprava_2411.ts`: pondělí 23. 11. → signál; svíčka 22:00 navíc → bez druhého signálu.
   - **Nejmenší lot jako runner:** `minLotCapPct: 0.5` u RSI2, F33, F31, F29, F46, F61. Když vyjde méně než nejmenší lot, vezme se nejmenší lot, pokud riziko u SL ≤ 0,5 %. Test: RSI2 SPX 16. 11. → 1 lot (0,34 %); NAS 1,52 % → dál ne; průraz bez stropu beze změny.
 
+- 2026-11-24 (souhlas uživatele „ano, přidej je do simulátoru“): přidáni tři kandidáti jen na sledování dopředu, ne MT5. Všichni měli 3/5 bodů. Viz [[Souhrn testů F71–F81 (2026-11-24)]].
+  - **F76 `f76_vix30_d1`** (SPX, NAS, US30, pomocná data `VIX` = ^VIX): zavření VIX ≥ 30 → long na 20 obchodních dní. Nový vstup až po výstupu (stav se dopočítá z historie). SL 3 ATR pojistka.
+  - **F73 `f73_dluhopisy_d1`** (SPX, NAS, US30, pomocná data `TLT`): 5denní výnos TLT ≥ 90. percentil za předchozích 252 dní a index za 5 dní < 0 → long na 5 dní. SL 3 ATR pojistka.
+  - **F79 `f79_halloween_eu_d1`** (DAX, FTSE, CAC): vstup na zavření posledního obchodního dne října až března, výstup na zavření posledního obchodního dne dalšího měsíce (`exitRule: "euMonthEnd"`). V testu bez stopu, tady SL 8 ATR proti katastrofě.
+  - **Parita s testem** (`scratch/f61_sim/kandidati.ts` + `kandidati_export.py`, data 2012–2026): F76 20/20 signálů, F73 96/96 signálů. F79 signály a výstupy správně podle kalendáře Xetry (28. 3. 2024 Velký pátek, 30. 12.).
+  - Odchylky od testu: vstup na zavření dne signálu (v testu otevření dalšího dne), TLT bez dividend (v testu upravené ceny), u F79 stop 8 ATR. tsc i build OK, nasazeno (feb7b5f).
