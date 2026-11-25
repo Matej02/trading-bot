@@ -261,3 +261,7 @@ Na pokyn uživatele „chci to na bota na MT5 dát“. Kód: `f2x_live.py` (rozh
   - Předpoklad „PC kolem 20:00“ tedy neplatí. Intradenní obchod otevřený odpoledne zůstane asi ve 2/3 případů přes noc.
   - Přes noc se těsný stop (9–14 pipů) vystavuje rozšíření spreadu kolem 23:00 a swapu, v pátek i víkendovému gapu, který může stop přeskočit. To už je jiná strategie, než jakou test měřil.
   - Návrh pojistky (zavřít jen intradenní F12, F13, F14, F16, F20, když se Windows vypíná; F15, F33, F31, F29 a RSI(2) nechat) je zapsaný, čeká na souhlas uživatele.
+- **2026-11-25 – pojistka se nezavádí.** Uživatel: „Asi ne, já se budu snažit vypínat PC v 19:45 každý den.“ Runner se tedy nemění.
+  - Runner kontroluje 8 s po každé celé minutě, takže intradenní pozice zavírá v 19:45:08. **PC vypínat nejdřív v 19:47.**
+  - Delší dny: **30. 11. do 22:00** (výstup F33 ve 21:55), **8. 12. do 20:01** (vstup F31 ve 20:00) a **9. 12. do 20:00** (výstup F31 v 19:55, FOMC 8.–9. 12.).
+  - Kdyby se PC přesto vypnulo dřív, do hodnocení se dál počítá výsledek podle pravidla (19:45), jako u EURUSD 24. 11.
