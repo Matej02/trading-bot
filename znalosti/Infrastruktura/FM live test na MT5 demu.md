@@ -245,3 +245,15 @@ Na pokyn uživatele „chci to na bota na MT5 dát“. Kód: `f2x_live.py` (rozh
 
 - **2026-11-19 – RSI(2) přidána do runneru** (magic 20261142, SPX/NAS/US30, vstup ráno 7–10, výstup nad SMA5 / 10 dní, stop 3 ATR), commit f969c78. NAS a US30 odmítne min. lot. Viz [[F42 RSI(2) přísná prověrka]]. Platí po restartu runneru.
 - **2026-11-24 – RSI(2): SMA200 z Yahoo** (souhlas uživatele „ano udělej to“). Historie MT5 dema má díry (10/2025–půlka 2/2026, půlka 6.–půlka 8. 2026; broker data nemá, ruční Žádost v okně Symboly vrátila 0 sloupců), takže SMA200 z MT5 vycházela moc nízko (SPX 18. 11. 7 172 proti 7 347). Teď: zavření a SMA200 indexu z Yahoo (^GSPC, ^NDX, ^DJI, `f2x_live.sma200_yahoo`), RSI(2), SMA5, ATR, výstup a ceny dál z MT5. Bez dat Yahoo se nevstupuje (nový pokus za 10 min v ranním okně), svátek v USA = bez signálu. Testy: `scratch/test_rsi2_yahoo.py` (17.–19. 11. starý kód signál, nový ne), `scratch/test_rsi2_runner.py` (signál, chyba Yahoo, chybějící den), parita F42 4449/4449. Zálohy `scratch/*_zaloha_2026-11-24.py`. **Platí po restartu runneru (uživatel).**
+- **2026-11-24/25 – obchody F13 a PC vypnuté v 16:59.**
+  - 16:24 F13 short EURUSD 1,78 lotu @ 1,09681 (SL 1,09822, TP 1,08809) a GBPUSD 2,8 lotu @ 1,31099 (SL 1,31189). F12 GBPUSD odmítnut (SL jen 3× spread).
+  - GBPUSD zasáhl SL v 17:19 → **−252 $ = −1,00 R.**
+  - PC se vypnulo v 16:59 (Windows log, událost 1074), takže runner v 19:45 EURUSD nezavřel. Pozice zůstala přes noc u brokera se stopem a runner ji zavřel po startu 25. 11. v 6:32 @ 1,09473: **+370,24 $ a swap +4,24 $ (+1,47 R).**
+  - **Podle pravidla (19:45) by to bylo −0,04 R (−9 $), podle testu (22:00) +0,20 R (+50 $).** Zisk přes noc vznikl mimo pravidlo, do hodnocení se počítá −0,04 R (M1 MT5, výpočet 25. 11.).
+  - Ponaučení: intradenní výstup v 19:45 funguje jen tehdy, když v tu dobu běží PC. Pojistka (zavřít intradenní pozice, když se Windows vypíná) je jen návrh a bez souhlasu uživatele se nezavádí.
+- **RSI(2) SPX 20.–24. 11.:** +122,23 $, swap −1,20 $ (+0,29 R). Signál vznikl ze špatné SMA200 z MT5 (opraveno 24. 11.), do hodnocení RSI(2) se nepočítá.
+- **2026-11-25 7:00 – první rozhodnutí RSI(2) se SMA200 z Yahoo:** SPX 7 201 < 7 351, NAS 26 214 < 28 086, US30 50 019 < 50 773 → bez signálu, správně.
+- **Stav 25. 11.:**
+  - zůstatek 100 969,19 $ (+969 $);
+  - obchody podle pravidel: F13 5. 11. +0,88 R, F12 11. 11. +2,53 R, F13 GBPUSD 24. 11. −1,00 R, F13 EURUSD 24. 11. −0,04 R. Celkem **4 obchody, +2,37 R**.
+- **F33 dnes 25. 11. v 15:30 (L−2; 26. 11. Díkůvzdání, 27. 11. zkrácený den, L = 30. 11.):** kód runneru na datech Yahoo do 24. 11. dává SPY −4,89 %, TLT −0,01 % → **long SPX500mini** (NAS100mini odmítne minimální lot), výstup 30. 11. ve 21:55 Praha. **PC musí běžet v 15:30 a 30. 11. do 22:00.**
