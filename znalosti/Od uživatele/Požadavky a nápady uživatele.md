@@ -180,3 +180,9 @@ aktualizovano: 2026-11-03
 - 2026-11-25: „A hned teď se vracíme k botovi.“ → kontrola dema (jen čtení). RSI(2) poprvé se SMA200 z Yahoo: bez signálu (všechny 3 indexy pod SMA200). Obchody F13 z 24. 11.: GBPUSD −1,00 R. EURUSD zůstal přes noc otevřený, protože PC se vypnulo v 16:59, takže runner v 19:45 neběžel. Zavřen 25. 11. v 6:32 se ziskem +370 $; podle pravidla 19:45 by to bylo −0,04 R. F33 dnes v 15:30 podle kódu runneru long SPX500mini, výstup 30. 11. ve 21:55. [[FM live test na MT5 demu]]
 - 2026-11-25: „A pomůže nám ta pojistka nějak? Nebo to spíš bude negativum?“ → rozbor: spíš pomůže. PC se ve 2/3 všedních dnů vypíná před 19:45 (Windows log), obchod pak zůstane přes noc s těsným stopem. Rizika pojistky: zavře dřív, než říká pravidlo; při vypínání nemusí stihnout; chyba by mohla zavřít swing pozice (řeší se testy). Čeká na rozhodnutí. [[FM live test na MT5 demu]]
 - 2026-11-25: „Asi ne, já se budu snažit vypínat PC v 19:45 každý den.“ → pojistka se nezavádí, runner beze změny. Runner zavírá v 19:45:08, takže vypínat nejdřív v 19:47. Výjimky: 30. 11. do 22:00 (F33), 8. 12. do 20:01 a 9. 12. do 20:00 (F31). [[FM live test na MT5 demu]]
+- 2026-11-25: „Řekni mi, co můžeme udělat pro to, abychom posunuli náš postup a abychom ho posílili a zrychlili.“ → návrh (nic nezměněno, čeká na volbu):
+  1. hned a bez rizika: broker s mikroloty (0,01) vybrat a demo u něj spustit už teď, souběžně se sledováním dopředu; automatické týdenní hodnocení podle pravidla (jen čtení);
+  2. hlavní směr výzkumu: akcie (hodně obchodů ročně → statistika i sledování dopředu za měsíce, ne roky), past: data bez zaniklých firem;
+  3. 4. 1. 2027: demo jen na tom, co by šlo živě (F33, RSI(2), F31), F12–F16 a F20 vypnout, jen se souhlasem;
+  4. VPS až před ostrým/prop účtem (placené);
+  - nedělat: další testy na stejných trzích, zkracovat pravidlo 30 obchodů.
