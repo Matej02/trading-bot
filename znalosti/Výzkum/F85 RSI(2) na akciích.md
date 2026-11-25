@@ -43,5 +43,30 @@ Zadání uživatele (2026-11-25): „Ano, začni s tím, a pak mi dej výstup.�
 
 Skript `scratch/f85_rsi2_akcie.py`, výstup `research_data/f85/souhrn.txt`.
 
-## Výsledky
-(doplní se po výpočtu; data se stahují až se souhlasem uživatele)
+## Výsledky (2026-11-25)
+Souhlas se stažením: „Ano, stáhni to a spusť test.“ Výstup `research_data/f85/souhrn.txt`, skripty `scratch/f85_stahni.py` a `scratch/f85_rsi2_akcie.py`. Parita výpočtu s F42 na SPX: 481/481 obchodů, rozdíl 0.
+
+**Data:**
+- složení S&P 500: 2 720 změn, 1996-01-02 až 2026-08-18, 1 209 tickerů;
+- Yahoo má data jen pro 737 z nich (zaniklé a převzaté firmy chybí);
+- pokrytí členů: 1996 38 %, 2005 53 %, 2015 72 %, 2026 98 %. Chybějící firmy výsledek spíš vylepšují.
+
+| Část | Obchodů | Signál R | Srovnání | Převis | t |
+|---|---|---|---|---|---|
+| Síto: vývoj bez nákladů | 48 115 | +0,033 | +0,019 | +0,014 | 2,95 |
+| Vývoj 1996–2018 | 48 115 | −0,003 | −0,007 | +0,004 | 0,89 |
+| Kontrola 2019–2026 | 24 304 | −0,011 | −0,012 | +0,001 | 0,15 |
+| Evropa FTMO (13 titulů) | 2 512 | −0,003 | −0,011 | +0,009 | 0,83 |
+
+- Pesimistické náklady: vývoj −0,023 R, kontrola −0,031 R.
+- Převis kladný v 18 z 31 let (58 %).
+- **Rozhodnutí: 1/5 bodů → NEPROŠLO.** Bez nákladů je u akcií jen malá hrubá výhoda (+0,033 R na obchod) a náklady akciových CFD (spread, provize, financování 12 % ročně) ji celou spotřebují.
+
+**Popis:**
+- americké akcie FTMO 2019–2026: signál −0,009 R, převis −0,002;
+- výstup na otevření dalšího dne: ještě horší (−0,006 / −0,013 R);
+- korelace s RSI(2) na indexech +0,47 (padá ve stejných měsících);
+- **měřítko prop zkoušky:** F85 přidaná k F33 + RSI(2) při 1 % zkrátí medián na 9 měsíců, ale **propadne 71 % zkoušek** (základ 0 %). To je jen hazard, žádná výhoda.
+- Páka 1:1 by při 1 % riziku byla v 14 % dní překročená.
+
+**Poučení:** RSI(2) funguje na indexech, ne na jednotlivých akciích po nákladech CFD. Krátkodobý návrat u velkých akcií je po roce 2000 slabý (shoda s literaturou o slábnoucím short-term reversal).

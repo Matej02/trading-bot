@@ -56,3 +56,8 @@ Výstup `research_data/prop/meritko_zaklad.txt`, skript `scratch/prop_meritko.py
 - Při 2 %: medián 14 měsíců, ale propadne 59 %.
 - **Neaktivita:** v 96–100 % zkoušek je mezera delší než 30 dní bez nového obchodu. Web FTMO (25. 11.): u CFD účtů FTMO po několika týdnech nečinnosti kontaktuje obchodníka a jde požádat o zmrazení. Pevné 30denní pravidlo našel jen u futures. Před nákupem ověřit u podpory.
 - **Závěr:** s dnešními ověřenými strategiemi trvá zkouška FTMO typicky **2,5–3 roky** a do 12 měsíců neprojde skoro nikdy. Potřebujeme strategie s častějšími obchody, které nejsou svázané s pády indexů. To je cíl F85 a dalších testů. Kandidát se porovná s tímto řádkem podle pravidla výše.
+
+## Testy podle měřítka
+| Test | Prověrka | Měřítko při 1 % | Poznámka |
+|---|---|---|---|
+| [[F85 RSI(2) na akciích|F85]] RSI(2) na akciích | NE (1/5) | NE: medián 31 → 9 měs., ale propadlo 0 → 71 % | náklady CFD sežerou malou hrubou výhodu |

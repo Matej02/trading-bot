@@ -53,3 +53,6 @@ Doplněno 2026-11-24 ([[F73 až F78 Dluhopisy, VIX a strach jako signál pro ind
 - Těsně neprošly (3/5): VIX ≥ 30, útěk do dluhopisů, Halloween.
 - **Víkendový pohyb bitcoinu** (návrat k páteční ceně, „CME gap“): ztráta i hrubě (F82).
 - **Sudé týdny cyklu FOMC** (Cieslak a kol.): do 2018 t 1,48, od 2019 záporné (F84).
+
+Doplněno 2026-11-25 ([[F85 RSI(2) na akciích|F85]]):
+- **RSI(2) na jednotlivých akciích** (členové S&P 500 k danému dni, 72 tis. obchodů, 1996–2026): bez nákladů +0,033 R, po nákladech akciových CFD −0,003 R (vývoj) a −0,011 R (kontrola), převis t 0,89 / 0,15. V prop zkoušce by zvýšila propady z 0 % na 71 %.
