@@ -207,3 +207,4 @@ aktualizovano: 2026-11-03
 - 2026-11-25: „To je jedno, já jim nechci psát, pokračuj s tím, co jsi našel na internetu.“ → podpora se nekontaktuje. Nejasnosti (denní limit The5ers, neaktivita, EA) dohledat na dalších oficiálních stránkách; co zůstane nejasné, počítat pesimisticky.
   - Výsledek z veřejných podmínek: The5ers vypadá (vlastní automatika jen s písemným souhlasem firmy), zůstává **FTMO 2 kroky Swing**. Podmínky FTMO čl. 13.2.3: právo ukončit účet po 30 dnech bez otevření obchodu. Naše portfolio by potřebovalo ~4–5 udržovacích obchodů ročně (nejdelší mezera 154 dní), nebo víc strategií. [[F91 Pravidla prop firem v měřítku]]
 - 2026-11-25: „Ano, pokračuj, dej mi seznam nápadů.“ → seznam nápadů na nové nezávislé strategie s častějšími obchody, s odhadem šance; uživatel vybere.
+- 2026-11-25: „Ano, pokračuj.“ → F92 den výsledků během dne, pak F93 druhý den po výsledcích (plán předem, data z F88). Bot se nemění.
