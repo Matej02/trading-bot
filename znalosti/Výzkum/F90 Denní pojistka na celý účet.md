@@ -45,3 +45,37 @@ Zadání uživatele (2026-11-25): „Ano, začni bodem 1 a pak 2.“ Bod 1 = poj
 **Co by ANO znamenalo:** pravidlo pro runner na prop účtu (zavedení jen na pokyn uživatele). Pojistka funguje, jen když runner běží celý americký obchodní den (15:30–22:00 Praha) i přes noc. Dnes se PC vypíná v 19:47, takže na prop by byl potřeba VPS ([[Cesta k prop účtu]], krok 5).
 
 Skript `scratch/f90_pojistka.py`, výstup `research_data/prop/f90_souhrn.txt`.
+
+## Výsledky (2026-11-25)
+Výstup `research_data/prop/f90_souhrn.txt`. Bez pojistky se shoduje s F87 (1,25 %: P24 17 %, P36 65 %, propadlo 3 %, medián 27,2).
+
+**Výběr na vývoji:** M* = 1,0 % (denně −4 %, celkem 91 %), r* = 2,5 %.
+
+| Při M* = 1 %, r* = 2,5 % | P12 | P24 | Propadlo | Medián |
+|---|---|---|---|---|
+| Vývoj 2003–2014 | 29 % | 75 % | 2 % | 13,8 měs. |
+| Kontrola 2015–2023 | 24 % | 54 % | **14 %** | 14,8 měs. |
+| Kontrola se skluzem 0,25 R | 11 % | 13 % | **87 %** | 7,0 měs. |
+| Základ bez pojistky 1,25 %, kontrola | 6 % | 22 % | 7 % | 25,1 měs. |
+
+- Bod 1 (propadlo ≤ 10 % i v kontrole): **NE** (14 %, propady v srpnu 2015 a v říjnu 2020).
+- Bod 2 (medián −20 % nebo P12 +10 p. b.): ANO.
+- Bod 3 (skluz 0,25 R): **NE** (propadlo 81 % / 87 %).
+- **Rozhodnutí: NEPROŠLO.**
+
+**Proč:** pojistka funguje, jen když se pozice zavřou rychle a skoro bez skluzu. Při vyšším riziku je otevřených víc korelovaných pozic na US indexech najednou a skluz se sčítá. Při 0,25 R na pozici přeskočí limit FTMO i s pojistkou. Při M* a r* pojistka zasáhla ve 347 různých dnech, je to tedy běžný mechanismus, ne výjimka.
+
+**Financovaný účet:** s pojistkou při 2,5 % přežije 12 měsíců jen 85 % (bez pojistky při 1,25 % 100 %).
+
+**Dodatečný popis po výsledku (nerozhoduje, `research_data/prop/f90_popis.txt`):**
+| Varianta | Skluz 0,1 R | Skluz 0,25 R |
+|---|---|---|
+| M = 2 % (denně −3 %, celkem 92 %), 1,5 % | P24 38 %, medián 23,6, propadlo 0 / 0 % | P24 28 %, medián 24,9, propadlo 0 / 0 % |
+| M = 2 %, 1,75 % | P24 48 %, medián 20,9, propadlo 0 / 0 % | propadlo 0 / **20 %** |
+| M = 1,5 %, 1,75 % | P24 53 %, medián 19,9, propadlo 0 / 0 % | propadlo **32 / 33 %** |
+
+(propadlo vývoj / kontrola)
+- Jediná varianta odolná na skluz: **pojistka −3 % denně a 92 % celkem při riziku 1,5 %**. P24 se zvedne ze 17 % na 28–38 %, medián se ale zkrátí jen z 27 na 24–25 měsíců. Je to vybrané až po výsledku, takže to není ověřené.
+- Skutečný skluz se z denních dat určit nedá. Rozhodne až simulace na minutových datech (HistData SPX a NAS od 2010, MT5 od 2017), kde je vidět skutečná cesta cen všech pozic najednou. To je samostatný test, jen se souhlasem uživatele.
+
+**Poučení:** pojistka je nutná ochrana pro prop runner (dodatečně odolná varianta −3 % / 92 % nic neubrala), ale **zkoušku výrazně nezrychlí**. Vyšší riziko s pojistkou stojí na kvalitě exekuce, kterou z denních dat neověříme. Pojistka navíc potřebuje runner běžící celý den i noc (VPS).

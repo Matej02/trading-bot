@@ -201,3 +201,4 @@ aktualizovano: 2026-11-03
   4. Nové nezávislé strategie až potom a cíleně (jiný zdroj výhody než kupování strachu na US indexech, bez držení přes noc u akcií).
   - nedělat: riziko podle stavu účtu (F86), akciové CFD (F85, F88), 1 krok (F89), další varianty kupování strachu (svázané s RSI(2)).
 - 2026-11-25: „Ano, začni bodem 1 a pak 2.“ → F90 denní pojistka (plán předem [[F90 Denní pojistka na celý účet]]), pak F91 pravidla dalších prop firem. Bot ani runner se nemění.
+  - F90 výsledek: **NEPROŠLO**. Pojistka dovolí vyšší riziko (vybráno 2,5 % s rezervou 1 %: P24 66 %, medián 14 měsíců), ale v kontrole propadlo 14 % a se skluzem 0,25 R přes 80 %. Odolná na skluz je jen pojistka −3 % denně / 92 % celkem při 1,5 % (P24 28–38 %, medián 24–25 měsíců, vybráno až po výsledku). Pojistka = ochrana pro prop runner, ne zrychlení. [[F90 Denní pojistka na celý účet]]
