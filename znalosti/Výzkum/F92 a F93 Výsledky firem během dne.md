@@ -84,3 +84,12 @@ Výstup `research_data/f88/f92_souhrn.txt`, dodatečný popis `research_data/f88
 - **Neaktivita:** s F93 klesnou mezery > 30 dní z 51 na 3 za 21 let (udržovací obchody ~0,3 ročně místo 4,5). S F92 na 7.
 
 **Poučení:** u akcií FTMO po výsledcích existuje silný a stálý efekt i během jednoho dne. Je ale malý vůči nákladům. Kdyby skutečné náklady byly do 0,05 % na stranu, F93 by byl nejlepší kandidát na zrychlení zkoušky i vyřešení neaktivity. Podle pravidel zapsaných předem ale neprošel a pravidla se dodatečně nemění.
+
+## Spready akcií u FTMO a jiných firem (2026-11-25, web)
+- **FTMO spready akcií nezveřejňuje.** Stránka [Symbols](https://ftmo.com/en/symbols/) má živý přehled jen pro měny, indexy, krypto a komodity. U „Equities CFD“ uvádí jen kontrakt, páku, swap a provizi (0,004 %). Recenze uvádějí jen „ne super úzké“ spready, bez čísel.
+- Pro představu: běžný broker CFD (Admiral Markets) uvádí u AAPL typický spread 0,03 $ (~0,013 %, tedy půl spreadu ~0,007 %). To je hluboko pod naším „normálním“ 0,05 %. Spready se ale v prvních minutách po otevření rozšiřují a to z denních dat nezměříme.
+- **Jiné firmy s akciemi** (přehled [FXEmpire](https://www.fxempire.com/prop-firms/best/stocks), affiliate, neověřeno na oficiálních stránkách):
+  - **Trade The Pool:** skutečné akcie (ne CFD), tedy bez financování přes noc, takže by mohl fungovat i vícedenní [[F88 Drift po výsledcích firem (PEAD)|F88]]. Platforma Trader Evolution (ne MT5), automatika přes SignalStack. Runner by se musel přepsat, indexy jen přes ETF.
+  - **FXIFY:** ~28 akciových CFD, MT5, EA povolené, spready neuvedeny.
+  - **100X Club:** EA zakázané. **The5ers, Fintokei:** akcie nemají.
+- **Jak spread zjistit:** FTMO Free Trial (zdarma, bez omezení počtu). Spready akcií ve webové platformě 15:30–16:00 Praha několik dní po sobě, bez zásahu do runneru. Zakládá uživatel.
