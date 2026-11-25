@@ -43,5 +43,16 @@ To nenahrazuje prověrku: kandidát musí nejdřív projít svými 5 body a sled
 - **Přísnější hranice:** od F35 je to ~50 testů, náhodou by prošly 1–2. Vývoj proto nově potřebuje **t ≥ 3,0** (dřív 2,0), kontrola t ≥ 2,0.
 - **Nové zdroje výhody místo dalších variant na stejných trzích:** akcie (F85), později drift po výsledcích firem.
 
-## Výsledky
-(doplní se po výpočtu)
+## Výsledky – výchozí stav (2026-11-25)
+Výstup `research_data/prop/meritko_zaklad.txt`, skript `scratch/prop_meritko.py` (běží 5 s). 250 startů 2003–2023.
+
+| Portfolio | Bezpečné riziko | Prošlo do 12 / 24 / 36 m | Propadlo | Medián do projití |
+|---|---|---|---|---|
+| RSI(2) samotná | 1,5 % | 2 % / 12 % / 40 % | 6 % | 27,8 měs. |
+| F33 samotná | 1,25 % | 0 / 0 / 0 % | 0 % | – |
+| **F33 + RSI(2)** | **1,0 %** | **0 % / 8 % / 40 %** | 0 % | **30,9 měs.** |
+
+- F33 + RSI(2) při 1,25 %: prošlo do 36 m 65 %, ale propadlo 14 % (u startů od 2015 až 34 %, hlavně pád v březnu 2020, kdy jsou otevřené pozice RSI(2) i F33 zároveň).
+- Při 2 %: medián 14 měsíců, ale propadne 59 %.
+- **Neaktivita:** v 96–100 % zkoušek je mezera delší než 30 dní bez nového obchodu. Web FTMO (25. 11.): u CFD účtů FTMO po několika týdnech nečinnosti kontaktuje obchodníka a jde požádat o zmrazení. Pevné 30denní pravidlo našel jen u futures. Před nákupem ověřit u podpory.
+- **Závěr:** s dnešními ověřenými strategiemi trvá zkouška FTMO typicky **2,5–3 roky** a do 12 měsíců neprojde skoro nikdy. Potřebujeme strategie s častějšími obchody, které nejsou svázané s pády indexů. To je cíl F85 a dalších testů. Kandidát se porovná s tímto řádkem podle pravidla výše.
