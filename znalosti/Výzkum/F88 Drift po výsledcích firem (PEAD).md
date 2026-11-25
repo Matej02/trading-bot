@@ -48,5 +48,29 @@ Zadání uživatele (2026-11-25): „Ano, pokračuj 1 a pak 2, ale na bota nesah
 
 Skripty `scratch/f88_stahni.py`, `scratch/f88_pead.py`, výstup `research_data/f88/souhrn.txt`.
 
-## Výsledky
-(doplní se po výpočtu)
+## Výsledky (2026-11-25)
+**Data:**
+- EDGAR, 3 305 podání 8-K 2.02, po vyčištění 3 050 událostí u 40 firem (2004-09 až 2026-11), 59 MB v `research_data/f88/raw`.
+- SEC vyžaduje kontakt v hlavičce User-Agent. Použit e-mail uživatele s jeho výslovným souhlasem (25. 11.), zadaný jen při spuštění, v repozitáři se neukládá.
+- U XOM, DIS, GOOG a AVGO chybějí roky před změnou čísla firmy v EDGAR. Ochrana soukromí aplikace další stahování s e-mailem zablokovala, takže zůstaly jen novější roky.
+
+**Ověření:** časy přijetí jsou UTC (Apple 16:30 NY = 21:30 Z v zimě), převedeny na čas New Yorku.
+
+| Část | Obchodů | R signálu | Převis nad stejnými obchody ve všech dnech | t |
+|---|---|---|---|---|
+| Síto: vývoj bez nákladů | 855 | +0,109 | +0,117 | 3,47 |
+| Vývoj 2004–2016 | 855 | **−0,029** | +0,121 | 3,70 |
+| Kontrola 2017–2026 | 879 | **−0,046** | +0,068 | 1,96 |
+
+- Pesimistické náklady: −0,075 / −0,087 R.
+- Long převis +0,066, short +0,098. Převis kladný v 19 z 23 let.
+- **Rozhodnutí: 3/6 bodů → NEPROŠLO.**
+- **Proč:** drift po výsledcích u akcií FTMO existuje (převis t 3,7 a v 83 % let kladný), ale je menší než náklady držení akciových CFD. Financování ~12 % ročně za 20 dní a spread stojí asi 0,14 R na obchod, hrubý zisk je +0,11 R.
+
+**Popis:**
+- držení 10 dní: kontrola převis +0,061 (t 2,29), ale R ≈ 0;
+- prahy 1,5 a 3: podobně;
+- korelace s RSI(2) +0,10 (nezávislé);
+- **měřítko při 1,25 %:** propadlo 53 % (základ 3 %). Ztrátové obchody zkoušku jen pokazí.
+
+**Poučení:** u akciových CFD na prop účtu sežere vícedenní akciové strategie financování. Efekt by mohl fungovat jen se skutečnými akciemi bez swapu, to ale na prop účtu nejde.

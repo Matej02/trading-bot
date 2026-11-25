@@ -56,3 +56,4 @@ Doplněno 2026-11-24 ([[F73 až F78 Dluhopisy, VIX a strach jako signál pro ind
 
 Doplněno 2026-11-25 ([[F85 RSI(2) na akciích|F85]]):
 - **RSI(2) na jednotlivých akciích** (členové S&P 500 k danému dni, 72 tis. obchodů, 1996–2026): bez nákladů +0,033 R, po nákladech akciových CFD −0,003 R (vývoj) a −0,011 R (kontrola), převis t 0,89 / 0,15. V prop zkoušce by zvýšila propady z 0 % na 71 %.
+- **Drift po výsledcích firem (PEAD) na akciích FTMO** ([[F88 Drift po výsledcích firem (PEAD)|F88]], 2004–2026, 1 734 obchodů): převis nad stejnými obchody ve všech dnech je skutečný (+0,12 R, t 3,7), ale po nákladech akciových CFD R signálu −0,03 / −0,05. Financování ~12 % ročně long i short sežere vícedenní akciové strategie.

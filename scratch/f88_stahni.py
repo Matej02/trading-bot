@@ -15,7 +15,8 @@ import pandas as pd
 RD = r"D:\Trading bot\research_data\f88"
 RAW = os.path.join(RD, "raw")
 os.makedirs(RAW, exist_ok=True)
-UA = {"User-Agent": "TradingResearch research-script (personal, non-commercial)", "Accept-Encoding": "identity"}
+# SEC vyzaduje kontakt v User-Agent. Zadava se jen pri spusteni (promenna SEC_UA), do repozitare se neuklada (repo je verejne).
+UA = {"User-Agent": os.environ.get("SEC_UA", "TradingResearch research-script"), "Accept-Encoding": "identity"}
 FTMO_US = ["AAPL", "AMZN", "BA", "BABA", "BAC", "CSCO", "CVX", "DIS", "META", "FDX", "GE", "GM", "GOOG", "IBM", "INTC", "JNJ", "JPM",
            "KO", "MCD", "MSFT", "NFLX", "NVDA", "PFE", "QCOM", "RACE", "T", "TSLA", "V", "WMT", "XOM", "ZM", "RTX", "LMT", "PLTR", "AMD",
            "AVGO", "SBUX", "MSTR", "GME", "NKE", "ARM", "SNOW", "ASML", "AZN", "BRK-B"]
