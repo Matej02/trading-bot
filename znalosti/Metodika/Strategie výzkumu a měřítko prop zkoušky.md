@@ -61,3 +61,4 @@ Výstup `research_data/prop/meritko_zaklad.txt`, skript `scratch/prop_meritko.py
 | Test | Prověrka | Měřítko při 1 % | Poznámka |
 |---|---|---|---|
 | [[F85 RSI(2) na akciích|F85]] RSI(2) na akciích | NE (1/5) | NE: medián 31 → 9 měs., ale propadlo 0 → 71 % | náklady CFD sežerou malou hrubou výhodu |
+| [[F86 Riziko přizpůsobené prop zkoušce|F86]] riziko přizpůsobené zkoušce | NE (žádná varianta) | V1 až V3 v kontrole propadly 24–36 % | 34 z 36 propadů při 1,25 % v únoru 2020 |

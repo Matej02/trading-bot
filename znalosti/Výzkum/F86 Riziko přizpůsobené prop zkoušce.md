@@ -40,5 +40,25 @@ Když pomáhá víc variant, doporučí se ta s nejvyšším P24 v kontrole. **P
 
 Skript `scratch/f86_riziko_zkousky.py`, výstup `research_data/prop/f86_souhrn.txt`.
 
-## Výsledky
-(doplní se po výpočtu)
+## Výsledky (2026-11-25)
+Výstup `research_data/prop/f86_souhrn.txt`. V0 při 1 % se shoduje s měřítkem (P24 8 %, P36 40 %, propadlo 0 %).
+
+| Varianta | r* (vývoj) | Vývoj P24 / propadlo | Kontrola P24 / propadlo | Celé propadlo | Rozhodnutí |
+|---|---|---|---|---|---|
+| V0 pevné (srovnání při 1,0 %) | – | 4 % / 0 % | 12 % / 0 % | 0 % | – |
+| V0 pevné, r vybrané na vývoji | 1,5 % | 38 % / 0 % | 45 % / **32 %** | 14 % | jen popis |
+| V1 klesá s propadem | 1,75 % | 49 % / 6 % | 50 % / **27 %** | 15 % | NE (body 1, 2) |
+| V2 strop otevřeného rizika 3 % | 1,75 % | 9 % / 0 % | 26 % / **36 %** | 15 % | NE (body 1–3) |
+| V3 = V1 + V2 | 1,75 % | 7 % / 0 % | 26 % / **24 %** | 10 % | NE (body 1, 3) |
+
+**Rozhodnutí: žádná varianta nepomáhá. Zůstává pevné riziko 1,0 %.**
+
+**Proč (rozbor po výpočtu, jen popis):**
+- Při 1,25 % propadlo 36 startů. **34 z nich v jediném měsíci, únoru 2020.** Tehdy byly otevřené F33 long SPX a NAS (vstup 26. 2.) a RSI(2) na NAS a SPX (vstupy 25. a 27. 2.) a trh padal několik dní za sebou.
+- Denní limit FTMO se počítá ze zůstatku o půlnoci, ne z equity. Ztráta otevřených pozic z předchozích dnů se proto do limitu počítá celá a pád trvající několik dní ho prorazí i při stropu 3 %.
+- F33 v testu nemá stop. 26. 2. 2020 šla SPX pozice na −2,18 R (low), runner na demu přitom používá stop 3 ATR (= −1 R).
+- **Odhad propadů tedy stojí hlavně na jedné události.** Rok 2008 RSI(2) neobchodovala (indexy pod SMA200), takže nezávislých krachů s otevřenými pozicemi je v datech velmi málo. Proto je bezpečné jen riziko, které přežije únor 2020.
+
+**Co z toho plyne:**
+- Samotnou velikostí rizika se zkouška zkrátit nedá. Zkrátí ji jen víc výnosu z dalších nezávislých strategií.
+- Další krok (jen návrh, s plánem předem): měřítko s F33 přesně tak, jak ji obchoduje runner (stop 3 ATR), protože simulace bez stopu je pro prop pesimistická.
