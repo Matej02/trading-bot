@@ -33,5 +33,20 @@ Zdroje: [2 kroky](https://ftmo.com/en/2-step-challenge/), [1 krok](https://ftmo.
 
 Skript `scratch/f89_typy_zkousek.py`, výstup `research_data/prop/f89_souhrn.txt`.
 
-## Výsledky
-(doplní se po výpočtu)
+## Výsledky (2026-11-25)
+Výstup `research_data/prop/f89_souhrn.txt`. Dva kroky se shodují s F87 (P24 17 %, P36 65 %, propadlo 3 %).
+
+| | 2 kroky | 1 krok |
+|---|---|---|
+| Bezpečné riziko (propadlo ≤ 10 %) | **1,25 %** | 0,75 % |
+| Prošlo do 12 / 24 / 36 měsíců | 3 % / **17 %** / 65 % | 1 % / 10 % / 56 % |
+| Propadlo | 3 % | 0 % |
+| Medián do projití | 27,2 měs. | 28,9 měs. |
+| Cena za projitou zkoušku (poplatek / P36) | ~833 €, **vratná** s první odměnou | ~897 €, nevratná |
+| Kontrolně: r* z vývoje → kontrola | 1,5 % → propadlo 33 % | 1,0 % → propadlo 32 % |
+| Financovaný účet 12 měsíců po projití | přežije 100 %, medián +3,6 % | přežije 100 %, medián +2,2 % |
+
+- 1 krok při 1,0 % by dal P24 46 %, ale propadne 14 % (v kontrole 32 %, opět únor 2020). Denní limit 3 % je na souběžné pozice na indexech moc těsný.
+- **Rozhodnutí podle pravidla předem: 2 kroky** (vyšší P24, 17 % proti 10 %). Navíc je poplatek vratný a na financovaném účtu jde riskovat víc.
+- Shoda s [[Prop firmy – doporučení]] (FTMO Swing 2 kroky jako první volba).
+- **Očekávání na financovaném účtu:** při 1,25 % asi +3,6 % ročně. Na 100 000 $ je to zhruba 3 600 $ ročně před podílem 80–90 %. Je to simulace z minulosti, ne slib.

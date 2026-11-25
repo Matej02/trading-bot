@@ -72,3 +72,5 @@ Na otázku uživatele: „Jaké bys doporučil prop firmy? Jen si je zapiš do v
 ## Stav
 - Doporučení je jen pro budoucí rozhodnutí. Rozhodující je pořád krok 1 (víc ověřených strategií).
 - Uživatel může vybrat i jiné firmy. Claude je porovná podle stejných bodů.
+
+- **2026-11-25 ([[F89 Porovnání zkoušek FTMO 1 krok a 2 kroky|F89]]):** pro F33 + RSI(2) vychází lépe FTMO **2 kroky** (bezpečné riziko 1,25 %, do 24 měsíců 17 %, do 36 měsíců 65 %, vratný poplatek 540 €) než 1 krok (0,75 %, 10 % / 56 %, nevratný 499 €). Ceny k 25. 11. 2026 (sleva Black Friday 20 %).

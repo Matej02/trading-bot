@@ -64,3 +64,4 @@ Výstup `research_data/prop/meritko_zaklad.txt`, skript `scratch/prop_meritko.py
 | [[F86 Riziko přizpůsobené prop zkoušce|F86]] riziko přizpůsobené zkoušce | NE (žádná varianta) | V1 až V3 v kontrole propadly 24–36 % | 34 z 36 propadů při 1,25 % v únoru 2020 |
 | [[F87 Měřítko s F33 se stopem jako v runneru|F87]] F33 se stopem jako v runneru | korekce měřítka | **nový základ: bezpečné riziko 1,25 %, do 36 m 65 %, propadlo 3 %, medián 27 měs.** | stop F33 skoro nic nebere (−0,002 / −0,006 R) |
 | [[F88 Drift po výsledcích firem (PEAD)|F88]] drift po výsledcích (akcie FTMO) | NE (3/6) | NE: propadlo 3 → 53 % | skutečný převis (t 3,7), ale menší než financování CFD |
+| [[F89 Porovnání zkoušek FTMO 1 krok a 2 kroky|F89]] typ zkoušky FTMO | 2 kroky | 2 kroky při 1,25 %: P24 17 %, P36 65 %; 1 krok při 0,75 %: P24 10 %, P36 56 % | denní limit 3 % u 1 kroku moc těsný |
