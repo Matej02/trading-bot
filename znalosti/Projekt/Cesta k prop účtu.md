@@ -46,3 +46,5 @@ Doporučení konkrétních firem: [[Prop firmy – doporučení]] (2026-11-11).
 - **2026-11-19 ([[F52 Kombinace F33 a RSI(2) pro prop účet|F52]]):** F33 + RSI(2) dohromady asi +4 R ročně, korelace 0,07, největší propad −7,9 R (2003–2026). Při 1 % riziku asi +4 % ročně a propad do −8 %. Zkouška +10 % za 12 měsíců jen při 2 % (54 %), proto firma bez časového limitu a 1–1,5 % riziko.
 
 - **2026-11-25 – upřesnění uživatele:** ostrý obchod bude jen přes prop zkoušku, ne vlastních 10 000 Kč. Malý účet a broker s mikroloty ([[F70 RSI(2) pro malý účet|F70]]) se tedy neřeší. VPS až před ostrým startem. Výzkum se má měřit podle toho, o kolik zkrátí zkoušku.
+
+- **2026-11-25 ([[F90 Denní pojistka na celý účet|F90]], [[F91 Pravidla prop firem v měřítku|F91]]):** firma = FTMO 2 kroky Swing. Pro runner na prop účtu (až na pokyn) přibývají dva požadavky: 1) denní pojistka (odolná varianta −3 % za den / 92 % celkem, potřebuje běh celý den = VPS), 2) neaktivita: FTMO může ukončit účet po 30 dnech bez nového obchodu (podmínky čl. 13.2.3). Řešení: víc strategií, nebo udržovací obchod před uplynutím 28 dnů (~4–5× ročně).

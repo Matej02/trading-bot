@@ -78,3 +78,18 @@ Výstup `research_data/prop/f91_souhrn.txt`. FTMO se shoduje s F89 (1,25 %: P24 
 - **Nemodelováno:** swap The5ers u indexů přes víkend („vysoký“), vratnost poplatku The5ers, swap-free u Fintokei Swing.
 
 **Co dál (rozhoduje uživatel):** zeptat se podpory The5ers, jestli High Stakes Classic 100k má denní limit 5 % nebo 3 %, a jak počítají neaktivitu. Podpory FTMO se zeptat na neaktivitu u Swing 2 kroky. Když The5ers potvrdí 5 %, vychází pro naše strategie lépe než FTMO.
+
+## Doplnění z veřejných podmínek (2026-11-25, podpora se nekontaktuje)
+Uživatel: „To je jedno, já jim nechci psát, pokračuj s tím, co jsi našel na internetu.“
+
+- **The5ers vypadá.** Obchodní podmínky (část „Use of Automated Trading Software“, [the5ers.com/terms-and-conditions](https://the5ers.com/terms-and-conditions/), aktualizace 28. 10. 2026): vlastní automatický software jen s **předchozím písemným souhlasem firmy**, který je na jejich uvážení. Bez kontaktu s firmou to nejde a runner je automatický. Dále: poplatek je podle podmínek po zahájení obchodování nevratný. Denní limit: stránka High Stakes a recenze třetích stran uvádějí 5 % (3 % mají programy Growth), FAQ „2-Step“ uvádí 3 %. Nerozhodnuto.
+- **FTMO zůstává** a nic z podmínek ho nevylučuje. Vlastní EA povolené bez schvalování (FAQ, viz [[Prop firmy – doporučení]]).
+- **Neaktivita u FTMO je potvrzená v podmínkách** ([FTMO Challenge Terms and Conditions, 12. 10. 2026](https://cdn.ftmo.com/docs/terms-and-conditions/b1d80f4da76c4bd4bcd42a5807727e34), čl. 13.2.3):
+  - FTMO si vyhrazuje právo ukončit smlouvu při „prolonged inactivity“: (a) 30 po sobě jdoucích kalendářních dní bez otevření aspoň jednoho obchodu, nebo (b) ztráta 8–10 % držená déle než 30 dní;
+  - věta o obcházení („trades designed to circumvent“ = obchody neodpovídající dosavadnímu stylu) je připojena k bodu (b);
+  - čl. 5.8.4: každou fázi je nutné aktivovat prvním obchodem do 30 dní.
+- **Kolik by to vadilo** (F33 se stopem + RSI(2), 2003–2025): nový obchod typicky každých 10,5 dne. Mezera > 30 dní ale nastala 57× za 23 let, nejdelší 154 dní (2008). Udržovací obchod po 28 dnech by byl potřeba průměrně **4,6× ročně** (2–10×).
+
+**Závěr F91 po doplnění:** první volba **FTMO 2 kroky Swing** beze změny. Ostatní firmy vypadly: The5ers (automatika jen s písemným souhlasem), Fintokei (pravidlo 3 % ztráty otevřených obchodů), FundedNext (EA na 100k zakázané). Pro FTMO je potřeba vyřešit 30denní neaktivitu:
+1. víc nezávislých strategií s častějšími obchody (zároveň zrychlí zkoušku), nebo
+2. udržovací obchod v runneru (malá pozice na stejném indexu, který strategie obchodují, před uplynutím 28 dnů). Riziko: FTMO má právo uvážení, takže jistotu bez dotazu nemáme. Zavedení jen na pokyn uživatele (bot se teď nemění).
