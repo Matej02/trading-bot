@@ -35,3 +35,7 @@ Zadání uživatele (2026-11-25): „Ano, pokračuj, dej mi seznam nápadů.“ 
 - Plán předem, rychlé síto (hrubá výhoda ve vývoji), vývoj t ≥ 3,0, kontrola t ≥ 2,0, pesimistické náklady, obě strany (long i short).
 - Pak [[Strategie výzkumu a měřítko prop zkoušky|měřítko prop zkoušky]]: o kolik zkrátí zkoušku a kolik vyplní 30denních mezer.
 - Bot se nemění. Do simulátoru až se souhlasem uživatele.
+
+## Stav (2026-11-25)
+- F92: NE (3/6). F93: NE (5/6, jen pesimistické náklady v kontrole), viz [[F92 a F93 Výsledky firem během dne]].
+- F94–F96 zatím netestováno.
