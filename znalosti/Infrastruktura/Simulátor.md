@@ -93,3 +93,12 @@ Každé pondělí od 16. 11. uživatel pošle export (obchody, deník, data). Pr
   - **F79 `f79_halloween_eu_d1`** (DAX, FTSE, CAC): vstup na zavření posledního obchodního dne října až března, výstup na zavření posledního obchodního dne dalšího měsíce (`exitRule: "euMonthEnd"`). V testu bez stopu, tady SL 8 ATR proti katastrofě.
   - **Parita s testem** (`scratch/f61_sim/kandidati.ts` + `kandidati_export.py`, data 2012–2026): F76 20/20 signálů, F73 96/96 signálů. F79 signály a výstupy správně podle kalendáře Xetry (28. 3. 2024 Velký pátek, 30. 12.).
   - Odchylky od testu: vstup na zavření dne signálu (v testu otevření dalšího dne), TLT bez dividend (v testu upravené ceny), u F79 stop 8 ATR. tsc i build OK, nasazeno (feb7b5f).
+
+## F93 Výsledky firem – sledování dopředu (2026-11-25)
+- Na přání uživatele („Klidně ji tam přidej“). Kandidát [[F92 a F93 Výsledky firem během dne|F93]] (5/6 bodů, neprošel jen s pesimistickým spreadem). Bot, demo runner ani MT5 beze změny.
+- **Jinak než ostatní systémy:** neběží přes brokera a agenty simulátoru (ti nemají akcie). Samostatný sledovač počítá obchody z denních dat **přesně jako test**: otevření → zavření dne po reakci, stop 1 ATR přes low/high, R = 1 ATR, náklady běžné i pesimistické.
+- Kód: `lib/f93.ts` (čistá logika), `lib/server/f93Runner.ts` (stažení dat a vyhodnocení), `app/api/f93`, záložka **„F93 výsledky firem“**, export „F93 výsledky firem (CSV)“ a v JSON pod `f93`.
+- Běh: s budíkem `/api/tick` jednou denně po 16:40 NY (při chybě znovu za 20 min), nebo při otevření záložky. Data: EDGAR 8-K 2.02 (40 akcií FTMO, obecný User-Agent bez osobních údajů, volitelně `SEC_UA` ve Vercelu) + Yahoo denní ceny upravené o dividendy (jako `auto_adjust` v testu). Stav v databázi pod `sim:f93`.
+- Sleduje se od dne reakce **25. 11. 2026**. Signál zapsaný až po otevření dne vstupu (výpadek budíku) se označí „zapsáno pozdě“ a do statistiky se nepočítá.
+- **Shoda s testem:** logika 1734/1734 obchodů (stejná data jako test, rozdíl R 1e-16, `scripts/compare-f93.ts` + `scratch/f93_sim/f93_export.py`). Živá data Yahoo + EDGAR březen–říjen 2026: 56/56 obchodů, rozdíl R 0,0000 (`scripts/test-f93-live.ts`). tsc i build OK.
+- Pravidlo vyhodnocení předem (jako u RSI(2)): rozhodnutí až po ≥ 30 obchodech zapsaných včas. Výsledky firem chodí hlavně koncem ledna, dubna, července a října, takže prvních ~30 obchodů asi do konce února 2027.

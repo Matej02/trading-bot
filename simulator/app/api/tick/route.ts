@@ -6,6 +6,7 @@ import { Bot } from "@/lib/bot";
 import { authMode } from "@/lib/server/auth";
 import { serverBackend } from "@/lib/server/backend";
 import { getKV } from "@/lib/server/kv";
+import { runF93Bounded } from "@/lib/server/f93Runner";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -27,12 +28,15 @@ async function run(req: NextRequest) {
   }
   const [lock] = await kv.pipeline([["SET", "sim:tick:lock", String(Date.now()), "NX", "PX", 240_000]]);
   if (lock !== "OK") return NextResponse.json({ ok: true, msg: "bot běžel před chvílí – další běh nejdřív za 4 min" });
+  // F93 (vysledky firem) - jen sledovani dopredu, jednou denne po zavreni US burzy; chyba nezastavi bota
+  const f93 = await runF93Bounded(kv).catch((e) => `F93 chyba: ${(e as Error).message}`);
   let msg: string;
   try {
     msg = await new Bot(serverBackend(kv), { id: "server", label: "server 24/7" }).runServerTick();
   } catch (e) {
     msg = `chyba: ${(e as Error).message}`;
   }
+  if (!f93.includes("není co dělat")) msg += ` | ${f93}`;
   await kv.pipeline([["SET", "sim:tick:last", JSON.stringify({ at: Date.now(), msg })]]);
   return NextResponse.json({ ok: !msg.startsWith("chyba"), msg });
 }

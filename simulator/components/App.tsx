@@ -4,7 +4,7 @@ import { useEffect, useReducer, useRef, useState } from "react";
 import Chart from "./Chart";
 import AgentRoom from "./AgentRoom";
 import Gate from "./Gate";
-import { AccountPanel, ExportButtons, JournalPanel, Log, ManualTrade, NewsPanel, Positions, Radar, Settings } from "./Panels";
+import { AccountPanel, ExportButtons, F93Panel, JournalPanel, Log, ManualTrade, NewsPanel, Positions, Radar, Settings } from "./Panels";
 import { getBot, type Bot } from "@/lib/bot";
 import { store } from "@/lib/data";
 import { BROKER_ACCOUNT, CHART_ORDER, fmt, MARKETS, quote } from "@/lib/markets";
@@ -15,7 +15,7 @@ import type { Deliberation, TF } from "@/lib/types";
 const TFS: TF[] = ["1m", "5m", "15m", "1h", "1d"];
 const GROUPS: [string, string][] = [["CRYPTO", "Krypto"], ["FOREX", "Forex"], ["FUTURE CFDs", "Ropa"],
   ["MINI CASH CFDs", "Indexy"], ["METALS", "Kovy"]];
-type Tab = "zive" | "pozice" | "denik" | "nastaveni" | "log";
+type Tab = "zive" | "pozice" | "denik" | "f93" | "nastaveni" | "log";
 
 export default function App() {
   const [bot, setBot] = useState<Bot | null>(null);
@@ -174,7 +174,7 @@ export default function App() {
           <Chart marketId={marketId} tf={tf} positions={s.broker.positions} closed={s.broker.closed} journal={s.journal} />
           <div className="tabs">
             {([["zive", "Bot živě"], ["pozice", `Pozice (${s.broker.positions.length})`], ["denik", "Deník a stínové výsledky"],
-              ["nastaveni", "Nastavení"], ["log", "Log"]] as [Tab, string][]).map(([k, label]) => (
+              ["f93", "F93 výsledky firem"], ["nastaveni", "Nastavení"], ["log", "Log"]] as [Tab, string][]).map(([k, label]) => (
               <button key={k} className={`tab ${tab === k ? "on" : ""}`} onClick={() => setTab(k)}>{label}</button>
             ))}
             {bot.status && <span className="small muted status">{bot.status}</span>}
@@ -196,6 +196,7 @@ export default function App() {
                 <JournalPanel state={s} />
               </>
             )}
+            {tab === "f93" && <F93Panel />}
             {tab === "nastaveni" && <Settings bot={bot} state={s} />}
             {tab === "log" && <Log state={s} />}
           </div>

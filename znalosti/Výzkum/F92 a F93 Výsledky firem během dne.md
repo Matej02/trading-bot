@@ -93,3 +93,6 @@ Výstup `research_data/f88/f92_souhrn.txt`, dodatečný popis `research_data/f88
   - **FXIFY:** ~28 akciových CFD, MT5, EA povolené, spready neuvedeny.
   - **100X Club:** EA zakázané. **The5ers, Fintokei:** akcie nemají.
 - **Jak spread zjistit:** FTMO Free Trial (zdarma, bez omezení počtu). Spready akcií ve webové platformě 15:30–16:00 Praha několik dní po sobě, bez zásahu do runneru. Zakládá uživatel.
+
+## V simulátoru (2026-11-25)
+Na přání uživatele F93 sleduje simulátor na Vercelu dopředu, přesně podle testu (shoda 1734/1734, živá data 56/56). Do MT5 ani na prop nic. Podrobnosti: [[Simulátor]].

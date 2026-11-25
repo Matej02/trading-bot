@@ -11,6 +11,7 @@ import { exitPrice, lotsFor, MAX_DD_LIMIT, pnlMoney, PROFIT_TARGET, type BrokerS
 import { lastAtr, manualLevels, SYSTEM, SYSTEMS } from "@/lib/strategies";
 import type { Bot, BotState } from "@/lib/bot";
 import type { Deliberation, Shadow, TF } from "@/lib/types";
+import type { F93State } from "@/lib/server/f93Runner";
 
 const money = (v: number) => `${v >= 0 ? "" : "−"}${Math.abs(v).toLocaleString("cs-CZ", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} $`;
 const dt = (t: number) => new Date(t * 1000).toLocaleString("cs-CZ", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
@@ -258,7 +259,8 @@ export function ExportButtons({ bot }: { bot: Bot }) {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  const items: [string, string][] = [["journal", "Deník (CSV)"], ["trades", "Obchody (CSV)"], ["json", "Vše pro rozbor (JSON)"]];
+  const items: [string, string][] = [["journal", "Deník (CSV)"], ["trades", "Obchody (CSV)"], ["json", "Vše pro rozbor (JSON)"],
+    ...(bot.mode === "server" ? [["f93", "F93 výsledky firem (CSV)"] as [string, string]] : [])];
   return (
     <div className="export">
       <span className="small muted">Stáhnout {bot.mode === "server" ? `celou historii (${bot.journalTotal} záznamů v deníku)` : "data z tohoto prohlížeče"}:</span>
@@ -572,6 +574,80 @@ export function Log({ state }: { state: BotState }) {
       {state.log.slice(0, 100).map((l, i) => (
         <div key={i}><span className="muted">{dt(l.t)}</span> {l.text}</div>
       ))}
+    </div>
+  );
+}
+
+/** F93 druhy den po vysledcich firem: sledovani dopredu ze serveru (signaly a vysledky, R = 1 ATR jako v testu). */
+export function F93Panel() {
+  const [d, setD] = useState<{ msg: string | null; state: F93State } | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  useEffect(() => {
+    let on = true;
+    const load = () => fetch("/api/f93", { cache: "no-store" }).then(async (r) => {
+      const j = await r.json();
+      if (!on) return;
+      if (!r.ok) setErr(j.error === "login" ? "přihlas se" : j.error === "no-db" ? "F93 běží jen se serverovou databází" : `chyba ${r.status}`);
+      else {
+        setErr(null);
+        setD(j);
+        // vypocet prave bezi v jinem dotazu (druha zalozka, cron) - za chvili nacist znovu
+        if (typeof j.msg === "string" && j.msg.includes("běží")) setTimeout(() => on && load(), 5000);
+      }
+    }).catch(() => on && setErr("nepodařilo se načíst"));
+    load();
+    const t = setInterval(load, 15 * 60_000);
+    return () => { on = false; clearInterval(t); };
+  }, []);
+  if (err) return <div className="empty">F93: {err}</div>;
+  if (!d) return <div className="empty">Načítám F93…</div>;
+  const s = d.state;
+  const done = s.trades.filter((t) => t.result && !t.late);
+  const top = done.filter((t) => t.rank <= 3);
+  const stat = (xs: number[]) => {
+    const n = xs.length;
+    const m = n ? xs.reduce((a, b) => a + b, 0) / n : 0;
+    const sd = n > 1 ? Math.sqrt(xs.reduce((a, b) => a + (b - m) ** 2, 0) / (n - 1)) : 0;
+    return { n, m, win: n ? (100 * xs.filter((x) => x > 0).length) / n : 0, t: sd > 0 ? m / (sd / Math.sqrt(n)) : 0 };
+  };
+  const a = stat(done.map((t) => t.result!.rNorm)), p = stat(done.map((t) => t.result!.rPess)), g = stat(top.map((t) => t.result!.rNorm));
+  const r2 = (x: number) => `${x >= 0 ? "+" : "−"}${Math.abs(x).toFixed(3)}`;
+  const rows = [...s.trades].reverse();
+  return (
+    <div>
+      <div className="small muted wrap" style={{ marginBottom: 8 }}>
+        KANDIDÁT F93 (test 2026-11-25, 5/6 bodů): po zveřejnění výsledků firmy (EDGAR 8-K 2.02) a reakci |z| ≥ 2 proti S&amp;P 500
+        vstup na otevření dalšího obchodního dne ve směru reakce, ven na zavření, stop 1 ATR. Test: vývoj 2004–16 +0,114 R (t 6,55),
+        kontrola 2017–26 +0,031 R (t 2,69), s pesimistickým spreadem v kontrole −0,011 R → neprošlo. 40 akcií FTMO, ~80 obchodů ročně.
+        Jen sledování dopředu z denních dat (jako v testu) – do brokera simulátoru ani do MT5 nic nejde. Sleduje se od {s.since}.
+      </div>
+      <div className="small" style={{ marginBottom: 8 }}>
+        Hotovo {a.n} obchodů: průměr <b className={a.m >= 0 ? "up" : "down"}>{r2(a.m)} R</b> (běžné náklady), pesimisticky {r2(p.m)} R,
+        výhry {a.win.toFixed(0)} %{a.n > 2 ? `, t ${a.t.toFixed(2)}` : ""} · jen 3 nejsilnější denně (jako prop): {g.n} obch., {r2(g.m)} R
+        {s.trades.some((t) => t.late) ? " · pozdě zapsané signály se nepočítají" : ""}
+      </div>
+      <div className="small muted" style={{ marginBottom: 8 }}>
+        Data do {s.lastDay ?? "–"} · poslední kontrola {s.lastOk ? new Date(s.lastOk).toLocaleString("cs-CZ") : "zatím ne"}
+        {s.lastError ? <span className="down"> · chyba: {s.lastError}</span> : null}
+      </div>
+      {!rows.length ? <div className="empty">Zatím žádný signál. Výsledky firem chodí hlavně koncem ledna, dubna, července a října.</div> : (
+        <table className="tbl">
+          <thead><tr><th>Den reakce</th><th>Akcie</th><th>z</th><th>Směr</th><th>Den obchodu</th><th>Vstup</th><th>Výstup</th><th>R</th><th>R pesim.</th><th>Pozn.</th></tr></thead>
+          <tbody>
+            {rows.map((t) => (
+              <tr key={t.id}>
+                <td>{t.dayD}</td><td><b>{t.ticker}</b></td><td>{t.z.toFixed(2)}</td>
+                <td><span className={`dir ${t.dir > 0 ? "long" : "short"}`}>{t.dir > 0 ? "BUY" : "SELL"}</span></td>
+                <td>{t.dayK ?? <span className="muted">další obchodní den</span>}</td>
+                <td>{t.result ? t.result.entry.toFixed(2) : ""}</td><td>{t.result ? t.result.exit.toFixed(2) : ""}</td>
+                <td className={t.result ? (t.result.rNorm >= 0 ? "up" : "down") : ""}>{t.result ? r2(t.result.rNorm) : "čeká"}</td>
+                <td>{t.result ? r2(t.result.rPess) : ""}</td>
+                <td className="small muted">{[t.result?.stopHit ? "stop" : "", t.rank > 3 ? `${t.rank}. v den` : "", t.late ? "zapsáno pozdě" : ""].filter(Boolean).join(", ")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

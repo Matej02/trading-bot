@@ -2,6 +2,7 @@
 // se jen pridava: denik a stiny jako hash + seznam id (poradi), obchody a log jako seznam.
 import type { ClosedTrade, CoreState, Deliberation, Lease, LoadResult, LogEntry, SaveBody, SaveResult, Shadow } from "../types";
 import type { Cmd, KV } from "./kv";
+import { F93_KEY, type F93State } from "./f93Runner";
 
 const K = {
   core: "sim:core", jHash: "sim:journal", jIds: "sim:journal:ids", shHash: "sim:shadows", shIds: "sim:shadows:ids",
@@ -100,8 +101,9 @@ export async function releaseLease(kv: KV, device: string) {
 
 /** Vsechno pro stazeni - historie chronologicky (nejstarsi prvni). */
 export async function exportAll(kv: KV) {
-  const [core, jIds, shIds, closed, log] = await kv.pipeline([
+  const [core, jIds, shIds, closed, log, f93] = await kv.pipeline([
     ["GET", K.core], ["LRANGE", K.jIds, 0, -1], ["LRANGE", K.shIds, 0, -1], ["LRANGE", K.closed, 0, -1], ["LRANGE", K.log, 0, -1],
+    ["GET", F93_KEY],
   ]);
   return {
     core: parse<CoreState>(core),
@@ -109,5 +111,6 @@ export async function exportAll(kv: KV) {
     shadows: await hmget<Shadow>(kv, K.shHash, unique(shIds as string[])),
     closed: dedupeClosed(parseAll<ClosedTrade>(closed)),
     log: parseAll<LogEntry>(log),
+    f93: parse<F93State>(f93),
   };
 }
