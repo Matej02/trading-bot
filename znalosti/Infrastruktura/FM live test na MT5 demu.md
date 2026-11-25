@@ -257,3 +257,7 @@ Na pokyn uživatele „chci to na bota na MT5 dát“. Kód: `f2x_live.py` (rozh
   - zůstatek 100 969,19 $ (+969 $);
   - obchody podle pravidel: F13 5. 11. +0,88 R, F12 11. 11. +2,53 R, F13 GBPUSD 24. 11. −1,00 R, F13 EURUSD 24. 11. −0,04 R. Celkem **4 obchody, +2,37 R**.
 - **F33 dnes 25. 11. v 15:30 (L−2; 26. 11. Díkůvzdání, 27. 11. zkrácený den, L = 30. 11.):** kód runneru na datech Yahoo do 24. 11. dává SPY −4,89 %, TLT −0,01 % → **long SPX500mini** (NAS100mini odmítne minimální lot), výstup 30. 11. ve 21:55 Praha. **PC musí běžet v 15:30 a 30. 11. do 22:00.**
+- **2026-11-25 – kdy se PC skutečně vypíná (Windows log, událost 6006, 26. 10.–24. 11.):** 28 z 36 vypnutí bylo před 19:45. Ve všední dny bylo poslední vypnutí před 19:45 ve 14 z 21 dnů, obvykle mezi 17:30 a 19:30.
+  - Předpoklad „PC kolem 20:00“ tedy neplatí. Intradenní obchod otevřený odpoledne zůstane asi ve 2/3 případů přes noc.
+  - Přes noc se těsný stop (9–14 pipů) vystavuje rozšíření spreadu kolem 23:00 a swapu, v pátek i víkendovému gapu, který může stop přeskočit. To už je jiná strategie, než jakou test měřil.
+  - Návrh pojistky (zavřít jen intradenní F12, F13, F14, F16, F20, když se Windows vypíná; F15, F33, F31, F29 a RSI(2) nechat) je zapsaný, čeká na souhlas uživatele.
