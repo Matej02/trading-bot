@@ -29,5 +29,26 @@ Zadání uživatele (2026-11-25): „Ano, pokračuj 1 a pak 2, ale na bota nesah
 
 Skript `scratch/f87_f33_stop.py`, výstup `research_data/prop/f87_souhrn.txt`.
 
-## Výsledky
-(doplní se po výpočtu)
+## Výsledky (2026-11-25)
+Výstup `research_data/prop/f87_souhrn.txt`.
+
+**F33 se stopem:** zastaveno 5 ze 400 obchodů.
+| Období | Bez stopu | Se stopem | Rozdíl |
+|---|---|---|---|
+| 2003–2018 | +0,102 R | +0,100 R | −0,002 |
+| 2019–2026 | +0,077 R | +0,071 R | −0,006 |
+
+Stop F33 skoro nic nebere. Únor 2020 na NAS ale otevřel gapem pod stopem, takže tam se stopem vyšlo −1,58 R místo −0,89 R.
+
+**Měřítko F33 se stopem + RSI(2):**
+| Riziko | Prošlo do 12 / 24 / 36 m | Propadlo | Medián |
+|---|---|---|---|
+| 1,0 % | 0 % / 8 % / 39 % | 0 % | 31,0 měs. |
+| **1,25 % (nové bezpečné)** | **3 % / 17 % / 65 %** | **3 %** | **27,2 měs.** |
+| 1,5 % | 7 % / 41 % / 75 % | 14 % | 23,7 měs. |
+
+- r* vybrané na vývoji = 1,5 %, v kontrole ale propadlo 33 %.
+- **Rozhodnutí:**
+  1. Základ měřítka = F33 se stopem, **bezpečné riziko 1,25 %** (dřív 1,0 %).
+  2. Stop F33 neoslabuje (rozdíl < 0,05 R).
+- Zkouška tím zrychlí jen mírně: typicky z ~31 na ~27 měsíců. Runner se nemění.
