@@ -44,3 +44,5 @@ Otázka uživatele: „Jak je možné se dopracovat k tomu, abychom tohle mohli 
 Doporučení konkrétních firem: [[Prop firmy – doporučení]] (2026-11-11).
 
 - **2026-11-19 ([[F52 Kombinace F33 a RSI(2) pro prop účet|F52]]):** F33 + RSI(2) dohromady asi +4 R ročně, korelace 0,07, největší propad −7,9 R (2003–2026). Při 1 % riziku asi +4 % ročně a propad do −8 %. Zkouška +10 % za 12 měsíců jen při 2 % (54 %), proto firma bez časového limitu a 1–1,5 % riziko.
+
+- **2026-11-25 – upřesnění uživatele:** ostrý obchod bude jen přes prop zkoušku, ne vlastních 10 000 Kč. Malý účet a broker s mikroloty ([[F70 RSI(2) pro malý účet|F70]]) se tedy neřeší. VPS až před ostrým startem. Výzkum se má měřit podle toho, o kolik zkrátí zkoušku.

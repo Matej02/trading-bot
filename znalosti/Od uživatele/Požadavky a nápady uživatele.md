@@ -186,3 +186,4 @@ aktualizovano: 2026-11-03
   3. 4. 1. 2027: demo jen na tom, co by šlo živě (F33, RSI(2), F31), F12–F16 a F20 vypnout, jen se souhlasem;
   4. VPS až před ostrým/prop účtem (placené);
   - nedělat: další testy na stejných trzích, zkracovat pravidlo 30 obchodů.
+- 2026-11-25: „Jasně, ale já budu mít prop firmu a nebudu obchodovat určitě s 10 000 korun, spíš nějakou challenge, takže na to bych se neupínal. VPS vyřeším, až půjdeme naostro. Jen jsem myslel, jestli nemůžeme na něčem zapracovat, třeba na strategii výzkumu atd., abychom to urychlili.“ → cíl = prop zkouška, malý účet a mikroloty se neřeší, VPS až naostro. Návrh nové strategie výzkumu: měřit vše podle toho, o kolik zkrátí prop zkoušku (dnes F33 + RSI(2) ≈ 2–3 roky, [[F52 Kombinace F33 a RSI(2) pro prop účet|F52]]); nový směr akcie u prop firmy (hodně obchodů); dvoustupňové testy (rychlé síto → plná prověrka) a přísnější hranice podle počtu testů. Čeká na volbu. [[Cesta k prop účtu]]
