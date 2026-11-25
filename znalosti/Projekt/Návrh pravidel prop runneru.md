@@ -53,3 +53,6 @@ Zadání uživatele (2026-11-25): „Klidně to udělej.“ **Jen návrh. Bot an
 - Jednotkové testy: výpočet L, pojistka, 27denní počítadlo, zastavení po cíli, odmítnutí cizího účtu.
 - Free Trial 2–4 týdny: skutečné zavírání pojistkou, symboly, velikosti lotů, čas serveru.
 - Až potom nákup zkoušky (rozhoduje uživatel).
+
+## Stav (2026-11-25)
+- Na pokyn uživatele („připrav vše, ať je ready na přenesení“) **naprogramováno** v `prop/run_prop.py`: 17 testů prošlo, shoda s testy na historii 100 % (813/813). Demo runner beze změny. Postup: [[Prop runner – návod k přenesení]].

@@ -1,0 +1,18 @@
+{
+  "_navod": "Zkopiruj jako prop_config.json a vypln login (cislo uctu FTMO, NE heslo). Heslo zadavas jen v MT5 terminalu.",
+  "login": 0,
+  "server_contains": "FTMO",
+  "server_tz": "Europe/Athens",
+  "terminal_path": "",
+  "initial_capital": 100000,
+  "phase_start": "2027-01-11",
+  "target_pct": 10,
+  "risk_pct": 1.25,
+  "guard_margin_pct": 2.0,
+  "keepalive_days": 27,
+  "symbols": {
+    "SPX500mini": "US500.cash",
+    "NAS100mini": "US100.cash",
+    "US30mini": "US30.cash"
+  }
+}

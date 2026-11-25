@@ -1,0 +1,5 @@
+prop_config.json
+prop_state.json
+prop_journal.jsonl
+prop_log.txt
+__pycache__/
