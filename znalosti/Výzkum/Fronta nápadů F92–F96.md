@@ -38,4 +38,4 @@ Zadání uživatele (2026-11-25): „Ano, pokračuj, dej mi seznam nápadů.“ 
 
 ## Stav (2026-11-25)
 - F92: NE (3/6). F93: NE (5/6, jen pesimistické náklady v kontrole), viz [[F92 a F93 Výsledky firem během dne]].
-- F94–F96 zatím netestováno.
+- F94: NE (3/6), F95: NE (2/5), F96: NE (síto), viz [[F94 až F96 Gap bez zprávy, náběh před výsledky, index a velké firmy]]. Fronta je vyčerpaná.

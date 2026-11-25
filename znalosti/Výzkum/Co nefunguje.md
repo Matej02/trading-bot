@@ -61,3 +61,4 @@ Doplněno 2026-11-25 ([[F85 RSI(2) na akciích|F85]]):
 Doplněno 2026-11-25 ([[F92 a F93 Výsledky firem během dne|F92, F93]]):
 - **Pokračování v den výsledků** (otevření → zavření ve směru gapu, akcie FTMO): převis t 1,6 / 1,4, po pesimistických nákladech ztráta. Gap informaci už obsahuje.
 - **Druhý den po výsledcích (F93)** neprošel jen o bod: silný efekt (t 6,5, 23 z 23 let), ale v kontrole po pesimistických nákladech −0,011 R. Není to „nefunguje“, ale „nevíme, jestli to unesou náklady“.
+- **Gap akcie bez zprávy proti směru (F94), náběh před výsledky (F95), NAS100 ve směru reakce velkých firem (F96):** nic neprošlo. F94 fungoval do 2016 (t 2,3), od 2017 t 0,8. F95 převis +0,02 R, po nákladech ~0. F96 záporný i hrubě ([[F94 až F96 Gap bez zprávy, náběh před výsledky, index a velké firmy|F94–F96]]).
