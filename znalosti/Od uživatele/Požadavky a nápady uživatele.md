@@ -200,3 +200,4 @@ aktualizovano: 2026-11-03
   3. Neaktivita: v 96–100 % zkoušek je mezera > 30 dní bez obchodu. Ověřit u podpory FTMO před nákupem (dotaz pošle uživatel, Claude připraví text).
   4. Nové nezávislé strategie až potom a cíleně (jiný zdroj výhody než kupování strachu na US indexech, bez držení přes noc u akcií).
   - nedělat: riziko podle stavu účtu (F86), akciové CFD (F85, F88), 1 krok (F89), další varianty kupování strachu (svázané s RSI(2)).
+- 2026-11-25: „Ano, začni bodem 1 a pak 2.“ → F90 denní pojistka (plán předem [[F90 Denní pojistka na celý účet]]), pak F91 pravidla dalších prop firem. Bot ani runner se nemění.
