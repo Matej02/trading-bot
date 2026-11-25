@@ -57,3 +57,24 @@ Jinak FTMO zůstává první volbou a ostatní se zapíší jako popis.
 - Zákaz obchodů 2 min kolem zpráv u The5ers: runner vstupuje na otevření a F31 zavírá 5 min před FOMC, takže nevadí.
 
 Skript `scratch/f91_firmy.py`, výstup `research_data/prop/f91_souhrn.txt`.
+
+## Výsledky (2026-11-25)
+Výstup `research_data/prop/f91_souhrn.txt`. FTMO se shoduje s F89 (1,25 %: P24 17 %, P36 65 %, propadlo 3 %, medián 27,2).
+
+| Firma (provozní riziko) | P12 / P24 / P36 | Propadlo (vývoj / kontrola) | Medián | Poplatek / P36 |
+|---|---|---|---|---|
+| FTMO 2 kroky (1,25 %) | 3 / 17 / 65 % | 0 / 7 % | 27,2 měs. | 540 € → ~833 € (vratný) |
+| **The5ers Classic, denní 5 % (1,25 %)** | **6 / 33 / 76 %** | 0 / 7 % | **24,9 měs.** | 179 $ → ~237 $ |
+| The5ers Classic, denní 3 % (0,75 %) | 0 / 5 / 20 % | 0 / 0 % | 30,8 měs. | 179 $ → ~895 $ |
+| Fintokei ProTrader (0,75 %) | 0 / 3 / 15 % | 0 / 0 % | 31,3 měs. | 549 $ → ~3 700 $ |
+| Fintokei Swing (0,75 %) | 0 / 3 / 15 % | 0 / 0 % | 31,3 měs. | 679 $ → ~4 600 $ |
+
+- **Rozhodnutí podle pravidla předem: FTMO 2 kroky zůstává první volbou.** The5ers splní bod 1 a 2 jen s denním limitem 5 %, s 3 % ne. Který platí, z webu nevíme (stránky si odporují).
+- **The5ers s 5 %:** dvojnásobná šance projít do 2 let (33 % proti 17 %), o 2 měsíce kratší medián a třikrát levnější poplatek. Pomáhá nižší cíl 8 % místo 10 %. Přísnější výpočet denního limitu (vyšší z zůstatku a equity) při 1,25 % nevadil.
+- **The5ers s 3 %:** bezpečné riziko jen 0,75 %, výrazně horší než FTMO.
+- **Fintokei:** limity samy o sobě vycházejí dobře (ProTrader při 1,5 %: P24 49 %, propadlo 7 %). Pravidlo „ztráta otevřených obchodů ≥ 3 % = varování a pak omezení“ ale při 1,25 % zasáhne v 80 % zkoušek, při 1,5 % v 88 %. Pro souběžné pozice na indexech nevhodné.
+- **FundedNext:** vyřazen předem (EA na 100k nepovolené).
+- **Neaktivita:** mezera > 30 dní bez nového obchodu je v 99 % zkoušek při 1,25 %. The5ers výslovně ruší zkoušku po 30 dnech bez aktivity (počítá se od registrace). U FTMO je to nejasné. **Bez „udržovacího“ obchodu nebo potvrzení od podpory hrozí ukončení zkoušky u obou.**
+- **Nemodelováno:** swap The5ers u indexů přes víkend („vysoký“), vratnost poplatku The5ers, swap-free u Fintokei Swing.
+
+**Co dál (rozhoduje uživatel):** zeptat se podpory The5ers, jestli High Stakes Classic 100k má denní limit 5 % nebo 3 %, a jak počítají neaktivitu. Podpory FTMO se zeptat na neaktivitu u Swing 2 kroky. Když The5ers potvrdí 5 %, vychází pro naše strategie lépe než FTMO.

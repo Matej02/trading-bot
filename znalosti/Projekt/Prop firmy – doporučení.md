@@ -74,3 +74,5 @@ Na otázku uživatele: „Jaké bys doporučil prop firmy? Jen si je zapiš do v
 - Uživatel může vybrat i jiné firmy. Claude je porovná podle stejných bodů.
 
 - **2026-11-25 ([[F89 Porovnání zkoušek FTMO 1 krok a 2 kroky|F89]]):** pro F33 + RSI(2) vychází lépe FTMO **2 kroky** (bezpečné riziko 1,25 %, do 24 měsíců 17 %, do 36 měsíců 65 %, vratný poplatek 540 €) než 1 krok (0,75 %, 10 % / 56 %, nevratný 499 €). Ceny k 25. 11. 2026 (sleva Black Friday 20 %).
+
+- **2026-11-25 ([[F91 Pravidla prop firem v měřítku|F91]]):** stejným měřítkem: FTMO 2 kroky zůstává první volbou. **The5ers High Stakes Classic** (cíl 8 % + 5 %, 179 $) by při denním limitu 5 % vyšlo lépe (do 24 měsíců 33 % proti 17 %, medián 24,9 proti 27,2 měsíce). Při 3 % je výrazně horší, stránky The5ers si odporují, tedy ověřit u podpory. Fintokei nevhodné (pravidlo 3 % ztráty otevřených obchodů zasáhne v 80 % zkoušek). FundedNext nepovoluje EA na účtech od 50 000. Neaktivita 30 dní: The5ers ve zkoušce výslovně, u FTMO ověřit.
